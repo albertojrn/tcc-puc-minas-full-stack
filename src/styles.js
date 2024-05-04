@@ -1,4 +1,4 @@
-import { Button, Typography, styled } from '@mui/material'
+import { Button, TextField, Typography, styled } from '@mui/material'
 
 export const AppContent = styled('div')`
   padding: 8px;
@@ -7,6 +7,15 @@ export const AppContent = styled('div')`
       padding: 24px;
     }
   `}
+`
+
+export const FormField = styled(TextField)`
+  & .MuiInputAdornment-root button.MuiButtonBase-root {
+    padding: 0;
+  }
+  & .MuiFormHelperText-root {
+    color: red;
+  }
 `
 
 export const MinimalButton = styled(Button, {
