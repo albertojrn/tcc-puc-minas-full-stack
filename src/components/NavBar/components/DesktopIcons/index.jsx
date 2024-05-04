@@ -1,16 +1,15 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { IconButton, Menu } from '@mui/material'
 import { AccountCircle } from '@mui/icons-material'
 import { IconsContainer, LoginButton } from './styles'
 import { useUserContext } from '../../../../contexts/UserContext'
 import LoggedInMenuItems from '../LoggedInMenuItems'
 import { DICTIONARY } from '../../../../constants/dictionary'
-import { useNavigate } from 'react-router-dom'
 
 function DesktopIcons() {
   const [anchor, setAnchor] = useState(null)
   const { isLoggedIn } = useUserContext()
-  const navigate = useNavigate()
 
   return (
     <>
@@ -27,9 +26,11 @@ function DesktopIcons() {
             </IconButton>
           )
           : (
-            <LoginButton onClick={() => navigate('/login')}>
-              {DICTIONARY.SIGN_UP}
-            </LoginButton>
+            <Link to='/login'>
+              <LoginButton>
+                {DICTIONARY.SIGN_UP}
+              </LoginButton>
+            </Link>
           )
         }
       </IconsContainer>

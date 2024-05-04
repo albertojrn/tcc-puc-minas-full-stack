@@ -1,11 +1,10 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { ThemeProvider, createTheme } from '@mui/material';
+import { ThemeProvider, createTheme } from '@mui/material'
 import './App.css'
 import EcommRoutes from './routes/EcommRoutes'
-import NavBar from './components/NavBar';
-import CUSTOM_THEME from './constants/theme';
-import { AppContent } from './styles';
+import NavBar from './components/NavBar'
+import CUSTOM_THEME from './constants/theme'
 
 function App() {
   const theme = createTheme(CUSTOM_THEME)
@@ -15,13 +14,11 @@ function App() {
       <ThemeProvider theme={theme}>
         <div id='app-main'>
           <NavBar />
-          <AppContent>
-            <EcommRoutes />
-          </AppContent>
+          <EcommRoutes />
         </div>
       </ThemeProvider>
     </BrowserRouter>
   )
 }
 
-export default App;
+export default App

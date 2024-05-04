@@ -1,20 +1,20 @@
 import React from 'react'
 import { Divider, Typography } from '@mui/material'
-import { FormContainer, LoginContainer } from './styles'
 import GoogleLoginButton from './components/GoogleLoginButton'
 import GithubLoginButton from './components/GithubLoginButton'
 import StandardLoginForm from './components/StandardLoginForm'
 import CreateNewAccountLink from './components/CreateNewAccountLink'
 import { useUserContext } from '../../contexts/UserContext'
 import Redirect from '../Redirect'
+import { StackedFormContainer, ViewboxContainer } from '../../styles'
 
 function LoginPage() {
   const { isLoggedIn } = useUserContext()
   if (isLoggedIn) return <Redirect to='/' />
 
   return (
-    <LoginContainer>
-      <FormContainer
+    <ViewboxContainer>
+      <StackedFormContainer
         direction='column'
         spacing={2}
       >
@@ -26,8 +26,8 @@ function LoginPage() {
         <GoogleLoginButton />
         <GithubLoginButton />
         <CreateNewAccountLink />
-      </FormContainer>
-    </LoginContainer>
+      </StackedFormContainer>
+    </ViewboxContainer>
   )
 }
 

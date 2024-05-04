@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { MinimalButton, MinimalText } from '../../../../styles'
 
 function CreateNewAccountLink() {
@@ -6,12 +7,14 @@ function CreateNewAccountLink() {
     <MinimalText align='center' component='div'>
       Não tem uma conta? Cadastre-se
       &nbsp;
-      <MinimalButton
-        noMinWidth
-        noPadding
-      >
-        aqui
-      </MinimalButton>
+      <Link to='/sign-up'>
+        <MinimalButton
+          noMinWidth
+          noPadding
+        >
+          aqui
+        </MinimalButton>
+      </Link>
       .
     </MinimalText>
   )

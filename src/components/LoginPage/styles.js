@@ -1,32 +1,4 @@
-import { Box, Stack, styled } from '@mui/material'
-import { COLORS, NAVBAR_HEIGHT } from '../../constants/theme'
-
-export const LoginContainer = styled(Box)`
-  --menu-height: ${NAVBAR_HEIGHT}px;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
-      height: calc(100vh - var(--menu-height) - (2 * 24px));
-    }
-  `}
-`
-
-export const FormContainer = styled(Stack)`
-  border: 1px solid ${COLORS.lightBorder};
-  border-radius: 8px;
-  padding: 8px;
-  width: 100%;
-  ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
-      min-width: 370px;
-      padding: 24px;
-      width: 25%;
-    }
-  `}
-`
+import { styled } from '@mui/material'
 
 export const GoogleButton = styled('button')`
   -moz-user-select: none;

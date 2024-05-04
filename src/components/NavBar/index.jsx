@@ -2,21 +2,24 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { AppBar, IconButton, Toolbar } from '@mui/material'
 import { Menu } from '@mui/icons-material'
-import { BarContainer, LogoContainer } from './styles'
+import { LogoContainer } from './styles'
 import SearchForm from './components/SearchForm'
 import DesktopIcons from './components/DesktopIcons'
 import MobileIcons from './components/MobileIcons'
 import logo from '../../assets/images/logo_letters.png'
+import { NAVBAR_HIDE_PART_ON_ROUTES, NAVBAR_HIDE_ON_ROUTES } from '../../constants/routesNotAllowed'
+import { AppBarContainer } from '../../styles'
 
 function NavBar() {
   const location = useLocation()
-  const isLoginPage = location.pathname === '/login'
+  if (NAVBAR_HIDE_ON_ROUTES.includes(location.pathname)) return null
+  const showContent = !NAVBAR_HIDE_PART_ON_ROUTES.includes(location.pathname)
 
   return (
-    <BarContainer>
+    <AppBarContainer>
       <AppBar position='static'>
         <Toolbar>
-          {!isLoginPage
+          {showContent
             && (
               <IconButton
                 color='inherit'
@@ -31,7 +34,7 @@ function NavBar() {
               <img src={logo} alt='logo' />
             </a>
           </LogoContainer>
-          {!isLoginPage
+          {showContent
             && (
               <>
                 <SearchForm />
@@ -41,7 +44,7 @@ function NavBar() {
             )}
         </Toolbar>
       </AppBar>
-    </BarContainer>
+    </AppBarContainer>
   )
 }
 
