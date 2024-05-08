@@ -1,35 +1,77 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
-  Divider,
-  List,
+  Collapse,
   ListItem,
   ListItemButton,
   ListItemText,
 } from '@mui/material'
-import { ItemsContainer } from './styles'
+import { ItemsContainer, ItemsList, ListItemCustom } from './styles'
+import { COLORS } from '../../../../../../constants/theme'
 
-function DrawerItems() {
+function DrawerItems({ setContentId }) {
+  const [collapseRegisterMenu, setCollapseRegisterMenu] = useState(true)
+  const [collapseReportMenu, setCollapseReportMenu] = useState(true)
+
   return (
     <ItemsContainer>
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map(text => (
-          <ListItem key={text} disablePadding>
+      <ItemsList>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => setContentId(0)}>
+            <ListItemText primary='Dashboard' />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => setContentId(1)}>
+            <ListItemText primary='Usuários' />
+          </ListItemButton>
+        </ListItem>
+        <ListItemCustom bgColor={COLORS.lightgray} disablePadding>
+          <ListItemButton onClick={() => setCollapseRegisterMenu(prev => !prev)}>
+            <ListItemText primary='Cadastro' />
+            {collapseRegisterMenu ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItemCustom>
+        <Collapse in={collapseRegisterMenu} timeout='auto' unmountOnExit>
+          <ItemsList indentation={1}>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => setContentId(2)}>
+                <ListItemText primary='Produtos' />
+              </ListItemButton>
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => setContentId(3)}>
+                <ListItemText primary='Características' />
+              </ListItemButton>
+            </ListItem>
+          </ItemsList>
+        </Collapse>
+        <ListItemCustom bgColor={COLORS.lightgray} disablePadding>
+          <ListItemButton onClick={() => setCollapseReportMenu(prev => !prev)}>
+            <ListItemText primary='Relatórios' />
+            {collapseReportMenu ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+        </ListItemCustom>
+        <Collapse in={collapseReportMenu} timeout='auto' unmountOnExit>
+          <ItemsList indentation={1}>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => setContentId(4)}>
+                <ListItemText primary='Vendas' />
+              </ListItemButton>
+            </ListItem>
+          </ItemsList>
+        </Collapse>
+      </ItemsList>
+      <ItemsList>
+        <Link to='/logout' >
+          <ListItem disablePadding>
             <ListItemButton>
-              <ListItemText primary={text} />
+              <ListItemText primary='Sair' />
             </ListItemButton>
           </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map(text => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+        </Link>
+      </ItemsList>
     </ItemsContainer>
   )
 }

@@ -5,6 +5,9 @@ import './App.css'
 import EcommRoutes from './routes/EcommRoutes'
 import NavBar from './components/NavBar'
 import CUSTOM_THEME from './constants/theme'
+import { LoadingContextProvider } from './contexts/LoadingContext'
+import Loading from './components/Loading'
+import { DashboardContextProvider } from './contexts/DashboardContext'
 
 function App() {
   const theme = createTheme(CUSTOM_THEME)
@@ -12,10 +15,15 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <div id='app-main'>
-          <NavBar />
-          <EcommRoutes />
-        </div>
+        <LoadingContextProvider>
+          <DashboardContextProvider>
+            <div id='app-main'>
+              <NavBar />
+              <EcommRoutes />
+              <Loading />
+            </div>
+          </DashboardContextProvider>
+        </LoadingContextProvider>
       </ThemeProvider>
     </BrowserRouter>
   )

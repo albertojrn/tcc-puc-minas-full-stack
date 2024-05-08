@@ -5,6 +5,7 @@ import DashDrawer from './components/DashDrawer'
 import DashContent from './components/DashContent'
 
 function DashboardPage() {
+  const [contentId, setContentId] = useState(0)
   const [open, setOpen] = useState(false)
   const [isClosing, setIsClosing] = React.useState(false)
 
@@ -30,8 +31,9 @@ function DashboardPage() {
         handleDrawerClose={handleDrawerClose}
         handleDrawerTransitionEnd={handleDrawerTransitionEnd}
         open={open}
+        setContentId={setContentId}
       />
-      <DashContent />
+      <DashContent contentId={contentId} />
     </DashboardContainer>
   )
 }

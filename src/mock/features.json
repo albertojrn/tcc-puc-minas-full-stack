@@ -1,0 +1,22 @@
+[
+  {
+    "id": 0,
+    "name": "gênero",
+    "is_multiple": true
+  },
+  {
+    "id": 1,
+    "name": "tamanho",
+    "is_multiple": true
+  },
+  {
+    "id": 2,
+    "name": "cor",
+    "is_multiple": true
+  },
+  {
+    "id": 3,
+    "name": "marca",
+    "is_multiple": false
+  }
+]

@@ -2,7 +2,7 @@ import React from 'react'
 import { MobileDrawerContainer } from './styles'
 import DrawerItems from '../DrawerItems'
 
-function MobileDrawer({ open, handleDrawerClose, handleDrawerTransitionEnd }) {
+function MobileDrawer({ open, handleDrawerClose, handleDrawerTransitionEnd, setContentId }) {
   return (
     <MobileDrawerContainer
       variant='temporary'
@@ -13,7 +13,7 @@ function MobileDrawer({ open, handleDrawerClose, handleDrawerTransitionEnd }) {
         keepMounted: true,
       }}
     >
-      <DrawerItems />
+      <DrawerItems setContentId={setContentId} />
     </MobileDrawerContainer>
   )
 }

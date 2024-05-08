@@ -3,15 +3,16 @@ import { DrawerContainer } from './styles'
 import MobileDrawer from './components/MobileDrawer'
 import DesktopDrawer from './components/DesktopDrawer'
 
-function DashDrawer({ open, handleDrawerClose, handleDrawerTransitionEnd }) {
+function DashDrawer({ open, handleDrawerClose, handleDrawerTransitionEnd, setContentId }) {
   return (
     <DrawerContainer component='nav'>
       <MobileDrawer
-        open={open}
         handleDrawerClose={handleDrawerClose}
         handleDrawerTransitionEnd={handleDrawerTransitionEnd}
+        open={open}
+        setContentId={setContentId}
       />
-      <DesktopDrawer />
+      <DesktopDrawer setContentId={setContentId} />
     </DrawerContainer>
   )
 }

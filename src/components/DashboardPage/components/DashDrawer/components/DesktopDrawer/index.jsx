@@ -2,13 +2,13 @@ import React from 'react'
 import { DesktopDrawerContainer } from './styles'
 import DrawerItems from '../DrawerItems'
 
-function DesktopDrawer() {
+function DesktopDrawer({ setContentId }) {
   return (
     <DesktopDrawerContainer
       variant='permanent'
       open
     >
-      <DrawerItems />
+      <DrawerItems setContentId={setContentId} />
     </DesktopDrawerContainer>
   )
 }

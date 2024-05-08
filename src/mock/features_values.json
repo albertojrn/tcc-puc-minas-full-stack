@@ -1,0 +1,252 @@
+[
+  {
+    "id": 0,
+    "name": "Feminino",
+    "feature_id": 0
+  },
+  {
+    "id": 1,
+    "name": "Masculino",
+    "feature_id": 0
+  },
+  {
+    "id": 2,
+    "name": "23",
+    "feature_id": 1
+  },
+  {
+    "id": 3,
+    "name": "24",
+    "feature_id": 1
+  },
+  {
+    "id": 4,
+    "name": "25",
+    "feature_id": 1
+  },
+  {
+    "id": 5,
+    "name": "26",
+    "feature_id": 1
+  },
+  {
+    "id": 6,
+    "name": "27",
+    "feature_id": 1
+  },
+  {
+    "id": 7,
+    "name": "28",
+    "feature_id": 1
+  },
+  {
+    "id": 8,
+    "name": "29",
+    "feature_id": 1
+  },
+  {
+    "id": 9,
+    "name": "30",
+    "feature_id": 1
+  },
+  {
+    "id": 10,
+    "name": "31",
+    "feature_id": 1
+  },
+  {
+    "id": 11,
+    "name": "32",
+    "feature_id": 1
+  },
+  {
+    "id": 12,
+    "name": "33",
+    "feature_id": 1
+  },
+  {
+    "id": 13,
+    "name": "34",
+    "feature_id": 1
+  },
+  {
+    "id": 14,
+    "name": "35",
+    "feature_id": 1
+  },
+  {
+    "id": 15,
+    "name": "36",
+    "feature_id": 1
+  },
+  {
+    "id": 16,
+    "name": "37",
+    "feature_id": 1
+  },
+  {
+    "id": 17,
+    "name": "38",
+    "feature_id": 1
+  },
+  {
+    "id": 18,
+    "name": "39",
+    "feature_id": 1
+  },
+  {
+    "id": 19,
+    "name": "40",
+    "feature_id": 1
+  },
+  {
+    "id": 20,
+    "name": "41",
+    "feature_id": 1
+  },
+  {
+    "id": 21,
+    "name": "42",
+    "feature_id": 1
+  },
+  {
+    "id": 22,
+    "name": "43",
+    "feature_id": 1
+  },
+  {
+    "id": 23,
+    "name": "44",
+    "feature_id": 1
+  },
+  {
+    "id": 24,
+    "name": "45",
+    "feature_id": 1
+  },
+  {
+    "id": 25,
+    "name": "Preto",
+    "feature_id": 2
+  },
+  {
+    "id": 26,
+    "name": "Branco",
+    "feature_id": 2
+  },
+  {
+    "id": 27,
+    "name": "Marrom",
+    "feature_id": 2
+  },
+  {
+    "id": 28,
+    "name": "Nude/Bege",
+    "feature_id": 2
+  },
+  {
+    "id": 29,
+    "name": "Cinza",
+    "feature_id": 2
+  },
+  {
+    "id": 30,
+    "name": "Vermelho",
+    "feature_id": 2
+  },
+  {
+    "id": 31,
+    "name": "Azul",
+    "feature_id": 2
+  },
+  {
+    "id": 32,
+    "name": "Verde",
+    "feature_id": 2
+  },
+  {
+    "id": 33,
+    "name": "Amarelo",
+    "feature_id": 2
+  },
+  {
+    "id": 34,
+    "name": "Rosa",
+    "feature_id": 2
+  },
+  {
+    "id": 35,
+    "name": "Metalizado",
+    "feature_id": 2
+  },
+  {
+    "id": 36,
+    "name": "Azul Bebê",
+    "feature_id": 2
+  },
+  {
+    "id": 37,
+    "name": "Vinho",
+    "feature_id": 2
+  },
+  {
+    "id": 38,
+    "name": "Caramelo",
+    "feature_id": 2
+  },
+  {
+    "id": 39,
+    "name": "Laranja",
+    "feature_id": 2
+  },
+  {
+    "id": 40,
+    "name": "Nike",
+    "feature_id": 3
+  },
+  {
+    "id": 41,
+    "name": "Adidas",
+    "feature_id": 3
+  },
+  {
+    "id": 42,
+    "name": "Vans",
+    "feature_id": 3
+  },
+  {
+    "id": 43,
+    "name": "Skechers",
+    "feature_id": 3
+  },
+  {
+    "id": 44,
+    "name": "Puma",
+    "feature_id": 3
+  },
+  {
+    "id": 45,
+    "name": "Asics",
+    "feature_id": 3
+  },
+  {
+    "id": 46,
+    "name": "New Balance",
+    "feature_id": 3
+  },
+  {
+    "id": 47,
+    "name": "Merrell",
+    "feature_id": 3
+  },
+  {
+    "id": 48,
+    "name": "Crocs",
+    "feature_id": 3
+  },
+  {
+    "id": 49,
+    "name": "Converse",
+    "feature_id": 3
+  }
+]

@@ -1,12 +1,20 @@
 import React from 'react'
-import { Toolbar } from '@mui/material'
-import { ContentContainer } from './styles'
+import { ContentContainer, DashboardContentContainer } from './styles'
+import ProductRegister from './components/ProductRegister'
+import FeaturesRegister from './components/FeaturesRegister'
 
-function DashContent() {
+function DashContent({ contentId }) {
   return (
-    <ContentContainer component='main'>
-      <Toolbar />
-    </ContentContainer>
+    <DashboardContentContainer component='main'>
+      <>
+        <ContentContainer show={contentId === 2}>
+          <ProductRegister />
+        </ContentContainer>
+        <ContentContainer show={contentId === 3}>
+          <FeaturesRegister />
+        </ContentContainer>
+      </>
+    </DashboardContentContainer>
   )
 }
 

@@ -41,12 +41,12 @@ export const MainGridContainer = styled(Grid, { shouldForwardProp: prop => !['dr
   ${({ maxWidth, theme }) => maxWidth && formatCssProp('max-width', maxWidth, theme)}
   ${({ minWidth, theme }) => minWidth && formatCssProp('min-width', minWidth, theme)}
   ${({ width, theme }) => width && formatCssProp('width', width, theme)}
+  ${({ marginTop, theme }) => marginTop && formatCssProp('margin-top', marginTop, theme)}
   ${({ drawBorder }) => drawBorder && `
     border: 1px solid ${COLORS.lightBorder};
     border-radius: 8px;
     padding: 8px;
   `}
-  ${({ marginTop, theme }) => marginTop && formatCssProp('margin-top', marginTop, theme)}
 `
 
 export const MinimalButton = styled(Button, {
