@@ -1,17 +1,17 @@
 import React from 'react'
 import { ContentContainer, DashboardContentContainer } from './styles'
-import ProductRegister from './components/ProductRegister'
-import FeaturesRegister from './components/FeaturesRegister'
+import Products from './components/Products'
+import Features from './components/Features'
 
 function DashContent({ contentId }) {
   return (
     <DashboardContentContainer component='main'>
       <>
         <ContentContainer show={contentId === 2}>
-          <ProductRegister />
+          <Products />
         </ContentContainer>
         <ContentContainer show={contentId === 3}>
-          <FeaturesRegister />
+          <Features />
         </ContentContainer>
       </>
     </DashboardContentContainer>
