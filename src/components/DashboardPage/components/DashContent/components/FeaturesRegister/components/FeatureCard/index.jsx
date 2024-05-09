@@ -1,7 +1,7 @@
 import React from 'react'
 import { CardActions, CardContent, CardHeader, IconButton, List, ListItem, ListItemText } from '@mui/material'
 import { Add } from '@mui/icons-material'
-import features_values from '../../../../../../../mock/features_values.json'
+import features_values from '../../../../../../../../mock/features_values.json'
 import FeatureCardToolbox from '../FeatureCardToolbox'
 import { CardContainer } from './styles'
 

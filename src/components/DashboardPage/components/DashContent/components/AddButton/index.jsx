@@ -1,8 +1,8 @@
 import React from 'react'
 import { Button } from '@mui/material'
 
-function AddFeatureButton() {
+function AddButton({ page }) {
   return <Button variant='contained'>Novo</Button>
 }
 
-export default AddFeatureButton
+export default AddButton

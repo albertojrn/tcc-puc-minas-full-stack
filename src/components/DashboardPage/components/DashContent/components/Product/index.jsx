@@ -1,6 +1,7 @@
 import React from 'react'
-import { Button, Divider, Typography } from '@mui/material'
+import { Divider, Typography } from '@mui/material'
 import { GridItem, MainGridContainer } from '../../../../../../styles'
+import AddButton from '../AddButton'
 
 function ProductRegister() {
   return (
@@ -9,7 +10,7 @@ function ProductRegister() {
         <Typography component='' variant='h5'>
           Produtos
           &nbsp;
-          <Button variant='contained'>Novo</Button>
+          <AddButton page='product' />
         </Typography>
       </GridItem>
       <GridItem item xs={12}>
