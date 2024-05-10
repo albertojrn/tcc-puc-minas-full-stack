@@ -10,6 +10,7 @@ export function handleOnUserTyping(field, setField, value, setError) {
     }
     return prev
   })
+  console.log({value})
   setField(value)
 }
 

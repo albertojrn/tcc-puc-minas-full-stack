@@ -9,6 +9,7 @@ import { LoadingContextProvider } from './contexts/LoadingContext'
 import Loading from './components/Loading'
 import { DashboardContextProvider } from './contexts/DashboardContext'
 import { DashboardDataContextProvider } from './contexts/DashboardDataContext'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
   const theme = createTheme(CUSTOM_THEME)

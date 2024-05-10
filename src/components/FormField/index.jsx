@@ -12,19 +12,22 @@ function FormField({
   inputProps,
   InputProps,
   label,
+  multiline = false,
   onlyNumbers,
   pattern,
   placeholder,
   required = false,
+  rows,
   setError,
   setField,
   type = 'text',
   value,
 }) {
-  const iProps = {
+  const otherProps = {
     inputProps,
     InputProps
   }
+  if (rows) otherProps.rows = rows
 
   function handleOnChange(e) {
     let newValue = e.target.value
@@ -35,13 +38,14 @@ function FormField({
   return (
     <FormTextField
       InputLabelProps={keepLabelOnTop ? { shrink: true } : {}}
-      {...iProps}
+      {...otherProps}
       autoComplete={autoComplete}
       color='info'
       error={Boolean(error?.[field])}
       fullWidth={fullWidth}
       helperText={error?.[field] ?? ''}
       label={label}
+      multiline={multiline}
       onChange={handleOnChange}
       placeholder={placeholder}
       required={required}
