@@ -10,6 +10,16 @@ export const AppBarContainer = styled(Box)`
   height: ${NAVBAR_HEIGHT}px;
 `
 
+export const CenterModalContainer = styled(Box, { shouldForwardProp: prop => !['width'].includes(prop) })`
+  background-color: white;
+  left: 50%;
+  padding: 24px;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: ${({ width }) => width ?? '400px'};
+`
+
 export const ContentMainConatiner = styled('div')`
   display: flex;
   justify-content: center;

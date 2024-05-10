@@ -3,6 +3,7 @@ import DashNavBar from './components/DashNavBar'
 import { DashboardContainer } from './styles'
 import DashDrawer from './components/DashDrawer'
 import DashContent from './components/DashContent'
+import DashModal from './components/DashModal'
 
 function DashboardPage() {
   const [contentId, setContentId] = useState(0)
@@ -34,6 +35,7 @@ function DashboardPage() {
         setContentId={setContentId}
       />
       <DashContent contentId={contentId} />
+      <DashModal />
     </DashboardContainer>
   )
 }

@@ -1,15 +1,15 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-import { DASHBOARD_INIT_VALUES } from './constants/params'
+import { INIT_VALUES } from './constants/params'
 
 const context = createContext({
-  ...DASHBOARD_INIT_VALUES,
+  ...INIT_VALUES,
   setDashboardData: () => {}
 })
 
-const useDashboardContext = () => useContext(context)
+const useDashboardDataContext = () => useContext(context)
 
-const DashboardContextProvider = ({ children }) => {
-  const [data, setData] = useState(DASHBOARD_INIT_VALUES)
+const DashboardDataContextProvider = ({ children }) => {
+  const [data, setData] = useState(INIT_VALUES)
 
   const value = useMemo(() => ({
     ...data,
@@ -23,4 +23,4 @@ const DashboardContextProvider = ({ children }) => {
   )
 }
 
-export { DashboardContextProvider, useDashboardContext }
+export { DashboardDataContextProvider, useDashboardDataContext }

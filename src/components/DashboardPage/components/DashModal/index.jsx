@@ -7,6 +7,8 @@ import ProductRegistry from './components/ProductRegistry'
 function DashModal() {
   const { modalPage, openModal, setDashboardData } = useDashboardContext()
 
+  console.log({openModal})
+
   return (
     <Modal
       open={openModal}

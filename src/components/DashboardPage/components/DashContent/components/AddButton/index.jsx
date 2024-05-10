@@ -3,7 +3,7 @@ import { Button } from '@mui/material'
 import { useDashboardContext } from '../../../../../../contexts/DashboardContext'
 
 function AddButton({ page }) {
-  const { setDashboardData } = useDashboardContext
+  const { setDashboardData } = useDashboardContext()
   function handleOnAddClick() {
     setDashboardData({ openModal: true, modalPage: page })
   }
