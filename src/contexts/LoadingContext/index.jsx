@@ -13,7 +13,7 @@ const LoadingContextProvider = ({ children }) => {
 
   const value = useMemo(() => ({
     ...data,
-    setLoading: (newData) => setData({ ...data, ...newData }),
+    setLoading: (newData) => setData(prev => ({ ...prev, ...newData })),
   }), [data])
 
   return (

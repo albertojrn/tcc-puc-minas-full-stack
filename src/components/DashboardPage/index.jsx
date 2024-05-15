@@ -4,11 +4,14 @@ import { DashboardContainer } from './styles'
 import DashDrawer from './components/DashDrawer'
 import DashContent from './components/DashContent'
 import DashModal from './components/DashModal'
+import { DashboardContextProvider } from '../../contexts/DashboardContext'
+import { DashboardDataContextProvider } from '../../contexts/DashboardDataContext'
+import DashDialog from './components/DashDialog'
 
 function DashboardPage() {
   const [contentId, setContentId] = useState(0)
   const [open, setOpen] = useState(false)
-  const [isClosing, setIsClosing] = React.useState(false)
+  const [isClosing, setIsClosing] = useState(false)
 
   function handleDrawerClose() {
     setIsClosing(true)
@@ -26,17 +29,22 @@ function DashboardPage() {
   }
 
   return (
-    <DashboardContainer>
-      <DashNavBar handleDrawerToggle={handleDrawerToggle} />
-      <DashDrawer
-        handleDrawerClose={handleDrawerClose}
-        handleDrawerTransitionEnd={handleDrawerTransitionEnd}
-        open={open}
-        setContentId={setContentId}
-      />
-      <DashContent contentId={contentId} />
-      <DashModal />
-    </DashboardContainer>
+    <DashboardContextProvider>
+      <DashboardDataContextProvider>
+        <DashboardContainer>
+          <DashNavBar handleDrawerToggle={handleDrawerToggle} />
+          <DashDrawer
+            handleDrawerClose={handleDrawerClose}
+            handleDrawerTransitionEnd={handleDrawerTransitionEnd}
+            open={open}
+            setContentId={setContentId}
+          />
+          <DashContent contentId={contentId} />
+          <DashModal />
+          <DashDialog />
+        </DashboardContainer>
+      </DashboardDataContextProvider>
+    </DashboardContextProvider>
   )
 }
 

@@ -7,8 +7,6 @@ import NavBar from './components/NavBar'
 import CUSTOM_THEME from './constants/theme'
 import { LoadingContextProvider } from './contexts/LoadingContext'
 import Loading from './components/Loading'
-import { DashboardContextProvider } from './contexts/DashboardContext'
-import { DashboardDataContextProvider } from './contexts/DashboardDataContext'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 function App() {
@@ -18,15 +16,11 @@ function App() {
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <LoadingContextProvider>
-          <DashboardContextProvider>
-            <DashboardDataContextProvider>
-              <div id='app-main'>
-                <NavBar />
-                <EcommRoutes />
-                <Loading />
-              </div>
-            </DashboardDataContextProvider>
-          </DashboardContextProvider>
+          <div id='app-main'>
+            <NavBar />
+            <EcommRoutes />
+            <Loading />
+          </div>
         </LoadingContextProvider>
       </ThemeProvider>
     </BrowserRouter>

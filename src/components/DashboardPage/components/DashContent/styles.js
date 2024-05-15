@@ -3,8 +3,8 @@ import { DRAWER_WIDTH } from '../../constants/params'
 
 const CONTAINER_PADDING = 24
 
-export const ContentContainer = styled(Box, { shouldForwardProp: prop => !['show'].includes(prop) })`
-  display: ${({ show }) => (show ? 'flex' : 'none')};
+export const ContentContainer = styled(Box)`
+  display: flex;
   flex-grow: 1;
 `
 

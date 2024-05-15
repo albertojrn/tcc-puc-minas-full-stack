@@ -1,7 +1,7 @@
 import React from 'react'
 import Carousel from 'react-bootstrap/Carousel'
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'
-import { CarouselContainer } from './styles'
+import { CarouselContainer } from '../../styles'
 
 function ImageSlider({ sliderIndex, setSliderIndex }) {
   return (

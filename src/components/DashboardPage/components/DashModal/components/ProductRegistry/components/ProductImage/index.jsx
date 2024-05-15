@@ -10,7 +10,7 @@ function ProductImage({ isRegistry = null }) {
   return (
     <Stack direction='column' justifyContent='center'>
       <ImageSlider sliderIndex={sliderIndex} setSliderIndex={setSliderIndex} />
-      <ThumbsContainer />
+      <ThumbsContainer sliderIndex={sliderIndex} setSliderIndex={setSliderIndex} />
       {isRegistry && <AddImageButton />}
     </Stack>
   )

@@ -32,7 +32,7 @@ function SignUpFormFields() {
     )
     setError(validation.error)
     if (validation.passed) {
-      console.log('Passed')
+      
     }
   }
 

@@ -12,11 +12,16 @@
   {
     "id": 2,
     "name": "cor",
-    "is_multiple": true
+    "is_multiple": false
   },
   {
     "id": 3,
     "name": "marca",
     "is_multiple": false
+  },
+  {
+    "id": 4,
+    "name": "categoria",
+    "is_multiple": true
   }
 ]

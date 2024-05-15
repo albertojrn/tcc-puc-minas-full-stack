@@ -2,15 +2,16 @@ import validate from 'validate.js'
 import moment from 'moment'
 
 export function handleOnUserTyping(field, setField, value, setError) {
-  setError(prev => {
-    if (prev[field]) {
-      const newError = { ...prev }
-      delete newError[field]
-      return newError
-    }
-    return prev
-  })
-  console.log({value})
+  if (typeof setError === 'function') {
+    setError(prev => {
+      if (prev[field]) {
+        const newError = { ...prev }
+        delete newError[field]
+        return newError
+      }
+      return prev
+    })
+  }
   setField(value)
 }
 

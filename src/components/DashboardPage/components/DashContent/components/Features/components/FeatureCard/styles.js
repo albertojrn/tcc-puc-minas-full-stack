@@ -13,4 +13,7 @@ export const CardContainer = styled(Card)`
   & .MuiCardHeader-content span {
     text-transform: uppercase;
   }
+  & .MuiCardActions-root {
+    justify-content: end;
+  }
 `

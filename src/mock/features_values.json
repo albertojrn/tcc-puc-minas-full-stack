@@ -248,5 +248,60 @@
     "id": 49,
     "name": "Converse",
     "feature_id": 3
+  },
+  {
+    "id": 50,
+    "name": "Menino",
+    "feature_id": 0
+  },
+  {
+    "id": 51,
+    "name": "Menina",
+    "feature_id": 0
+  },
+  {
+    "id": 52,
+    "name": "Unissex",
+    "feature_id": 0
+  },
+  {
+    "id": 53,
+    "name": "Corrida",
+    "feature_id": 4
+  },
+  {
+    "id": 54,
+    "name": "Casual",
+    "feature_id": 4
+  },
+  {
+    "id": 55,
+    "name": "Treino",
+    "feature_id": 4
+  },
+  {
+    "id": 56,
+    "name": "Caminhada",
+    "feature_id": 4
+  },
+  {
+    "id": 57,
+    "name": "Dia a dia",
+    "feature_id": 4
+  },
+  {
+    "id": 58,
+    "name": "Performance",
+    "feature_id": 4
+  },
+  {
+    "id": 59,
+    "name": "Academia",
+    "feature_id": 4
+  },
+  {
+    "id": 60,
+    "name": "Outdoor",
+    "feature_id": 4
   }
 ]

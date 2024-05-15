@@ -19,7 +19,6 @@ function ForgetPasswordPage() {
     const validation = validateFields({ email }, CONSTRAINTS)
     setError(validation.error)
   }
-  console.log(process.env.REACT_APP_EMAIL)
 
   return (
     <ViewboxContainer>

@@ -7,12 +7,8 @@ function DashContent({ contentId }) {
   return (
     <DashboardContentContainer component='main'>
       <>
-        <ContentContainer show={contentId === 2}>
-          <Products />
-        </ContentContainer>
-        <ContentContainer show={contentId === 3}>
-          <Features />
-        </ContentContainer>
+        {contentId === 2 && <ContentContainer><Products /></ContentContainer>}
+        {contentId === 3 && <ContentContainer><Features /></ContentContainer>}
       </>
     </DashboardContentContainer>
   )

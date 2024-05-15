@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { NumericFormat } from 'react-number-format'
+import { InputAdornment } from '@mui/material'
 import { GridItem, MainGridContainer } from '../../../../../../../../styles'
 import FormField from '../../../../../../../FormField'
+import ProductVariations from './components/ProductVariations'
+import ProductFeatures from './components/ProductFeatures'
 
 function ProductFormFields() {
   const [error, setError] = useState({})
   const [description, setDescription] = useState('')
   const [title, setTitle] = useState('')
-  const [quantity, setQuantity] = useState(0)
-  const [price, setPrice] = useState('')
-
+  const [sku, setSku] = useState('')
+  const [depth, setDepth] = useState(0)
+  const [width, setWidth] = useState(0)
+  const [height, setHeight] = useState(0)
+  const [variations, setVariations] = useState([])
+  const [selectedFeatures, setSelectedFeatures] = useState([])
 
   return (
     <GridItem item xs={12} md={7}>
@@ -36,76 +40,82 @@ function ProductFormFields() {
             label='Descrição'
             multiline
             required
-            rows={6}
+            rows={4}
             setError={setError}
             setField={setDescription}
             value={description}
           />
         </GridItem>
-        <GridItem item xs={3}>
+        <GridItem item xs={12} md={3}>
           <FormField
             error={error}
-            field='quantity'
+            field='sku'
             fullWidth
-            label='Qtd'
+            label='SKU'
+            onlyNumbers
             required
             setError={setError}
-            setField={setQuantity}
-            value={quantity}
+            setField={setSku}
+            value={sku}
+          />
+        </GridItem>
+        <GridItem item xs={12} md={3}>
+          <FormField
+            InputProps={{
+              endAdornment: <InputAdornment position='end'>cm</InputAdornment>,
+            }}
+            error={error}
+            field='width'
+            fullWidth
+            label='Comprimento'
+            required
+            setError={setError}
+            setField={setWidth}
+            value={width}
             type='number'
           />
         </GridItem>
-        <GridItem item xs={3}>
+        <GridItem item xs={12} md={3}>
           <FormField
             InputProps={{
-              inputComponent: NumericFormatCustom,
+              endAdornment: <InputAdornment position='end'>cm</InputAdornment>,
             }}
             error={error}
-            field='price'
+            field='depth'
             fullWidth
-            label='Preço'
-            placeholder='R$ 0,00'
+            label='Largura'
             required
             setError={setError}
-            setField={setPrice}
-            type='text'
-            value={price}
+            setField={setDepth}
+            value={depth}
+            type='number'
           />
+        </GridItem>
+        <GridItem item xs={12} md={3}>
+          <FormField
+            InputProps={{
+              endAdornment: <InputAdornment position='end'>cm</InputAdornment>,
+            }}
+            error={error}
+            field='height'
+            fullWidth
+            label='Altura'
+            required
+            setError={setError}
+            setField={setHeight}
+            value={height}
+            type='number'
+          />
+        </GridItem>
+        <GridItem item xs={12}>
+          <ProductVariations variations={variations} setVariations={setVariations} />
+        </GridItem>
+        <GridItem item xs={12}>
+          <ProductFeatures selectedFeatures={selectedFeatures} setSelectedFeatures={setSelectedFeatures} />
         </GridItem>
       </MainGridContainer>
     </GridItem>
   )
-}
-
-const NumericFormatCustom = React.forwardRef(
-  (props, ref) => {
-    const { onChange, ...other } = props
-
-    return (
-      <NumericFormat
-        {...other}
-        getInputRef={ref}
-        onValueChange={(values) => {
-          onChange({
-            target: {
-              name: props.name,
-              value: values.value,
-            },
-          })
-        }}
-        valueIsNumericString
-        decimalScale={2}
-        decimalSeparator=','
-        fixedDecimalScale
-        prefix="R$ "
-      />
-    )
-  },
-)
-
-NumericFormatCustom.propTypes = {
-  name: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
 }
 
 export default ProductFormFields

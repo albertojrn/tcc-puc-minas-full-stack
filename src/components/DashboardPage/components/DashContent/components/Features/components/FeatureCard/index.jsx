@@ -1,5 +1,14 @@
 import React from 'react'
-import { CardActions, CardContent, CardHeader, IconButton, List, ListItem, ListItemText } from '@mui/material'
+import {
+  Button,
+  CardActions,
+  CardContent,
+  CardHeader,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+} from '@mui/material'
 import { Add } from '@mui/icons-material'
 import features_values from '../../../../../../../../mock/features_values.json'
 import FeatureCardToolbox from '../FeatureCardToolbox'
@@ -24,9 +33,9 @@ function FeatureCard({ feature, featureId }) {
         </List>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton>
-          <Add />
-        </IconButton>
+        <Button color='standard' endIcon={<Add />}>
+          Adicionar
+        </Button>
       </CardActions>
     </CardContainer>
   )

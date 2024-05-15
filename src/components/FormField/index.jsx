@@ -8,6 +8,7 @@ function FormField({
   error,
   field,
   fullWidth = false,
+  helperText,
   keepLabelOnTop = false,
   inputProps,
   InputProps,
@@ -43,7 +44,8 @@ function FormField({
       color='info'
       error={Boolean(error?.[field])}
       fullWidth={fullWidth}
-      helperText={error?.[field] ?? ''}
+      helperText={error?.[field] ?? helperText ?? ''}
+      helperTextColor={error?.[field] ? 'red' : 'black'}
       label={label}
       multiline={multiline}
       onChange={handleOnChange}

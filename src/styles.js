@@ -3,6 +3,7 @@ import { COLORS, NAVBAR_HEIGHT } from './constants/theme'
 import { formatCssProp } from './utils/cssMethods'
 
 export const AppBarContainer = styled(Box)`
+  background-color: ${COLORS.urbanBeige};
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -10,7 +11,7 @@ export const AppBarContainer = styled(Box)`
   height: ${NAVBAR_HEIGHT}px;
 `
 
-export const CenterModalContainer = styled(Box, { shouldForwardProp: prop => !['width'].includes(prop) })`
+export const CenterModalContainer = styled(Box, { shouldForwardProp: prop => !['height', 'width'].includes(prop) })`
   background-color: white;
   left: 50%;
   padding: 24px;
@@ -18,6 +19,19 @@ export const CenterModalContainer = styled(Box, { shouldForwardProp: prop => !['
   top: 50%;
   transform: translate(-50%, -50%);
   width: ${({ width }) => width ?? '400px'};
+  ${({ height }) => height && `height: ${height};`}
+  overflow-x: hidden;
+  overflow-y: auto;
+  ${({ theme }) => `
+    ${theme.breakpoints.down('md')} {
+      height: 100%;
+      width: 100%;
+    }
+  `}
+`
+
+export const Color = styled('span', { shouldForwardProp: prop => !['color'].includes(prop)})`
+  ${({ color }) => color && `color: ${color}`}
 `
 
 export const ContentMainConatiner = styled('div')`
@@ -31,12 +45,21 @@ export const ContentMainConatiner = styled('div')`
   `}
 `
 
-export const FormTextField = styled(TextField)`
+export const FormContainer = styled(Box, {shouldForwardProp: prop => !['height', 'maxHeight'].includes(prop)})`
+  border: 1px solid ${COLORS.inputBorderColor};
+  border-radius: 4px;
+  padding: 8px;
+  overflow: auto;
+  ${({ height }) => height && `height: ${height};`}
+  ${({ maxHeight }) => maxHeight && `max-height: ${maxHeight};`}
+`
+
+export const FormTextField = styled(TextField, { shouldForwardProp: prop => !['helperTextColor'].includes(prop) })`
   & .MuiInputAdornment-root button.MuiButtonBase-root {
     padding: 0;
   }
   & .MuiFormHelperText-root {
-    color: red;
+    color: ${({ helperTextColor }) => helperTextColor};
   }
 `
 export const GridItem = styled(Grid, { shouldForwardProp: prop => !['alignItems', 'direction', 'justifyContent', 'isFlex'].includes(prop) })`

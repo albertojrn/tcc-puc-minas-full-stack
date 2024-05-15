@@ -17,7 +17,7 @@ function StandardLoginForm() {
     const validation = validateFields({ email, password }, CONSTRAINTS)
     setError(validation.error)
     if (validation.passed) {
-      console.log('Passed')
+      
     }
   }
 

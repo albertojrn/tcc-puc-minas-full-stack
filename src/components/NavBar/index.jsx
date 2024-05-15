@@ -6,7 +6,7 @@ import { LogoContainer } from './styles'
 import SearchForm from './components/SearchForm'
 import DesktopIcons from './components/DesktopIcons'
 import MobileIcons from './components/MobileIcons'
-import logo from '../../assets/images/logo_letters.png'
+import logo from '../../assets/images/logo_urban_500x200.jpg'
 import { NAVBAR_HIDE_PART_ON_ROUTES, NAVBAR_HIDE_ON_ROUTES } from '../../constants/routesNotAllowed'
 import { AppBarContainer } from '../../styles'
 
@@ -16,7 +16,7 @@ function NavBar() {
   const showContent = !NAVBAR_HIDE_PART_ON_ROUTES.includes(location.pathname)
 
   return (
-    <AppBarContainer>
+    <AppBarContainer color='primary'>
       <AppBar position='static'>
         <Toolbar>
           {showContent
