@@ -4,7 +4,7 @@ import { Delete, Edit } from '@mui/icons-material'
 
 function FeatureCardToolbox({ featureValueId, name }) {
   return (
-    <Stack direction='row' edge='end' spacing={0}>
+    <Stack direction='row' edge='end' spacing={1}>
       <IconButton size='small'>
         <Edit />
       </IconButton>

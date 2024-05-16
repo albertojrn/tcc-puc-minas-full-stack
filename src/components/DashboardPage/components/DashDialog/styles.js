@@ -1,7 +1,7 @@
 import { Dialog, styled } from '@mui/material'
 
 export const DialogContainer = styled(Dialog)`
-  & form { 
+  & form {
     width: 60%;
     max-width: unset;
   ${({ theme }) => `

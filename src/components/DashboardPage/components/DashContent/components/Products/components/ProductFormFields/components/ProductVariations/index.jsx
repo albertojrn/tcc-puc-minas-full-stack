@@ -5,9 +5,10 @@ import { v4 } from 'uuid'
 import { FormContainer } from '../../../../../../../../../../styles'
 import VariationItem from '../VariationItem'
 import { useDashboardContext } from '../../../../../../../../../../contexts/DashboardContext'
+import AddProductVariation from '../../../AddProductVariation'
 
 function ProductVariations({ setVariations, variations }) {
-  const { setDashboardData } = useDashboardContext()
+  const { setDashboardParams } = useDashboardContext()
 
   return (
     <FormContainer>
@@ -34,7 +35,12 @@ function ProductVariations({ setVariations, variations }) {
         <Button
           color='standard'
           endIcon={<Add />}
-          onClick={() => setDashboardData({ dialogPage: 0, openDialog: true, dialogData: { setVariations, variations } })}
+          onClick={
+            () => setDashboardParams({
+              dialogChild: <AddProductVariation setVariations={setVariations} variations={variations} />,
+              openDialog: true,
+            })
+          }
         >
           Adicionar
         </Button>

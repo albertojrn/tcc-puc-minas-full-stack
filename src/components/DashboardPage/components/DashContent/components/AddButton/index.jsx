@@ -1,12 +1,24 @@
 import React from 'react'
 import { Button } from '@mui/material'
 import { useDashboardContext } from '../../../../../../contexts/DashboardContext'
+import ProductRegistry from '../Products/components/ProductRegistry'
 import { AddButtonContainer } from './styles'
+import AddFeature from '../Features/components/AddFeature'
 
-function AddButton({ page }) {
-  const { setDashboardData } = useDashboardContext()
+function AddButton({ page, attr = {} }) {
+  const { setDashboardParams } = useDashboardContext()
+
   function handleOnAddClick() {
-    setDashboardData({ openModal: true, modalPage: page })
+    const data = {}
+    if (page === 'product') {
+      data.modalChild = <ProductRegistry {...attr} />
+      data.openModal = true
+    }
+    if (page === 'features') {
+      data.dialogChild = <AddFeature {...attr} />
+      data.openDialog = true
+    }
+    setDashboardParams(data)
   }
 
   return (

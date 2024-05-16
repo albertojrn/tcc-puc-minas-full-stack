@@ -1,20 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDashboardContext } from '../../../../contexts/DashboardContext'
-import NewProductVariation from './components/NewProductVariation'
 import { DialogContainer } from './styles'
 
 function DashDialog() {
-  const { openDialog, dialogPage, setDashboardData } = useDashboardContext()
+  const { dialogChild, openDialog, setDashboardParams } = useDashboardContext()
+
+  useEffect(() => {
+    if (!openDialog && dialogChild) setDashboardParams({ dialogChild: null })
+  }, [openDialog])
 
   return (
     <DialogContainer
       open={openDialog}
-      onClose={() => setDashboardData({ openDialog: false })}
+      onClose={() => setDashboardParams({ openDialog: false })}
       PaperProps={{
         component: 'form',
       }}
     >
-      {dialogPage === 0 && <NewProductVariation />}
+      {dialogChild}
     </DialogContainer>
   )
 }

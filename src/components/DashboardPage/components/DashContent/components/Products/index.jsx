@@ -5,7 +5,7 @@ import AddButton from '../AddButton'
 
 function Products() {
   return (
-    <MainGridContainer container drawBorder spacing={2}>
+    <MainGridContainer container spacing={2}>
       <GridItem item xs={12}>
         <Stack direction='row' spacing={1}>
           <Typography component='' variant='h5'>

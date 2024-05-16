@@ -12,14 +12,14 @@ export const COLORS = {
 const CUSTOM_THEME = {
   palette: {
     primary: {
-      main: COLORS.urbanBeige
-    },
-    secondary: {
-      main: COLORS.urbanBlack
+      main: COLORS.urbanBeige,
+      light: '#42a5f5',
+      dark: '#1565c0',
+      contrastText: COLORS.urbanBlack,
     },
     standard: {
       main: '#000000',
-    }
+    },
   }
 }
 

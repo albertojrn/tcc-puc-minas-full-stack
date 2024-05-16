@@ -1,7 +1,6 @@
 export const DASHBOARD_INIT_VALUES = {
-  dialogData: {},
-  dialogPage: '',
-  modalPage: '',
+  dialogChild: null,
+  modalChild: null,
   openDialog: false,
   openModal: false,
 }

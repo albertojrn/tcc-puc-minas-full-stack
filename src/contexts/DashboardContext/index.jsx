@@ -3,7 +3,7 @@ import { DASHBOARD_INIT_VALUES } from './constants/params'
 
 const context = createContext({
   ...DASHBOARD_INIT_VALUES,
-  setDashboardData: () => {}
+  setDashboardParams: () => {}
 })
 
 const useDashboardContext = () => useContext(context)
@@ -13,7 +13,7 @@ const DashboardContextProvider = ({ children }) => {
 
   const value = useMemo(() => ({
     ...data,
-    setDashboardData: (newData) => setData(prev => ({ ...prev, ...newData })),
+    setDashboardParams: (newData) => setData(prev => ({ ...prev, ...newData })),
   }), [data])
 
   return (

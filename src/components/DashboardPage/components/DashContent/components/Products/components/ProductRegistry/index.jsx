@@ -1,7 +1,7 @@
 import React from 'react'
-import { GridItem, MainGridContainer } from '../../../../../../styles'
-import ProductImage from './components/ProductImage'
-import ProductFormFields from './components/ProductFormFields'
+import { GridItem, MainGridContainer } from '../../../../../../../../styles'
+import ProductImage from '../ProductImage'
+import ProductFormFields from '../ProductFormFields'
 
 function ProductRegistry() {
   return (

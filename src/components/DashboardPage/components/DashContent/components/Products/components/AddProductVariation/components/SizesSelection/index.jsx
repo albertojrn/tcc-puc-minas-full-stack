@@ -1,10 +1,10 @@
 import React from 'react'
 import { Button, Divider, IconButton } from '@mui/material'
 import { Add, Delete } from '@mui/icons-material'
-import { GridItem, MainGridContainer } from '../../../../../../../../styles'
-import SelectFeatureField from '../../../../../../../SelectFeatureField'
-import FormField from '../../../../../../../FormField'
-import CurrencyField from '../../../../../../../CurrencyField'
+import { GridItem, MainGridContainer } from '../../../../../../../../../../styles'
+import SelectFeatureField from '../../../../../../../../../SelectFeatureField'
+import FormField from '../../../../../../../../../FormField'
+import CurrencyField from '../../../../../../../../../CurrencyField'
 import { SIZE_INIT } from '../../constants/params'
 
 function SizesSelection({ error, sizeOptions, sizes, setSizes }) {

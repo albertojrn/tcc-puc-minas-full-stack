@@ -16,7 +16,7 @@ export const DashboardContentContainer = styled(Box)`
   ${({ theme }) => `
     ${theme.breakpoints.up('sm')} {
       margin-left: ${DRAWER_WIDTH}px;
-      width: calc(100% - ${DRAWER_WIDTH}px - ${CONTAINER_PADDING}px - ${CONTAINER_PADDING}px);
+      /* width: calc(100vw - ${DRAWER_WIDTH}px - ${CONTAINER_PADDING}px - ${CONTAINER_PADDING}px); */
     }
   `}
 `

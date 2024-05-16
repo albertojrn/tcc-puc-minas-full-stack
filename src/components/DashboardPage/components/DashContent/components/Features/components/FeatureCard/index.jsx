@@ -7,19 +7,22 @@ import {
   List,
   ListItem,
   ListItemText,
-  Stack,
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import features_values from '../../../../../../../../mock/features_values.json'
 import FeatureCardToolbox from '../FeatureCardToolbox'
 import { CardContainer } from './styles'
+import EditRemoveFeatureButtons from '../EditRemoveFeatureButtons'
 
-function FeatureCard({ feature, featureId }) {
-  const values = features_values.filter(value => value.feature_id === featureId)
+function FeatureCard({ feature }) {
+  const values = features_values.filter(value => value.feature_id === feature.id)
 
   return (
     <CardContainer>
-      <CardHeader title={feature} />
+      <CardHeader
+        action={<EditRemoveFeatureButtons feature={feature} />}
+        title={feature.name}
+      />
       <CardContent>
         <List dense>
           {values.map(value => (

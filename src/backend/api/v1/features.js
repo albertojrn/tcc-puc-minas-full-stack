@@ -2,13 +2,14 @@ const express = require('express')
 const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
+const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
 
 const router = express.Router()
 
 router.get('/', (req, res, next) => {
   try {
     db.query('SELECT * FROM features', (err, result) => {
-      if (err) errorHandler(err, req, res, next)
+      if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, result)
     })
   }
@@ -21,7 +22,7 @@ router.get('/:id', (req, res, next) => {
   try {
     const id = req.params.id
     db.query('SELECT * FROM features WHERE id = ?', id, (err, result) => {
-      if (err) errorHandler(err, req, res, next)
+      if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, result)
     })
   }
@@ -36,8 +37,8 @@ router.post('/', (req, res, next) => {
     const is_multiple = req.body.is_multiple
 
     db.query('INSERT INTO features (name, is_multiple) VALUES (?,?)', [name, is_multiple], (err, result) => {
-      if (err) errorHandler(err, req, res, next)
-      responseHandler(req, res, { ...req.body, resourceUrl: `${req.baseUrl}/${result.insertId}` }, 201)
+      if (err) return sqlErrorHandler(err, req, res, next)
+      responseHandler(req, res, { ...req.body, id: result.insertId, resourceUrl: `${req.baseUrl}/${result.insertId}` }, 201)
     })
   }
   catch (err) {
@@ -60,7 +61,7 @@ router.put('/:id', (req, res, next) => {
     else if (is_multiple) return errorHandler({ status: 400, message: 'Invalid is_multiple prop.' }, req, res, next)
     const setStr = propsArray.join(', ')
     db.query(`UPDATE features SET ${setStr} WHERE id = ?`, id, (err) => {
-      if (err) errorHandler(err, req, res, next)
+      if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, req.body, 200)
     })
   }
@@ -73,7 +74,7 @@ router.delete('/:id', (req, res, next) => {
   try {
     const id = req.params.id
     db.query('DELETE FROM features WHERE id= ?', id, (err) => {
-      if (err) errorHandler(err, req, res, next)
+      if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, undefined, 204)
     })
   }
