@@ -5,16 +5,21 @@ import { useDashboardContext } from '../../../../contexts/DashboardContext'
 import TopToolbar from './components/TopToolbar'
 
 function DashModal() {
-  const { modalChild, openModal, setDashboardParams } = useDashboardContext()
+  const { blockModal, modalChild, openModal, setDashboardParams } = useDashboardContext()
 
   useEffect(() => {
-    if (!openModal && modalChild) setDashboardParams({ modalChild: null })
+    if (!openModal) {
+      const newParams = {}
+      if (blockModal) newParams.blockModal = false
+      if (modalChild) newParams.modalChild = null
+      if (Object.keys(newParams).length) setDashboardParams(newParams)
+    }
   }, [openModal])
 
   return (
     <Modal
       open={openModal}
-      onClose={() => setDashboardParams({ openModal: false })}
+      onClose={() => !blockModal && setDashboardParams({ openModal: false })}
     >
       <CenterModalContainer width='70%' height='80%'>
         <TopToolbar />

@@ -53,13 +53,14 @@ function SizesSelection({ error, sizeOptions, sizes, setSizes }) {
               label='Qtd'
               required
               setField={(value) => handleChange('quantity', value, i)}
-              value={sizes[i].quantity}
               type='number'
+              value={sizes[i].quantity}
             />
           </GridItem>
           <GridItem item xs={10} sm={3}>
             <FormField
               InputProps={{
+                name: 'currency_field',
                 inputComponent: CurrencyField,
               }}
               field='price'

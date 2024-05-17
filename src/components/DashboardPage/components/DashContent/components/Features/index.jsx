@@ -3,59 +3,55 @@ import { Divider, Stack, Typography } from '@mui/material'
 import { GridItem, MainGridContainer } from '../../../../../../styles'
 import FeatureCard from './components/FeatureCard'
 import AddButton from '../AddButton'
-import { readFeatures } from '../../../../../../services/api/features'
 import { useLoadingContext } from '../../../../../../contexts/LoadingContext'
 import { useDashboardDataContext } from '../../../../../../contexts/DashboardDataContext'
 import PleaseTryAgain from '../../../../../PleaseTryAgain'
+import { loadFeatures } from '../../../../../../utils/features'
+import { loadFeatureValues } from '../../../../../../utils/featureValues'
 
 function Features() {
   const [errorLoadingFeatures, setErrorLoadingFeatures] = useState('')
+  const [errorLoadingFeatureVals, setErrorLoadingFeatureVals] = useState('')
   const { setLoading } = useLoadingContext()
-  const { features, setDashboardData } = useDashboardDataContext()
+  const { features, featureValues, setDashboardData } = useDashboardDataContext()
 
-  async function loadFeatures() {
-    if (!features.length) {
-      setLoading({ show: true })
-      const res = await readFeatures()
-      if (res.status === 200 && res.data.length) {
-        setDashboardData({ features: res.data })
-        if (errorLoadingFeatures) setErrorLoadingFeatures('')
-      }
-      else if (!errorLoadingFeatures) setErrorLoadingFeatures('Tivemos um problema.')
-      setLoading({ show: false })
-    }
+  function fetchParams() {
+    loadFeatures(features, setLoading, setDashboardData, setErrorLoadingFeatures)
+      .then(loadFeatureValues(featureValues, setLoading, setDashboardData, setErrorLoadingFeatureVals))
   }
 
   useEffect(() => {
-    loadFeatures()
+    fetchParams()
   }, [])
 
   return (
     <MainGridContainer container spacing={2}>
-      <GridItem item xs={12}>
-        <Stack direction='row' spacing={1}>
-          <Typography component='div' variant='h5'>
-            Características
-            &nbsp;
-          </Typography>
-          <AddButton page='features' />
-        </Stack>
-      </GridItem>
-      <GridItem item xs={12}>
-        <Divider />
-      </GridItem>
-      {errorLoadingFeatures
+      {(errorLoadingFeatures || errorLoadingFeatureVals)
         ? (
           <GridItem item xs={12}>
-            <PleaseTryAgain text={errorLoadingFeatures} onTryAgain={loadFeatures} />
+            <PleaseTryAgain text={errorLoadingFeatures || errorLoadingFeatureVals} onTryAgain={loadFeatures} />
           </GridItem>
         )
         : (
-          features.map(feature => (
-            <GridItem item xs={12} md={4} key={feature.id}>
-              <FeatureCard feature={feature} />
+          <>
+            <GridItem item xs={12}>
+              <Stack direction='row' spacing={1}>
+                <Typography component='div' variant='h5'>
+                  Características
+                  &nbsp;
+                </Typography>
+                <AddButton page='features' />
+              </Stack>
             </GridItem>
-          ))
+            <GridItem item xs={12}>
+              <Divider />
+            </GridItem>
+            {features.map(feature => (
+              <GridItem item xs={12} sm={4} md={3} key={feature.id}>
+                <FeatureCard feature={feature} />
+              </GridItem>
+            ))}
+          </>
         )}
     </MainGridContainer>
   )

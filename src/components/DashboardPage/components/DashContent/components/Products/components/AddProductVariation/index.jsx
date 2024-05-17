@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { Button, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
 import { useDashboardContext } from '../../../../../../../../contexts/DashboardContext'
-import featuresValues from '../../../../../../../../mock/features_values.json'
-import features from '../../../../../../../../mock/features.json'
 import SelectFeatureField from '../../../../../../../SelectFeatureField'
 import SizesSelection from './components/SizesSelection'
 import { SIZE_INIT } from './constants/params'
 import { validateFields } from '../../../../../../../../utils/formMethods'
 import { CONSTRAINTS } from './constants/validationParams'
+import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
 
 function AddProductVariation({ setVariations, variations }) {
   const [error, setError] = useState({})
@@ -15,10 +14,11 @@ function AddProductVariation({ setVariations, variations }) {
   const [secondaryColor, setSecondaryColor] = useState('')
   const [sizes, setSizes] = useState([{ ...SIZE_INIT, id: 0 }])
   const { setDashboardParams } = useDashboardContext()
+  const { features, featureValues } = useDashboardDataContext()
   const colorId = features.find(feature => feature.name === 'cor')?.id
   const sizeId = features.find(feature => feature.name === 'tamanho')?.id
-  const colorOptions = featuresValues.filter(val => val.feature_id === colorId)
-  const sizeOptions = featuresValues.filter(val => val.feature_id === sizeId)
+  const colorOptions = featureValues[colorId] ?? []
+  const sizeOptions = featureValues[sizeId] ?? []
 
   function handleAddVariation() {
     const validation = validateFields({ primaryColor, sizes }, CONSTRAINTS)
@@ -73,7 +73,7 @@ function AddProductVariation({ setVariations, variations }) {
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button color='standard' onClick={() => setDashboardParams({ openDialog: false })}>Cancel</Button>
+        <Button color='standard' onClick={() => setDashboardParams({ openDialog: false })}>Cancelar</Button>
         <Button color='standard' onClick={handleAddVariation}>Ok</Button>
       </DialogActions>
     </>

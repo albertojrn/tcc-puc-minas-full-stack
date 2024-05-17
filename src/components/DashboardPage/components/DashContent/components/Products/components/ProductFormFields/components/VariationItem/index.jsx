@@ -1,14 +1,14 @@
 import { ListItem, ListItemText, Typography } from '@mui/material'
 import React from 'react'
 import ProductVariationsToolbox from '../ProductVariationsToolbox'
-import features from '../../../../../../../../../../mock/features.json'
-import features_values from '../../../../../../../../../../mock/features_values.json'
+import { useDashboardDataContext } from '../../../../../../../../../../contexts/DashboardDataContext'
 
 function VariationItem({ index, setVariations, variation }) {
+  const { features, featureValues } = useDashboardDataContext()
   const colorId = features.find(item => item.name === 'cor').id
-  const colorsValues = features_values.filter(item => item.feature_id === colorId)
+  const colorsValues = featureValues[colorId].filter(item => item.feature_id === colorId)
   const sizesId = features.find(item => item.name === 'tamanho').id
-  const sizesValues = features_values.filter(item => item.feature_id === sizesId)
+  const sizesValues = featureValues[sizesId].filter(item => item.feature_id === sizesId)
 
   return (
     <ListItem
@@ -19,6 +19,7 @@ function VariationItem({ index, setVariations, variation }) {
         secondary={(
           <>
             <Typography
+              component='div'
               variant='body2'
             >
               Cor secundária:
@@ -26,12 +27,14 @@ function VariationItem({ index, setVariations, variation }) {
               {`${variation.secondaryColor ? colorsValues.find(c => c.id === variation.secondaryColor).name : '-'}`}
             </Typography>
             <Typography
+              component='div'
               variant='body2'
             >
               Tamanhos:
             </Typography>
             {variation.sizes.map(size => (
               <Typography
+                component='div'
                 key={size.id}
                 variant='body2'
               >

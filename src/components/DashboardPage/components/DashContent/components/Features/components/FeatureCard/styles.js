@@ -16,4 +16,11 @@ export const CardContainer = styled(Card)`
   & .MuiCardActions-root {
     justify-content: end;
   }
+  & .MuiListItemSecondaryAction-root {
+    right: 0;
+    & svg {
+      height: 0.8em;
+      width: 0.8em;
+    }
+  }
 `

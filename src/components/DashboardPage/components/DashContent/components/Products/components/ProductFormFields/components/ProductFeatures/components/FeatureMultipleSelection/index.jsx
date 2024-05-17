@@ -1,10 +1,11 @@
 import React from 'react'
 import { Checkbox, FormControl, FormControlLabel, FormLabel } from '@mui/material'
-import featureValues from '../../../../../../../../../../../../mock/features_values.json'
 import { CheckboxesContainer } from './styles'
+import { useDashboardDataContext } from '../../../../../../../../../../../../contexts/DashboardDataContext'
 
 function FeatureMultipleSelection({ feature, selectedFeatures, setSelectedFeatures }) {
-  const options = featureValues.filter(val => val.feature_id === feature.id)
+  const { featureValues } = useDashboardDataContext()
+  const options = featureValues[feature.id]
   const valuesSelected = selectedFeatures.find(f => f.name === feature.name)?.values ?? []
 
   function handleChange(e) {
@@ -15,7 +16,7 @@ function FeatureMultipleSelection({ feature, selectedFeatures, setSelectedFeatur
     <FormControl fullWidth>
       <FormLabel component='legend'>{feature.name}</FormLabel>
       <CheckboxesContainer>
-        {options.map(option => (
+        {options?.map(option => (
           <FormControlLabel
             key={option.id}
             control={(

@@ -22,7 +22,7 @@ const CurrencyField = React.forwardRef(
         decimalScale={2}
         decimalSeparator=','
         fixedDecimalScale
-        prefix="R$ "
+        prefix='R$ '
       />
     )
   },

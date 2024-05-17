@@ -9,26 +9,41 @@ import {
   ListItemText,
 } from '@mui/material'
 import { Add } from '@mui/icons-material'
-import features_values from '../../../../../../../../mock/features_values.json'
 import FeatureCardToolbox from '../FeatureCardToolbox'
 import { CardContainer } from './styles'
 import EditRemoveFeatureButtons from '../EditRemoveFeatureButtons'
+import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
+import { SPECIAL_FEATURES } from '../../../../../../constants/params'
+import AddFeatureValues from '../AddFeatureValues'
+import { useDashboardContext } from '../../../../../../../../contexts/DashboardContext'
 
 function FeatureCard({ feature }) {
-  const values = features_values.filter(value => value.feature_id === feature.id)
+  const { featureValues } = useDashboardDataContext()
+  const { setDashboardParams } = useDashboardContext()
+
+  function onAddFeatureValueClick() {
+    setDashboardParams({
+      dialogChild: <AddFeatureValues feature={feature} />,
+      openDialog: true,
+    })
+  }
 
   return (
     <CardContainer>
       <CardHeader
-        action={<EditRemoveFeatureButtons feature={feature} />}
+        action={
+          SPECIAL_FEATURES.includes(feature.name)
+            ? null
+            : <EditRemoveFeatureButtons feature={feature} />
+        }
         title={feature.name}
       />
       <CardContent>
         <List dense>
-          {values.map(value => (
+          {featureValues[feature.id]?.map(value => (
             <ListItem
               key={value.id}
-              secondaryAction={<FeatureCardToolbox featureValueId={value.id} name={value.name} />}
+              secondaryAction={<FeatureCardToolbox featureValue={value} />}
             >
               <ListItemText primary={value.name} />
             </ListItem>
@@ -36,7 +51,7 @@ function FeatureCard({ feature }) {
         </List>
       </CardContent>
       <CardActions disableSpacing>
-        <Button color='standard' endIcon={<Add />}>
+        <Button color='standard' endIcon={<Add />} onClick={onAddFeatureValueClick}>
           Adicionar
         </Button>
       </CardActions>

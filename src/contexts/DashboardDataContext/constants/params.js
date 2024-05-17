@@ -1,6 +1,6 @@
 export const INIT_VALUES = {
   features: [],
-  featuresVals: [],
+  featureValues: {},
   products: [],
   users: [],
 }

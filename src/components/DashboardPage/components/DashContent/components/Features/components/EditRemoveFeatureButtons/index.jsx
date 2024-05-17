@@ -1,19 +1,23 @@
-import React from 'react'
-import { IconButton, Stack } from '@mui/material'
-import { Delete, Edit } from '@mui/icons-material'
+import React, { useState } from 'react'
+import { IconButton, Menu, MenuItem } from '@mui/material'
+import { MoreVert } from '@mui/icons-material'
 import { useLoadingContext } from '../../../../../../../../contexts/LoadingContext'
 import { deleteFeatures } from '../../../../../../../../services/api/features'
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
 import { useDashboardContext } from '../../../../../../../../contexts/DashboardContext'
 import DialogOk from '../../../../../../../DialogOk'
+import DialogYesNo from '../../../../../../../DialogYesNo'
 import AddFeature from '../AddFeature'
 
 function EditRemoveFeatureButtons({ feature }) {
+  const [anchorMenu, setAnchorMenu] = useState(null)
   const { setLoading } = useLoadingContext()
   const { features, setDashboardData } = useDashboardDataContext()
   const { setDashboardParams } = useDashboardContext()
+  const openMenu = Boolean(anchorMenu)
 
-  function handleEditIcon() {
+  function handleEditFeature() {
+    setAnchorMenu(null)
     setDashboardParams({
       dialogChild: (
         <AddFeature feature={feature} />
@@ -43,20 +47,43 @@ function EditRemoveFeatureButtons({ feature }) {
     }
   }
 
+  function confirmDeleteFeature() {
+    setDashboardParams({ openDialog: false })
+    handleDeleteFeature()
+  }
+
+  function openDeleteDialog() {
+    setAnchorMenu(null)
+    setDashboardParams({
+      dialogChild: (
+        <DialogYesNo
+          onYes={confirmDeleteFeature}
+          text={`Tem certeza de que deseja apagar a característica '${feature.name}'?`}
+          title='PRECISAMOS DA SUA CONFIRMAÇÃO'
+        />
+      ),
+      openDialog: true,
+    })
+  }
+
   return (
-    <Stack
-      alignItems='center'
-      direction='row'
-      edge='end'
-      spacing={1}
-    >
-      <IconButton onClick={handleEditIcon}>
-        <Edit />
+    <>
+      <IconButton onClick={(e) => setAnchorMenu(e.currentTarget)}>
+        <MoreVert />
       </IconButton>
-      <IconButton onClick={handleDeleteFeature}>
-        <Delete />
-      </IconButton>
-    </Stack>
+      <Menu
+        anchorEl={anchorMenu}
+        open={openMenu}
+        onClose={() => setAnchorMenu(null)}
+      >
+        <MenuItem onClick={handleEditFeature}>
+          Editar
+        </MenuItem>
+        <MenuItem onClick={openDeleteDialog}>
+          Apagar
+        </MenuItem>
+      </Menu>
+    </>
   )
 }
 

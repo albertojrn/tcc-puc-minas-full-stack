@@ -13,6 +13,7 @@ function AddButton({ page, attr = {} }) {
     if (page === 'product') {
       data.modalChild = <ProductRegistry {...attr} />
       data.openModal = true
+      data.blockModal = true
     }
     if (page === 'features') {
       data.dialogChild = <AddFeature {...attr} />

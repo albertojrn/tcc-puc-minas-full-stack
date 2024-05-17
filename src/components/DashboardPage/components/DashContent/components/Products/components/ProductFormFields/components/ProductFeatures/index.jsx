@@ -1,12 +1,13 @@
 import React from 'react'
 import { Divider, Typography } from '@mui/material'
-import features from '../../../../../../../../../../mock/features.json'
 import { FormContainer } from '../../../../../../../../../../styles'
 import FeatureMultipleSelection from './components/FeatureMultipleSelection'
 import FeatureSingleSelection from './components/FeatureSingleSelection'
 import { SPECIAL_FEATURES } from '../../../../../../../../constants/params'
+import { useDashboardDataContext } from '../../../../../../../../../../contexts/DashboardDataContext'
 
 function ProductFeatures({ selectedFeatures, setSelectedFeatures }) {
+  const { features } = useDashboardDataContext()
   const featuresToShow = features.filter(feature => !SPECIAL_FEATURES.includes(feature.name))
   return (
     <FormContainer maxHeight='350px'>

@@ -1,9 +1,10 @@
 import React from 'react'
 import { FormControl, FormLabel, NativeSelect } from '@mui/material'
-import featureValues from '../../../../../../../../../../../../mock/features_values.json'
+import { useDashboardDataContext } from '../../../../../../../../../../../../contexts/DashboardDataContext'
 
 function FeatureSingleSelection({ feature, selectedFeatures, setSelectedFeatures }) {
-  const options = featureValues.filter(val => val.feature_id === feature.id)
+  const { featureValues } = useDashboardDataContext()
+  const options = featureValues[feature.id]
 
   return (
     <FormControl fullWidth>
@@ -13,7 +14,7 @@ function FeatureSingleSelection({ feature, selectedFeatures, setSelectedFeatures
         size='small'
       >
         <option value=''>Selcione...</option>
-        {options.map(item => (
+        {options?.map(item => (
           <option key={item.id} value={item.id}>{item.name}</option>
         ))}
       </NativeSelect>

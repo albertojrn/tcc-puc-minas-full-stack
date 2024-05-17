@@ -55,10 +55,8 @@ router.put('/:id', (req, res, next) => {
       return errorHandler({ status: 400, message: 'Bad request.' }, req, res, next)
     }
     const propsArray = []
-    if (typeof name === 'string') propsArray.push(`name = '${name}'`)
-    else if (name) return errorHandler({ status: 400, message: 'Invalid name prop.' }, req, res, next)
-    if (typeof is_multiple === 'boolean') propsArray.push(`is_multiple = ${is_multiple}`)
-    else if (is_multiple) return errorHandler({ status: 400, message: 'Invalid is_multiple prop.' }, req, res, next)
+    if (name) propsArray.push(`name = '${name}'`)
+    if (is_multiple) propsArray.push(`is_multiple = ${is_multiple}`)
     const setStr = propsArray.join(', ')
     db.query(`UPDATE features SET ${setStr} WHERE id = ?`, id, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
