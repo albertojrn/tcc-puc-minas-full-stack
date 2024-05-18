@@ -6,9 +6,11 @@ import { FormContainer } from '../../../../../../../../../../styles'
 import VariationItem from '../VariationItem'
 import { useDashboardContext } from '../../../../../../../../../../contexts/DashboardContext'
 import AddProductVariation from '../../../AddProductVariation'
+import groupVariations from './utils/groupVariations'
 
 function ProductVariations({ setVariations, variations }) {
   const { setDashboardParams } = useDashboardContext()
+  const groupedVariations = groupVariations(variations)
 
   return (
     <FormContainer>
@@ -20,12 +22,11 @@ function ProductVariations({ setVariations, variations }) {
       </Typography>
       <List>
         <Divider />
-        {variations.map((variation, i) => (
+        {groupedVariations.map(groupedVariation => (
           <React.Fragment key={v4()}>
             <VariationItem
-              index={i}
               setVariations={setVariations}
-              variation={variation}
+              groupedVariation={groupedVariation}
             />
             <Divider />
           </React.Fragment>

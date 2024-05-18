@@ -11,6 +11,7 @@ function DashDialog() {
 
   return (
     <DialogContainer
+      disableRestoreFocus
       open={openDialog}
       onClose={() => setDashboardParams({ openDialog: false })}
       PaperProps={{

@@ -2,9 +2,14 @@ import React from 'react'
 import { IconButton, Stack } from '@mui/material'
 import { Delete } from '@mui/icons-material'
 
-function ProductVariationsToolbox({ index, setVariations }) {
+function ProductVariationsToolbox({ groupedVariation, setVariations }) {
   function deleteVariation() {
-    setVariations(prev => prev.filter((_, i) => i !== index))
+    setVariations(prev => prev.filter(
+      variation => (
+        !(variation.primaryColor === groupedVariation.primaryColor
+        && variation.secondaryColor === groupedVariation.secondaryColor)
+      )
+    ))
   }
 
   return (

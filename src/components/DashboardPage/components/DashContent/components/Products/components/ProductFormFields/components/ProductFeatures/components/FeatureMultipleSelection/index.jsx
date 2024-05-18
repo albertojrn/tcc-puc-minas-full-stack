@@ -3,13 +3,24 @@ import { Checkbox, FormControl, FormControlLabel, FormLabel } from '@mui/materia
 import { CheckboxesContainer } from './styles'
 import { useDashboardDataContext } from '../../../../../../../../../../../../contexts/DashboardDataContext'
 
-function FeatureMultipleSelection({ feature, selectedFeatures, setSelectedFeatures }) {
+function FeatureMultipleSelection({ feature, groupedFeatures, setSelectedFeatures }) {
   const { featureValues } = useDashboardDataContext()
   const options = featureValues[feature.id]
-  const valuesSelected = selectedFeatures.find(f => f.name === feature.name)?.values ?? []
+  const valuesSelected = groupedFeatures.find(item => item.featureId === feature.id)?.featureValuesIds ?? []
 
-  function handleChange(e) {
-
+  function handleChange(e, featureValueId) {
+    const checked = e.target.checked
+    setSelectedFeatures(prev => {
+      const newSelectedFeatures = structuredClone(prev)
+      if (!checked) {
+        const lastValue = newSelectedFeatures.find(item => item === featureValueId)
+        if (lastValue) {
+          newSelectedFeatures.splice(newSelectedFeatures.indexOf(lastValue), 1)
+        }
+      }
+      else if (checked) newSelectedFeatures.push(featureValueId)
+      return newSelectedFeatures
+    })
   }
 
   return (
@@ -22,7 +33,7 @@ function FeatureMultipleSelection({ feature, selectedFeatures, setSelectedFeatur
             control={(
               <Checkbox
                 checked={valuesSelected.includes(option.id)}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, option.id)}
                 size='small'
               />
             )}

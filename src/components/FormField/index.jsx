@@ -5,6 +5,7 @@ import { handleOnUserTyping } from '../../utils/formMethods'
 
 function FormField({
   autoComplete,
+  autoFocus = false,
   error,
   field,
   fullWidth = false,
@@ -34,6 +35,7 @@ function FormField({
     let newValue = e.target.value
     if (onlyNumbers) newValue = newValue.replace(/[^0-9]/g, '')
     if (pattern) newValue = formatStringByPattern(pattern, newValue)
+    if (type === 'number') newValue = Number(newValue)
     handleOnUserTyping(field, setField, newValue, setError)
   }
   return (
@@ -41,6 +43,7 @@ function FormField({
       InputLabelProps={keepLabelOnTop ? { shrink: true } : {}}
       {...otherProps}
       autoComplete={autoComplete}
+      autoFocus={autoFocus}
       color='info'
       error={Boolean(error?.[field])}
       fullWidth={fullWidth}

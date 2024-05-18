@@ -14,6 +14,7 @@ const db = mysql.createConnection({
   user: REACT_APP_SQL_USER,
   password: REACT_APP_SQL_PASS,
   database: REACT_APP_SQL_DATABASE,
+  multipleStatements: true,
 })
 
 module.exports = db

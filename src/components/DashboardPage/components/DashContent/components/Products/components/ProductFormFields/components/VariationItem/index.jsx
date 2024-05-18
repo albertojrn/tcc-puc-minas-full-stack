@@ -3,7 +3,7 @@ import React from 'react'
 import ProductVariationsToolbox from '../ProductVariationsToolbox'
 import { useDashboardDataContext } from '../../../../../../../../../../contexts/DashboardDataContext'
 
-function VariationItem({ index, setVariations, variation }) {
+function VariationItem({ setVariations, groupedVariation }) {
   const { features, featureValues } = useDashboardDataContext()
   const colorId = features.find(item => item.name === 'cor').id
   const colorsValues = featureValues[colorId].filter(item => item.feature_id === colorId)
@@ -12,10 +12,10 @@ function VariationItem({ index, setVariations, variation }) {
 
   return (
     <ListItem
-      secondaryAction={<ProductVariationsToolbox index={index} setVariations={setVariations} />}
+      secondaryAction={<ProductVariationsToolbox groupedVariation={groupedVariation} setVariations={setVariations} />}
     >
       <ListItemText
-        primary={`Cor primária: ${colorsValues.find(c => c.id === variation.primaryColor).name}`}
+        primary={`Cor primária: ${colorsValues.find(c => c.id === groupedVariation.primaryColor).name}`}
         secondary={(
           <>
             <Typography
@@ -24,7 +24,7 @@ function VariationItem({ index, setVariations, variation }) {
             >
               Cor secundária:
               &nbsp;
-              {`${variation.secondaryColor ? colorsValues.find(c => c.id === variation.secondaryColor).name : '-'}`}
+              {`${groupedVariation.secondaryColor ? colorsValues.find(c => c.id === groupedVariation.secondaryColor).name : '-'}`}
             </Typography>
             <Typography
               component='div'
@@ -32,7 +32,7 @@ function VariationItem({ index, setVariations, variation }) {
             >
               Tamanhos:
             </Typography>
-            {variation.sizes.map(size => (
+            {groupedVariation.sizes.map(size => (
               <Typography
                 component='div'
                 key={size.id}

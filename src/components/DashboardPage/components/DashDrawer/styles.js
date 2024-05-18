@@ -8,7 +8,7 @@ export const DrawerContainer = styled(Box)`
       flex-shrink: 0;
       width: ${DRAWER_WIDTH}px;
       & .MuiDrawer-paper {
-        margin-top: ${NAVBAR_HEIGHT}px;
+        margin-top: ${NAVBAR_HEIGHT + 12}px;
       }
     }
   `}

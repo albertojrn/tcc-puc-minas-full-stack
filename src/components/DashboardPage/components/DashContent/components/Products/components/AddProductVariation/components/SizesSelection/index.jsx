@@ -12,7 +12,8 @@ function SizesSelection({ error, sizeOptions, sizes, setSizes }) {
   function handleChange(prop, value, index) {
     setSizes(prev => {
       const newSizes = structuredClone(prev)
-      newSizes[index][prop] = value
+      const val = value ? Number(value) : value
+      newSizes[index][prop] = val
       return newSizes
     })
   }

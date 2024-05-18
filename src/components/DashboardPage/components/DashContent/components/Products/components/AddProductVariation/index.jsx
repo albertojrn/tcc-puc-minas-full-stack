@@ -31,9 +31,16 @@ function AddProductVariation({ setVariations, variations }) {
     }
     setError(validationError)
     if (!Object.keys(validationError).length) {
-      const newVariation = { primaryColor, secondaryColor, sizes }
-      const variationExists = variations.filter(variation => variation.primaryColor === primaryColor && variation.secondaryColor === secondaryColor).length
-      if (!variationExists) setVariations(prev => [...prev, newVariation])
+      const newVariations = []
+      for (const size of sizes) {
+        const exists = variations.filter(
+          variation => variation.primaryColor === primaryColor
+          && variation.secondaryColor === secondaryColor
+          && variation.size === size.size
+        ).length
+        if (!exists) newVariations.push({ primaryColor, secondaryColor, ...size })
+      }
+      if (newVariations.length) setVariations(prev => [...prev, ...newVariations])
       setDashboardParams({ openDialog: false })
     }
   }

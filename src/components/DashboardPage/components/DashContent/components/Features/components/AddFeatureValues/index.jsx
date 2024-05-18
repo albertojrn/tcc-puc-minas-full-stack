@@ -60,6 +60,7 @@ function AddFeatureValues({ feature }) {
       <DialogContent>
         <Stack spacing={2} direction='column'>
           <FormField
+            autoFocus
             error={error}
             field='name'
             fullWidth

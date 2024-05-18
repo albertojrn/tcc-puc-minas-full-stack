@@ -5,9 +5,9 @@ import { imgFileToDataUrl } from '../../../../../../../../../../utils/imageMetho
 
 function AddImageButton({ selectedImages, setSelectedImages }) {
   const [loadingImages, setLoadingImages] = useState(false)
-  const fileBtn = useRef(null)
 
   async function handleFileSelectChange(e) {
+    e.preventDefault()
     setLoadingImages(true)
     const files = e.target.files
     if (files.length) {
@@ -26,27 +26,26 @@ function AddImageButton({ selectedImages, setSelectedImages }) {
         setSelectedImages(prev => [...prev, ...res])
       }
     }
-    fileBtn.current.value = ''
+    e.target.value = ''
     setLoadingImages(false)
   }
 
   return (
-    <>
-      <Button
-        disabled={loadingImages}
-        onClick={() => fileBtn.current.click()}
-        variant='contained'
-      >
-        {loadingImages ? 'Aguarde...' : 'Adicionar Imagem'}
-      </Button>
+    <Button
+      component='label'
+      disabled={loadingImages}
+      role={undefined}
+      tabIndex={-1}
+      variant='contained'
+    >
+      {loadingImages ? 'Aguarde...' : 'Adicionar Imagem'}
       <FileInput
-        ref={fileBtn}
         type='file'
         accept='image/png, image/jpeg'
         multiple
         onChange={handleFileSelectChange}
       />
-    </>
+    </Button>
   )
 }
 

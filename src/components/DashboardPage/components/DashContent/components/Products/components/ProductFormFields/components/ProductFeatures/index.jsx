@@ -5,10 +5,13 @@ import FeatureMultipleSelection from './components/FeatureMultipleSelection'
 import FeatureSingleSelection from './components/FeatureSingleSelection'
 import { SPECIAL_FEATURES } from '../../../../../../../../constants/params'
 import { useDashboardDataContext } from '../../../../../../../../../../contexts/DashboardDataContext'
+import groupFeatures from './utils/groupFeatures'
 
 function ProductFeatures({ selectedFeatures, setSelectedFeatures }) {
-  const { features } = useDashboardDataContext()
+  const { features, featureValues } = useDashboardDataContext()
   const featuresToShow = features.filter(feature => !SPECIAL_FEATURES.includes(feature.name))
+  const groupedFeatures = groupFeatures(featureValues, selectedFeatures)
+
   return (
     <FormContainer maxHeight='350px'>
       <Typography
@@ -23,14 +26,14 @@ function ProductFeatures({ selectedFeatures, setSelectedFeatures }) {
             ? (
               <FeatureMultipleSelection
                 feature={feature}
-                selectedFeatures={selectedFeatures}
+                groupedFeatures={groupedFeatures}
                 setSelectedFeatures={setSelectedFeatures}
               />
             )
             : (
               <FeatureSingleSelection
                 feature={feature}
-                selectedFeatures={selectedFeatures}
+                groupedFeatures={groupedFeatures}
                 setSelectedFeatures={setSelectedFeatures}
               />
             )}
