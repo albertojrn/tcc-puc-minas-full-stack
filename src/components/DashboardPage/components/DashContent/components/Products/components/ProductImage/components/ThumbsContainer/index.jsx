@@ -47,7 +47,7 @@ function ThumbsContainer({ isRegistry, selectedImages, setSelectedImages, slider
           ? (
             selectedImages.map((img, i) => (
               <Carousel.Item key={img.name}>
-                <img src={img.dataUrl} alt={img.name} />
+                <img src={img.dataUrl ?? `${process.env.PUBLIC_URL}/images/${img}`} alt={img.name ?? img} />
                 {isRegistry && (
                 <DeleteImageIcon onClick={() => handleDeleteImage(img.name, i)}>
                   <Close />

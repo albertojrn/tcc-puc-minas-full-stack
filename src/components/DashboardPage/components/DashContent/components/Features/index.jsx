@@ -15,9 +15,13 @@ function Features() {
   const { setLoading } = useLoadingContext()
   const { features, featureValues, setDashboardData } = useDashboardDataContext()
 
-  function fetchParams() {
-    loadFeatures(features, setLoading, setDashboardData, setErrorLoadingFeatures)
-      .then(loadFeatureValues(featureValues, setLoading, setDashboardData, setErrorLoadingFeatureVals))
+  async function fetchParams() {
+    setLoading({ show: true })
+    await Promise.allSettled([
+      loadFeatures(features, setDashboardData, setErrorLoadingFeatures),
+      loadFeatureValues(featureValues, setDashboardData, setErrorLoadingFeatureVals),
+    ])
+    setLoading({ show: false })
   }
 
   useEffect(() => {

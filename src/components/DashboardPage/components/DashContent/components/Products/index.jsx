@@ -7,6 +7,7 @@ import { useDashboardDataContext } from '../../../../../../contexts/DashboardDat
 import { loadFeatures } from '../../../../../../utils/features'
 import { loadFeatureValues } from '../../../../../../utils/featureValues'
 import PleaseTryAgain from '../../../../../PleaseTryAgain'
+import ProductsList from './components/ProductsList'
 
 function Products() {
   const [errFetchFeatures, setErrFetchFeatures] = useState('')
@@ -14,9 +15,13 @@ function Products() {
   const { setLoading } = useLoadingContext()
   const { features, featureValues, setDashboardData } = useDashboardDataContext()
 
-  function fetchParams() {
-    loadFeatures(features, setLoading, setDashboardData, setErrFetchFeatures)
-      .then(loadFeatureValues(featureValues, setLoading, setDashboardData, setErrFetchFeatureVals))
+  async function fetchParams() {
+    setLoading({ show: true })
+    await Promise.allSettled([
+      loadFeatures(features, setDashboardData, setErrFetchFeatures),
+      loadFeatureValues(featureValues, setDashboardData, setErrFetchFeatureVals),
+    ])
+    setLoading({ show: false })
   }
 
   useEffect(() => {
@@ -27,7 +32,10 @@ function Products() {
       {(errFetchFeatures || errFetchFeatureVals)
         ? (
           <GridItem item xs={12}>
-            <PleaseTryAgain text={errFetchFeatures || errFetchFeatureVals} onTryAgain={fetchParams} />
+            <PleaseTryAgain
+              onTryAgain={fetchParams}
+              text={errFetchFeatures || errFetchFeatureVals}
+            />
           </GridItem>
         )
         : (
@@ -43,6 +51,9 @@ function Products() {
             </GridItem>
             <GridItem item xs={12}>
               <Divider />
+            </GridItem>
+            <GridItem item xs={12}>
+              <ProductsList />
             </GridItem>
           </>
         )}

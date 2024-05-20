@@ -17,7 +17,7 @@ function ImageSlider({ options, selectedImages, sliderIndex, setSliderIndex }) {
           ? (
             selectedImages.map(img => (
               <Carousel.Item key={img.name}>
-                <img src={img.dataUrl} alt={img.name} />
+                <img src={img.dataUrl ?? `${process.env.PUBLIC_URL}/images/${img}`} alt={img.name ?? img} />
               </Carousel.Item>
             ))
           )

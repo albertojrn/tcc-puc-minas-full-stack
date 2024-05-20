@@ -4,4 +4,5 @@ export const DASHBOARD_INIT_VALUES = {
   modalChild: null,
   openDialog: false,
   openModal: false,
+  productsPage: 1,
 }

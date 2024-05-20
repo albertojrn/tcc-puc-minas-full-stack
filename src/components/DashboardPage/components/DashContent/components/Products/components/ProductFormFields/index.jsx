@@ -8,28 +8,31 @@ import { useDashboardContext } from '../../../../../../../../contexts/DashboardC
 import { validateFields } from '../../../../../../../../utils/formMethods'
 import { CONSTRAINTS } from './constants/validationParams'
 import { uploadFiles } from '../../../../../../../../utils/file'
-import { createProducts } from '../../../../../../../../services/api/products'
+import { createProducts, updateProducts } from '../../../../../../../../services/api/products'
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
 import SQL_ERROR_STATUS_DICT from '../../../../../../../../constants/sqlErrorStatusDict'
 import { useLoadingContext } from '../../../../../../../../contexts/LoadingContext'
+import { deleteImages } from '../../../../../../../../utils/productImages'
 
-function ProductFormFields({ selectedImages }) {
+function ProductFormFields({ product, selectedImages }) {
+  const isUpdate = product !== undefined
   const [error, setError] = useState({})
   const [errorCreate, setErrorCreate] = useState(false)
-  const [description, setDescription] = useState('')
-  const [title, setTitle] = useState('')
-  const [sku, setSku] = useState('')
-  const [depth, setDepth] = useState(0)
-  const [width, setWidth] = useState(0)
-  const [height, setHeight] = useState(0)
-  const [variations, setVariations] = useState([])
-  const [selectedFeatures, setSelectedFeatures] = useState([])
-  const { setDashboardParams } = useDashboardContext()
+  const [description, setDescription] = useState(product?.description ?? '')
+  const [title, setTitle] = useState(product?.title ?? '')
+  const [sku, setSku] = useState(product?.sku ?? '')
+  const [depth, setDepth] = useState(product?.depth ?? 0)
+  const [width, setWidth] = useState(product?.width ?? 0)
+  const [height, setHeight] = useState(product?.height ?? 0)
+  const [variations, setVariations] = useState(product?.variations ?? [])
+  const [selectedFeatures, setSelectedFeatures] = useState(product?.selectedFeatures ?? [])
+  const { productsPage, setDashboardParams } = useDashboardContext()
   const { products, setDashboardData } = useDashboardDataContext()
   const { setLoading } = useLoadingContext()
   if (variations.length && error.variations) setError(prev => ({ ...prev, variations: '' }))
 
-  async function handleCreateProduct() {
+  async function handleCreateProduct(e) {
+    e.preventDefault()
     const validation = validateFields({ title, description, depth, width, height }, CONSTRAINTS)
     const validationError = { ...validation.error }
     if (!variations.length) validationError.variations = 'Você deve informar pelo menos uma variação do produto.'
@@ -40,43 +43,66 @@ function ProductFormFields({ selectedImages }) {
         title,
         description,
         depth,
-        sku: sku || null,
+        sku,
         width,
         height,
         variations,
         selectedFeatures,
         images: [],
       }
-      const filesList = selectedImages.map(img => img.file)
-      const uploadRes = await uploadFiles(filesList)
-      if (uploadRes.status === 200) input.images = uploadRes.data.files.map(file => file.path)
-      if (input.images.length !== filesList.length) {
-        setLoading({ show: false })
-        return setError({ images: 'Ocorreu um erro ao enviar as imagens. Tente novamente.' })
+      const imagesToAdd = []
+      const imagesToRemove = []
+      for (const img of selectedImages) {
+        if (img.file) imagesToAdd.push(img.file)
       }
-      console.log({input})
-      const createProductRes = await createProducts(input)
-      console.log({createProductRes})
-      if (createProductRes.status === 201) {
-        setDashboardData({ products: [...products, createProductRes.data] })
+      if (isUpdate) {
+        if (title === product.title) delete input.title
+        if (description === product.description) delete input.description
+        if (depth === product.depth) delete input.depth
+        if (sku === product.sku) delete input.sku
+        if (width === product.width) delete input.width
+        if (height === product.height) delete input.height
+        const savedImages = selectedImages.filter(img => img && typeof img === 'string')
+        for (const img of product.images) {
+          if (!savedImages.includes(img)) imagesToRemove.push(img)
+        }
+      }
+      if (imagesToAdd.length) {
+        const uploadRes = await uploadFiles(imagesToAdd)
+        if (uploadRes.status === 200) {
+          input.images = uploadRes.data.files.map(file => file.filename)
+        }
+        if (input.images.length !== imagesToAdd.length) {
+          setLoading({ show: false })
+          return setError({ images: 'Ocorreu um erro ao enviar as imagens. Tente novamente.' })
+        }
+      }
+      const res = (
+        isUpdate
+          ? await updateProducts(product.id, input)
+          : await createProducts(input)
+      )
+      console.log({res})
+      if (res.status === 201) {
+        setDashboardData({ products: [...products, res.data] })
         setDashboardParams({ openModal: false })
       }
-      // else if (res.status === 200) {
-      //   const newFeatures = structuredClone(features)
-      //   for (const f of newFeatures) {
-      //     if (f.id === feature.id) {
-      //       if (res.data.name) f.name = res.data.name
-      //       if (res.data.is_multiple) f.is_multiple = res.data.is_multiple
-      //     }
-      //   }
-      //   setDashboardData({ features: newFeatures })
-      //   setDashboardParams({ openDialog: false })
-      // }
-      else if (createProductRes?.response?.data?.error) {
-        const errorStatus = createProductRes.response.data.error.status
+      else if (res.status === 200) {
+        if (imagesToRemove.length) deleteImages(imagesToRemove)
+        const newProducts = { ...products }
+        const newProductsPage = structuredClone(newProducts[productsPage])
+        for (let p of newProductsPage) {
+          if (p.id === product.id) p = { ...p, ...res.data }
+          break
+        }
+        setDashboardData({ products: newProducts })
+        setDashboardParams({ openDialog: false })
+      }
+      else if (res?.response?.data?.error) {
+        const errorStatus = res.response.data.error.status
         const errorMessage = SQL_ERROR_STATUS_DICT[errorStatus]
         if (errorMessage) setErrorCreate(errorMessage)
-        else setErrorCreate(`Não foi possível ${true ? 'editar' : 'criar'} o produto. Tente novamente`)
+        else setErrorCreate(`Não foi possível ${isUpdate ? 'editar' : 'criar'} o produto. Tente novamente`)
       }
       setLoading({ show: false })
     }

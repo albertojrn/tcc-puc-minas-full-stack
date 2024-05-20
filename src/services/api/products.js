@@ -18,8 +18,17 @@ export async function deleteProducts(id) {
   return result
 }
 
-export async function readProducts(id) {
-  const url = `${v1BaseUrl}/products${id ? `/${id}` : ''}`
+export async function readProducts(id, reqQuery) {
+  let queryString = ''
+  const queryProps = Object.keys(reqQuery)
+  if (queryProps.length) {
+    queryString += '?'
+    for (let i = 0; i < queryProps.length; i++) {
+      const prop = queryProps[i]
+      queryString += `${i !== 0 ? '&' : ''}${prop}=${reqQuery[prop]}`
+    }
+  }
+  const url = `${v1BaseUrl}/products${(id || id === 0) ? `/${id}` : ''}${queryString}`
   const result = await axios.get(url)
     .then(res => res)
     .catch(error => error)

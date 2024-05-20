@@ -44,6 +44,7 @@ function AddImageButton({ selectedImages, setSelectedImages }) {
         accept='image/png, image/jpeg'
         multiple
         onChange={handleFileSelectChange}
+        onSubmit={e => { e.preventDefault() }}
       />
     </Button>
   )

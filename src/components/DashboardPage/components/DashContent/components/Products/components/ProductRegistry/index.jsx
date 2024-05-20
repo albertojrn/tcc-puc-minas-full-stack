@@ -7,8 +7,8 @@ import ProductFormFields from '../ProductFormFields'
 import AddImageButton from '../ProductImage/components/AddImageButton'
 import { useDashboardContext } from '../../../../../../../../contexts/DashboardContext'
 
-function ProductRegistry() {
-  const [selectedImages, setSelectedImages] = useState([])
+function ProductRegistry({ product }) {
+  const [selectedImages, setSelectedImages] = useState(product?.images ?? [])
   const { setDashboardParams } = useDashboardContext()
 
   return (
@@ -28,7 +28,7 @@ function ProductRegistry() {
         </Stack>
       </GridItem>
       <GridItem item xs={12} md={7}>
-        <ProductFormFields selectedImages={selectedImages} />
+        <ProductFormFields selectedImages={selectedImages} product={product} />
       </GridItem>
     </MainGridContainer>
   )

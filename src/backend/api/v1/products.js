@@ -8,8 +8,50 @@ const router = express.Router()
 
 router.get('/', (req, res, next) => {
   try {
-    db.query('SELECT * FROM products', (err, result) => {
+    const limit = req.query.limit
+    const offset = req.query.offset
+
+    const query = `
+      SELECT
+      *,
+      (
+      SELECT JSON_ARRAYAGG(pf.feature_values_id)
+      FROM products_features_values pf
+      WHERE products.id = pf.product_id
+      )
+      AS selectedFeatures,
+      (
+      SELECT JSON_ARRAYAGG(JSON_OBJECT(
+      'size', pv.size_id,
+      'quantity', pv.quantity,
+      'price', pv.price,
+      'primaryColor', pv.primary_color_id,
+      'secondaryColor', pv.secondary_color_id
+      ))
+      FROM products_variations pv
+      WHERE products.id = pv.product_id
+      )
+      AS variations,
+      (
+      SELECT JSON_ARRAYAGG(pImg.name)
+      FROM products_images pImg
+      WHERE products.id = pImg.product_id
+      )
+      AS images
+      FROM products
+      GROUP BY products.id
+      ${limit ? `LIMIT ${limit}` : ''}
+      ${offset ? `OFFSET ${offset}` : ''};
+    `
+    db.query(query, (err, result) => {
       if (err) return sqlErrorHandler(err, req, res, next)
+      if (Array.isArray(result)) {
+        for (const item of result) {
+          if (item.selectedFeatures) item.selectedFeatures = JSON.parse(item.selectedFeatures)
+          if (item.variations) item.variations = JSON.parse(item.variations)
+          if (item.images) item.images = JSON.parse(item.images)
+        }
+      }
       responseHandler(req, res, result)
     })
   }
@@ -44,19 +86,19 @@ router.post('/', (req, res, next) => {
     const images = req.body.images
 
     const query = `
-      INSERT INTO products (title, description, depth, sku, width, height) VALUES ("${title}","${description}",${depth},"${sku}",${width},${height});
+      INSERT INTO products (title, description, depth, sku, width, height) VALUES ("${title}","${description}",${depth},${sku ? `"${sku}"` : null},${width},${height});
       SELECT LAST_INSERT_ID() INTO @productId;
       ${variations?.length && `
         INSERT INTO products_variations (product_id, size_id, quantity, price, primary_color_id, secondary_color_id) 
-        VALUES ${variations.map(variation => `(@productId, ${variation.size}, ${variation.quantity}, ${variation.price}, ${variation.primaryColor}, ${variation.secondaryColor})`).join(', ')}
+        VALUES ${variations.map(variation => `(@productId, ${variation.size}, ${variation.quantity}, ${variation.price}, ${variation.primaryColor}, ${variation.secondaryColor || null})`).join(', ')}
       `};
       ${selectedFeatures?.length && `
         INSERT INTO products_features_values (product_id, feature_values_id) 
         VALUES ${selectedFeatures.map(id => `(@productId, ${id})`).join(', ')}
       `};
       ${images?.length && `
-        INSERT INTO products_images (product_id, path) 
-        VALUES ${images.map(imgPath => `(@productId, "${imgPath}")`).join(', ')}
+        INSERT INTO products_images (product_id, name) 
+        VALUES ${images.map(imgName => `(@productId, "${imgName}")`).join(', ')}
       `};
     `
 
@@ -76,16 +118,35 @@ router.post('/', (req, res, next) => {
 router.put('/:id', (req, res, next) => {
   try {
     const id = req.params.id
-    const name = req.body.name
-    const is_multiple = req.body.is_multiple
-    if (!id || (name === undefined && is_multiple === undefined)) {
-      return errorHandler({ status: 400, message: 'Bad request.' }, req, res, next)
+    const {
+      title,
+      description,
+      depth,
+      sku,
+      width,
+      height,
+      variationsToAdd,
+      variationsToRemove,
+      selectedFeaturesToAdd,
+      selectedFeaturesToRemove,
+      imagesToAdd,
+      imagesToRemove,
+    } = req.body
+    if (!id) {
+      return errorHandler({ status: 400, message: 'Bad request. Missing rpduct id.' }, req, res, next)
     }
-    const propsArray = []
-    if (name) propsArray.push(`name = '${name}'`)
-    if (is_multiple) propsArray.push(`is_multiple = ${is_multiple}`)
-    const setStr = propsArray.join(', ')
-    db.query(`UPDATE products SET ${setStr} WHERE id = ?`, id, (err) => {
+    const productPropsToChange = []
+    if (title) productPropsToChange.push(`title = '${title}'`)
+    if (description) productPropsToChange.push(`description = ${description}`)
+    if (depth) productPropsToChange.push(`depth = ${depth}`)
+    if (sku) productPropsToChange.push(`sku = ${sku}`)
+    if (width) productPropsToChange.push(`width = ${width}`)
+    if (height) productPropsToChange.push(`height = ${height}`)
+    const setProductStr = productPropsToChange.join(', ')
+    const query = `
+      UPDATE products SET ${setProductStr} WHERE id = ${id};
+    `
+    db.query(`UPDATE products SET ${setProductStr} WHERE id = ?`, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, req.body, 200)
     })

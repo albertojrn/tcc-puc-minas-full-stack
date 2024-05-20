@@ -42,6 +42,7 @@ function AddFeature({ feature }) {
           if (f.id === feature.id) {
             if (res.data.name) f.name = res.data.name
             if (res.data.is_multiple) f.is_multiple = res.data.is_multiple
+            break
           }
         }
         setDashboardData({ features: newFeatures })

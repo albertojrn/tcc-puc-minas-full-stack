@@ -30,7 +30,7 @@ export const CenterModalContainer = styled(Box, { shouldForwardProp: prop => !['
   `}
 `
 
-export const Color = styled('span', { shouldForwardProp: prop => !['color'].includes(prop)})`
+export const Color = styled('span', { shouldForwardProp: prop => !['color'].includes(prop) })`
   ${({ color }) => color && `color: ${color}`}
 `
 
@@ -45,7 +45,7 @@ export const ContentMainConatiner = styled('div')`
   `}
 `
 
-export const FormContainer = styled(Box, {shouldForwardProp: prop => !['height', 'maxHeight'].includes(prop)})`
+export const FormContainer = styled(Box, { shouldForwardProp: prop => !['height', 'maxHeight'].includes(prop) })`
   border: 1px solid ${COLORS.inputBorderColor};
   border-radius: 4px;
   padding: 8px;
@@ -62,11 +62,17 @@ export const FormTextField = styled(TextField, { shouldForwardProp: prop => !['h
     color: ${({ helperTextColor }) => helperTextColor};
   }
 `
-export const GridItem = styled(Grid, { shouldForwardProp: prop => !['alignItems', 'direction', 'justifyContent', 'isFlex'].includes(prop) })`
+export const GridItem = styled(Grid, { shouldForwardProp: prop => !['align', 'alignItems', 'direction', 'isFlex', 'hideInMobile', 'justifyContent'].includes(prop) })`
+  ${({ align }) => align && `text-align: ${align};`}
   ${({ alignItems }) => alignItems && `align-tems: ${alignItems};`}
   ${({ direction }) => direction && `flex-direction: ${direction};`}
   ${({ justifyContent }) => justifyContent && `justify-content: ${justifyContent};`}
   ${({ isFlex }) => isFlex && 'display: flex;'}
+  ${({ theme, hideInMobile }) => `
+    ${theme.breakpoints.down('sm')} {
+      ${hideInMobile && 'display: none;'}
+    }
+  `}
 `
 
 export const MainGridContainer = styled(Grid, { shouldForwardProp: prop => !['drawBorder', 'height', 'marginTop', 'maxWidth', 'minWidth', 'width'].includes(prop) })`

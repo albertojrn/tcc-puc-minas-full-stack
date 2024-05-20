@@ -16,6 +16,5 @@ export async function createFile(body) {
   )
     .then(res => res)
     .catch(error => error)
-  console.log(JSON.stringify(result))
   return result
 }
