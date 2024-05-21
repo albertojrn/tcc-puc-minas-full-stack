@@ -21,7 +21,7 @@ function DashModal() {
       open={openModal}
       onClose={() => !blockModal && setDashboardParams({ openModal: false })}
     >
-      <CenterModalContainer width='70%' height='80%'>
+      <CenterModalContainer width='80%' height='90%'>
         <TopToolbar />
         {modalChild}
       </CenterModalContainer>

@@ -75,7 +75,7 @@ router.put('/:product_id/:feature_values_id', (req, res, next) => {
     const setStr = propsArray.join(', ')
     db.query(`UPDATE products_features_values SET ${setStr} WHERE product_id = ${paramProductId} AND feature_values_id = ${paramFeatureId}`, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, req.body, 200)
+      responseHandler(req, res, { product_id, ...req.body }, 200)
     })
   }
   catch (err) {

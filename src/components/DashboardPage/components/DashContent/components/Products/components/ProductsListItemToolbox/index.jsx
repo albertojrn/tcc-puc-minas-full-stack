@@ -7,8 +7,8 @@ import { useLoadingContext } from '../../../../../../../../contexts/LoadingConte
 import { deleteProducts } from '../../../../../../../../services/api/products'
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
 import { PRODUCTS_PER_PAGE } from '../ProductsList/constants/searchParams'
-import DialogOk from '../../../../../../../DialogOk'
 import ProductRegistry from '../ProductRegistry'
+import DialogRetry from '../../../../../../../DialogRetry'
 
 function ProductsListItemToolbox({ product, page }) {
   const [anchorMenu, setAnchorMenu] = useState(null)
@@ -51,9 +51,10 @@ function ProductsListItemToolbox({ product, page }) {
     else if (res?.response?.data?.error) {
       setDashboardParams({
         dialogChild: (
-          <DialogOk
+          <DialogRetry
             text={`Não foi possível excluir o produto ${product.title}. Tente novamente.`}
             title='Atenção'
+            onRetry={handleDeleteProduct}
           />
         ),
         openDialog: true,
@@ -62,17 +63,18 @@ function ProductsListItemToolbox({ product, page }) {
     setLoading({ show: false })
   }
 
-  function confirmDeleteFeature() {
+  function confirmDeleteProduct() {
     setDashboardParams({ openDialog: false })
     setAnchorMenu(null)
     handleDeleteProduct()
   }
 
-  function openDeleteDialog() {
+  function openDeleteConfirmation() {
+    setAnchorMenu(null)
     setDashboardParams({
       dialogChild: (
         <DialogYesNo
-          onYes={confirmDeleteFeature}
+          onYes={confirmDeleteProduct}
           text={`Tem certeza de que deseja excluir o produto '${product.title}'?`}
           title='PRECISAMOS DA SUA CONFIRMAÇÃO'
         />
@@ -92,7 +94,7 @@ function ProductsListItemToolbox({ product, page }) {
         onClose={() => setAnchorMenu(null)}
       >
         <MenuItem onClick={handleOpenEditProduct}>Editar</MenuItem>
-        <MenuItem onClick={openDeleteDialog}>Excluir</MenuItem>
+        <MenuItem onClick={openDeleteConfirmation}>Excluir</MenuItem>
       </Menu>
     </>
   )

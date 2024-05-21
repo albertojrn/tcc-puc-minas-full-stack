@@ -1,4 +1,6 @@
 const express = require('express')
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
@@ -31,17 +33,35 @@ router.get('/:id', (req, res, next) => {
   }
 })
 
-router.post('/', (req, res, next) => {
+router.post('/login', async (req, res, next) => {
   try {
-    const name = req.body.name
-    const is_multiple = req.body.is_multiple
+    const {
+      email,
+      password,
+    } = req.body
+    if ([email, password].some(item => !item)) {
+      return errorHandler({ status: 400, message: 'Bad Request' }, req, res, next)
+    }
 
-    db.query('INSERT INTO features (name, is_multiple) VALUES (?,?)', [name, is_multiple], (err, result) => {
-      if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, { ...req.body, id: result.insertId, resourceUrl: `${req.baseUrl}/${result.insertId}` }, 201)
-    })
+    db.query(
+      `SELECT * FROM users WHERE email = "${email}";`,
+      async (err, result) => {
+        if (err) return sqlErrorHandler(err, req, res, next)
+        const user = result?.[0]
+        const userPass = user?.password
+        if (!user) return errorHandler({ status: 400, message: 'Usuário não encontrado' }, req, res, next)
+        if (!userPass) return errorHandler({ status: 500, message: 'Senha do usuário não configurada' }, req, res, next)
+        const checkPassword = await bcrypt.compare(password, userPass)
+        if (!checkPassword) return errorHandler({ status: 200, message: 'Senha incorreta.' }, req, res, next)
+        const secret = process.env.REACT_APP_AUTH_SECRET
+        const token = jwt.sign({ id: user.id }, secret)
+        delete user.password
+        responseHandler(req, res, { ...user, token }, 200)
+      }
+    )
   }
   catch (err) {
+    console.log(err)
     errorHandler(err, req, res, next)
   }
 })

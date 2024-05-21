@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Divider, List, Stack, Typography } from '@mui/material'
+import { Button, Divider, Stack, Typography } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import { v4 } from 'uuid'
 import { FormContainer } from '../../../../../../../../../../styles'

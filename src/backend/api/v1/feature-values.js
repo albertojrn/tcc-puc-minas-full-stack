@@ -60,7 +60,7 @@ router.put('/:id', (req, res, next) => {
     const setStr = propsArray.join(', ')
     db.query(`UPDATE feature_values SET ${setStr} WHERE id = ?`, id, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, req.body, 200)
+      responseHandler(req, res, { id, ...req.body }, 200)
     })
   }
   catch (err) {

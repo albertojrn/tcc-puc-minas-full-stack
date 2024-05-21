@@ -75,7 +75,7 @@ router.put('/:product_id/:name', (req, res, next) => {
     const setStr = propsArray.join(', ')
     db.query(`UPDATE products_images SET ${setStr} WHERE product_id = ${paramProductId} AND name = ${paramName}`, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, req.body, 200)
+      responseHandler(req, res, { product_id, ...req.body }, 200)
     })
   }
   catch (err) {

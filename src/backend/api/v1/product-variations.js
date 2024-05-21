@@ -93,7 +93,7 @@ router.put('/:product_id/:primary_color_id/:secondary_color_id/:size_id', (req, 
     const setStr = propsArray.join(', ')
     db.query(`UPDATE products_variations SET ${setStr} WHERE product_id = ${paramProductId} AND primary_color_id = ${paramPrimaryColorId} AND ${secondary_color_id ? `secondary_color_id = ${secondary_color_id}` : '(secondary_color_id IS NULL)'} AND size_id = ${paramSizeId}`, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, req.body, 200)
+      responseHandler(req, res, { product_id, ...req.body }, 200)
     })
   }
   catch (err) {

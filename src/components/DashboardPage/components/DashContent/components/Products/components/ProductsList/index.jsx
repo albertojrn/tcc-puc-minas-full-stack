@@ -5,7 +5,6 @@ import { COLUMNS } from './constants/gridParams'
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
 import { loadProducts } from '../../../../../../../../utils/products'
 import PleaseTryAgain from '../../../../../../../PleaseTryAgain'
-import buildGridItemContent from './utils/buildGridItemContent'
 import ProductsListItem from '../ProductsListItem'
 import { useDashboardContext } from '../../../../../../../../contexts/DashboardContext'
 

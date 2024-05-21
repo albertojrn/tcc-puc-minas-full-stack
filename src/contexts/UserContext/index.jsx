@@ -3,7 +3,7 @@ import { USER_INIT_VALUES } from './constants/params'
 
 const context = createContext({
   ...USER_INIT_VALUES,
-  setUserData: () => {}
+  setUser: () => {}
 })
 
 const useUserContext = () => useContext(context)
@@ -13,7 +13,7 @@ const UserContextProvider = ({ children }) => {
 
   const value = useMemo(() => ({
     ...data,
-    setUserData: (newData) => setData({ ...data, ...newData }),
+    setUser: (newData) => setData(prev => ({ ...prev, ...newData })),
   }), [data])
 
   return (

@@ -1,23 +1,32 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Button, IconButton, InputAdornment } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { MinimalButton } from '../../../../styles'
 import { CONSTRAINTS } from './constants/validationParams'
 import { validateFields } from '../../../../utils/formMethods'
 import FormField from '../../../FormField'
+import { loginUser } from '../../../../utils/auth'
+import { useLoadingContext} from '../../../../contexts/LoadingContext'
+import { useUserContext } from '../../../../contexts/UserContext'
 
 function StandardLoginForm() {
   const [error, setError] = useState({})
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [email, setEmail] = useState('')
+  const { setLoading } = useLoadingContext()
+  const { setUser } = useUserContext()
+  const navigate = useNavigate()
 
-  function handleLogin() {
+  async function handleLogin() {
     const validation = validateFields({ email, password }, CONSTRAINTS)
     setError(validation.error)
     if (validation.passed) {
-      
+      setLoading({ show: true })
+      const loginRes = await loginUser({ email, password }, setUser, setError, navigate)
+      setLoading({ show: false })
+      console.log({loginRes})
     }
   }
 

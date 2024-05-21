@@ -15,6 +15,6 @@ export async function createFile(body) {
     }
   )
     .then(res => res)
-    .catch(error => error)
+    .catch(error => error.response)
   return result
 }

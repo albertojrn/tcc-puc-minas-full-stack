@@ -195,7 +195,7 @@ router.put('/:id', (req, res, next) => {
     `
     db.query(query, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, req.body, 200)
+      responseHandler(req, res, { id, ...req.body }, 200)
     })
   }
   catch (err) {

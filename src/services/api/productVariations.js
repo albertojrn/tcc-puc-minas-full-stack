@@ -6,7 +6,7 @@ export async function createProductVariations(body) {
   const url = `${v1BaseUrl}/product-variations`
   const result = await axios.post(url, body)
     .then(res => res)
-    .catch(error => error)
+    .catch(error => error.response)
   return result
 }
 
@@ -14,7 +14,7 @@ export async function deleteProductVariations(product_id, primary_color_id, seco
   const url = `${v1BaseUrl}/product-variations/${product_id}/${primary_color_id}/${secondary_color_id}/${size_id}`
   const result = await axios.delete(url)
     .then(res => res)
-    .catch(error => error)
+    .catch(error => error.response)
   return result
 }
 
@@ -22,7 +22,7 @@ export async function readProductVariations(product_id, primary_color_id, second
   const url = `${v1BaseUrl}/product-variations${(product_id) ? `/${product_id}` : ''}${(product_id && primary_color_id && secondary_color_id && size_id) ? `/${primary_color_id}/${secondary_color_id}/${size_id}` : ''}`
   const result = await axios.get(url)
     .then(res => res)
-    .catch(error => error)
+    .catch(error => error.response)
   return result
 }
 
@@ -30,6 +30,6 @@ export async function updateProductVariations(product_id, primary_color_id, seco
   const url = `${v1BaseUrl}/product-variations/${product_id}/${primary_color_id}/${secondary_color_id}/${size_id}`
   const result = await axios.put(url, body)
     .then(res => res)
-    .catch(error => error)
+    .catch(error => error.response)
   return result
 }
