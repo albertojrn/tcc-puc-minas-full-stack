@@ -7,6 +7,7 @@ import VariationItem from '../VariationItem'
 import { useDashboardContext } from '../../../../../../../../../../contexts/DashboardContext'
 import AddProductVariation from '../../../AddProductVariation'
 import groupVariations from './utils/groupVariations'
+import { VaritionsLis } from './styles'
 
 function ProductVariations({ setVariations, variations }) {
   const { setDashboardParams } = useDashboardContext()
@@ -20,7 +21,7 @@ function ProductVariations({ setVariations, variations }) {
       >
         Variações*
       </Typography>
-      <List>
+      <VaritionsLis>
         <Divider />
         {groupedVariations.map(groupedVariation => (
           <React.Fragment key={v4()}>
@@ -31,7 +32,7 @@ function ProductVariations({ setVariations, variations }) {
             <Divider />
           </React.Fragment>
         ))}
-      </List>
+      </VaritionsLis>
       <Stack direction='row' justifyContent='end'>
         <Button
           color='standard'

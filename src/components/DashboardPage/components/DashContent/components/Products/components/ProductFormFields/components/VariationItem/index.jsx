@@ -19,27 +19,32 @@ function VariationItem({ setVariations, groupedVariation }) {
         secondary={(
           <>
             <Typography
-              component='div'
+              component='span'
               variant='body2'
             >
               Cor secundária:
               &nbsp;
               {`${groupedVariation.secondaryColor ? colorsValues.find(c => c.id === groupedVariation.secondaryColor).name : '-'}`}
             </Typography>
+            <br />
             <Typography
-              component='div'
+              component='span'
               variant='body2'
             >
               Tamanhos:
             </Typography>
+            <br />
             {groupedVariation.sizes.map(size => (
-              <Typography
-                component='div'
-                key={size.id}
-                variant='body2'
-              >
-                {`${sizesValues.find(s => s.id === size.size).name}, qtd: ${size.quantity}, preço: R$ ${size.price}`}
-              </Typography>
+              <React.Fragment key={size.size}>
+                <Typography
+                  component='span'
+                  key={size.size}
+                  variant='body2'
+                >
+                  {`${sizesValues.find(s => s.id === size.size).name}, qtd: ${size.quantity}, preço: R$ ${size.price}`}
+                </Typography>
+                <br />
+              </React.Fragment>
             ))}
           </>
           )}

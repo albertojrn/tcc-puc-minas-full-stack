@@ -18,7 +18,7 @@ export async function deleteProducts(id) {
   return result
 }
 
-export async function readProducts(id, reqQuery) {
+export async function readProducts(id, reqQuery = {}) {
   let queryString = ''
   const queryProps = Object.keys(reqQuery)
   if (queryProps.length) {

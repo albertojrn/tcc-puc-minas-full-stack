@@ -63,8 +63,46 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   try {
     const id = req.params.id
-    db.query('SELECT * FROM products WHERE id = ?', id, (err, result) => {
+
+    const query = `
+      SELECT
+      *,
+      (
+      SELECT JSON_ARRAYAGG(pf.feature_values_id)
+      FROM products_features_values pf
+      WHERE ${id} = pf.product_id
+      )
+      AS selectedFeatures,
+      (
+      SELECT JSON_ARRAYAGG(JSON_OBJECT(
+      'size', pv.size_id,
+      'quantity', pv.quantity,
+      'price', pv.price,
+      'primaryColor', pv.primary_color_id,
+      'secondaryColor', pv.secondary_color_id
+      ))
+      FROM products_variations pv
+      WHERE ${id} = pv.product_id
+      )
+      AS variations,
+      (
+      SELECT JSON_ARRAYAGG(pImg.name)
+      FROM products_images pImg
+      WHERE ${id} = pImg.product_id
+      )
+      AS images
+      FROM products
+      WHERE products.id = ${id};
+    `
+    db.query(query, (err, result) => {
       if (err) return sqlErrorHandler(err, req, res, next)
+      if (Array.isArray(result)) {
+        for (const item of result) {
+          if (item.selectedFeatures) item.selectedFeatures = JSON.parse(item.selectedFeatures)
+          if (item.variations) item.variations = JSON.parse(item.variations)
+          if (item.images) item.images = JSON.parse(item.images)
+        }
+      }
       responseHandler(req, res, result)
     })
   }
@@ -88,18 +126,18 @@ router.post('/', (req, res, next) => {
     const query = `
       INSERT INTO products (title, description, depth, sku, width, height) VALUES ("${title}","${description}",${depth},${sku ? `"${sku}"` : null},${width},${height});
       SELECT LAST_INSERT_ID() INTO @productId;
-      ${variations?.length && `
+      ${variations?.length ? `
         INSERT INTO products_variations (product_id, size_id, quantity, price, primary_color_id, secondary_color_id) 
         VALUES ${variations.map(variation => `(@productId, ${variation.size}, ${variation.quantity}, ${variation.price}, ${variation.primaryColor}, ${variation.secondaryColor || null})`).join(', ')}
-      `};
-      ${selectedFeatures?.length && `
+      ;` : ''}
+      ${selectedFeatures?.length ? `
         INSERT INTO products_features_values (product_id, feature_values_id) 
         VALUES ${selectedFeatures.map(id => `(@productId, ${id})`).join(', ')}
-      `};
-      ${images?.length && `
+      ;` : ''}
+      ${images?.length ? `
         INSERT INTO products_images (product_id, name) 
         VALUES ${images.map(imgName => `(@productId, "${imgName}")`).join(', ')}
-      `};
+      ;` : ''}
     `
 
     db.query(
@@ -125,28 +163,37 @@ router.put('/:id', (req, res, next) => {
       sku,
       width,
       height,
-      variationsToAdd,
-      variationsToRemove,
-      selectedFeaturesToAdd,
-      selectedFeaturesToRemove,
-      imagesToAdd,
-      imagesToRemove,
+      variations,
+      selectedFeatures,
+      images,
     } = req.body
     if (!id) {
       return errorHandler({ status: 400, message: 'Bad request. Missing rpduct id.' }, req, res, next)
     }
     const productPropsToChange = []
     if (title) productPropsToChange.push(`title = '${title}'`)
-    if (description) productPropsToChange.push(`description = ${description}`)
+    if (description) productPropsToChange.push(`description = '${description}'`)
     if (depth) productPropsToChange.push(`depth = ${depth}`)
-    if (sku) productPropsToChange.push(`sku = ${sku}`)
+    if (sku !== undefined && sku !== null) productPropsToChange.push(`sku = ${sku ? `'${sku}'` : null}`)
     if (width) productPropsToChange.push(`width = ${width}`)
     if (height) productPropsToChange.push(`height = ${height}`)
     const setProductStr = productPropsToChange.join(', ')
     const query = `
       UPDATE products SET ${setProductStr} WHERE id = ${id};
+      ${variations?.length ? `
+        INSERT INTO products_variations (product_id, size_id, quantity, price, primary_color_id, secondary_color_id) 
+        VALUES ${variations.map(variation => `(${id}, ${variation.size}, ${variation.quantity}, ${variation.price}, ${variation.primaryColor}, ${variation.secondaryColor || null})`).join(', ')}
+      ;` : ''}
+      ${selectedFeatures?.length ? `
+        INSERT INTO products_features_values (product_id, feature_values_id) 
+        VALUES ${selectedFeatures.map(featureId => `(${id}, ${featureId})`).join(', ')}
+      ;` : ''}
+      ${images?.length ? `
+        INSERT INTO products_images (product_id, name) 
+        VALUES ${images.map(imgName => `(${id}, "${imgName}")`).join(', ')}
+      ;` : ''}
     `
-    db.query(`UPDATE products SET ${setProductStr} WHERE id = ?`, (err) => {
+    db.query(query, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, req.body, 200)
     })

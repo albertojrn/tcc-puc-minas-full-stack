@@ -8,16 +8,19 @@ import { useDashboardContext } from '../../../../../../../../contexts/DashboardC
 import { validateFields } from '../../../../../../../../utils/formMethods'
 import { CONSTRAINTS } from './constants/validationParams'
 import { uploadFiles } from '../../../../../../../../utils/file'
-import { createProducts, updateProducts } from '../../../../../../../../services/api/products'
+import { createProducts, readProducts, updateProducts } from '../../../../../../../../services/api/products'
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
 import SQL_ERROR_STATUS_DICT from '../../../../../../../../constants/sqlErrorStatusDict'
 import { useLoadingContext } from '../../../../../../../../contexts/LoadingContext'
-import { deleteImages } from '../../../../../../../../utils/productImages'
+import { deleteProductImages } from '../../../../../../../../services/api/productImages'
+import { deleteProductFeatures } from '../../../../../../../../services/api/productFeatures'
+import { deleteProductVariations } from '../../../../../../../../services/api/productVariations'
+import DialogRetry from '../../../../../../../DialogRetry'
+import DialogOk from '../../../../../../../DialogOk'
 
 function ProductFormFields({ product, selectedImages }) {
   const isUpdate = product !== undefined
   const [error, setError] = useState({})
-  const [errorCreate, setErrorCreate] = useState(false)
   const [description, setDescription] = useState(product?.description ?? '')
   const [title, setTitle] = useState(product?.title ?? '')
   const [sku, setSku] = useState(product?.sku ?? '')
@@ -26,13 +29,13 @@ function ProductFormFields({ product, selectedImages }) {
   const [height, setHeight] = useState(product?.height ?? 0)
   const [variations, setVariations] = useState(product?.variations ?? [])
   const [selectedFeatures, setSelectedFeatures] = useState(product?.selectedFeatures ?? [])
-  const { productsPage, setDashboardParams } = useDashboardContext()
+  const { openDialog, productsPage, setDashboardParams } = useDashboardContext()
   const { products, setDashboardData } = useDashboardDataContext()
   const { setLoading } = useLoadingContext()
   if (variations.length && error.variations) setError(prev => ({ ...prev, variations: '' }))
 
-  async function handleCreateProduct(e) {
-    e.preventDefault()
+  async function handleCreateProduct() {
+    if (openDialog) setDashboardParams({ openDialog: false })
     const validation = validateFields({ title, description, depth, width, height }, CONSTRAINTS)
     const validationError = { ...validation.error }
     if (!variations.length) validationError.variations = 'Você deve informar pelo menos uma variação do produto.'
@@ -52,6 +55,10 @@ function ProductFormFields({ product, selectedImages }) {
       }
       const imagesToAdd = []
       const imagesToRemove = []
+      const variationsToAdd = []
+      const variationsToRemove = []
+      const featuresToAdd = []
+      const featuresToRemove = []
       for (const img of selectedImages) {
         if (img.file) imagesToAdd.push(img.file)
       }
@@ -66,43 +73,159 @@ function ProductFormFields({ product, selectedImages }) {
         for (const img of product.images) {
           if (!savedImages.includes(img)) imagesToRemove.push(img)
         }
-      }
-      if (imagesToAdd.length) {
-        const uploadRes = await uploadFiles(imagesToAdd)
-        if (uploadRes.status === 200) {
-          input.images = uploadRes.data.files.map(file => file.filename)
+        for (const v of product.variations) {
+          if (!variations.find(
+            item => item.primaryColor === v.primaryColor
+            && (item.secondaryColor || null) === (v.secondaryColor || null)
+            && item.size === v.size
+            && item.quantity === v.quantity
+            && item.price === v.price
+          )) variationsToRemove.push(v)
         }
+        for (const v of variations) {
+          if (!product.variations.find(
+            item => item.primaryColor === v.primaryColor
+            && (item.secondaryColor || null) === (v.secondaryColor || null)
+            && item.size === v.size
+            && item.quantity === v.quantity
+            && item.price === v.price
+          )) variationsToAdd.push(v)
+        }
+        for (const f of product.selectedFeatures) {
+          if (!selectedFeatures.includes(f)) featuresToRemove.push(f)
+        }
+        for (const f of selectedFeatures) {
+          if (!product.selectedFeatures.includes(f)) featuresToAdd.push(f)
+        }
+        input.variations = variationsToAdd
+        input.selectedFeatures = featuresToAdd
+      }
+      const preSavingPromises = []
+      preSavingPromises.push(imagesToAdd.length ? uploadFiles(imagesToAdd) : undefined)
+      if (isUpdate) {
+        preSavingPromises
+          .push(imagesToRemove.length
+            ? imagesToRemove.map(item => deleteProductImages(product.id, item))
+            : [])
+        preSavingPromises
+          .push(featuresToRemove.length
+            ? featuresToRemove.map(item => deleteProductFeatures(product.id, item))
+            : [])
+        preSavingPromises
+          .push(variationsToRemove.length
+            ? variationsToRemove.map(item => deleteProductVariations(product.id, item.primary_color_id, item.secondary_color_id, item.size_id))
+            : [])
+      }
+      const [uploadImagesRes, deleteImagesRes, deleteFeaturesRes, deleteVariationsRes] = await Promise.allSettled(preSavingPromises)
+      if (uploadImagesRes?.value?.status === 200) {
+        input.images = uploadImagesRes?.value?.data.files.map(file => file.filename)
         if (input.images.length !== imagesToAdd.length) {
           setLoading({ show: false })
-          return setError({ images: 'Ocorreu um erro ao enviar as imagens. Tente novamente.' })
+          return setDashboardParams({
+            dialogChild: (
+              <DialogRetry
+                title='Erro'
+                text='Ocorreu um erro ao enviar as imagens.'
+                onRetry={handleCreateProduct}
+              />
+            ),
+            openDialog: true
+          })
         }
+      }
+      if (isUpdate) {
+        if ((deleteImagesRes?.length && deleteImagesRes.some(res => res?.value?.status !== 204))
+            || (deleteFeaturesRes?.length && deleteFeaturesRes.some(res => res?.value?.status !== 204))
+            || (deleteVariationsRes?.length && deleteVariationsRes.some(res => res?.value?.status !== 204))) {
+          setLoading({ show: false })
+          return setDashboardParams({
+            dialogChild: (
+              <DialogRetry
+                title='Erro'
+                text='Ocorreu um erro ao excluir os parâmetros removidos.'
+                onRetry={handleCreateProduct}
+              />
+            ),
+            openDialog: true
+          })
+        }
+      }
+      if (
+        isUpdate
+        && product.name === input.name
+        && product.description === input.description
+        && (product.sku || null) === (input.sku || null)
+        && product.depth === input.depth
+        && product.width === input.width
+        && product.height === input.height
+        && !imagesToAdd.length
+        && !variationsToAdd.length
+        && !featuresToAdd.length
+      ) {
+        setLoading({ show: false })
+        return setDashboardParams({ openModal: false })
       }
       const res = (
         isUpdate
           ? await updateProducts(product.id, input)
           : await createProducts(input)
       )
-      console.log({res})
-      if (res.status === 201) {
-        setDashboardData({ products: [...products, res.data] })
+      if (res.status === 201 && res.data) {
+        const newProducts = { ...products }
+        newProducts[productsPage] = [...newProducts[productsPage], res.data]
+        setDashboardData({ products: newProducts })
         setDashboardParams({ openModal: false })
       }
-      else if (res.status === 200) {
-        if (imagesToRemove.length) deleteImages(imagesToRemove)
+      else if (res.status === 200 && res.data) {
         const newProducts = { ...products }
-        const newProductsPage = structuredClone(newProducts[productsPage])
-        for (let p of newProductsPage) {
-          if (p.id === product.id) p = { ...p, ...res.data }
-          break
+        let newProductsPage = structuredClone(newProducts[productsPage])
+        let currentP
+        for (const p of newProductsPage) {
+          if (p.id === product.id) {
+            currentP = p
+            break
+          }
         }
-        setDashboardData({ products: newProducts })
-        setDashboardParams({ openDialog: false })
+        const index = newProductsPage.indexOf(currentP)
+        const newP = await readProducts(product.id).then(response => response.data?.[0])
+        if (newP) {
+          newProductsPage = [
+            ...newProductsPage.slice(0, index),
+            newP,
+            ...newProductsPage.slice(index + 1)
+          ]
+          newProducts[productsPage] = newProductsPage
+          setDashboardData({ products: newProducts })
+          setDashboardParams({ openModal: false })
+        }
+        else {
+          setLoading({ show: false })
+          return (
+            setDashboardParams({
+              dialogChild: (
+                <DialogOk
+                  title='Erro'
+                  text='O produto foi editado mas houve um erro ao tentar atualizar a lista.'
+                />
+              ),
+              openDialog: true
+            })
+          )
+        }
       }
       else if (res?.response?.data?.error) {
         const errorStatus = res.response.data.error.status
         const errorMessage = SQL_ERROR_STATUS_DICT[errorStatus]
-        if (errorMessage) setErrorCreate(errorMessage)
-        else setErrorCreate(`Não foi possível ${isUpdate ? 'editar' : 'criar'} o produto. Tente novamente`)
+        setDashboardParams({
+          dialogChild: (
+            <DialogRetry
+              title='Erro'
+              text={errorMessage ?? `Não foi possível ${isUpdate ? 'editar' : 'criar'} o produto.`}
+              onRetry={handleCreateProduct}
+            />
+          ),
+          openDialog: true
+        })
       }
       setLoading({ show: false })
     }
@@ -214,7 +337,6 @@ function ProductFormFields({ product, selectedImages }) {
           <Button color='standard' onClick={() => setDashboardParams({ openModal: false })}>Cancelar</Button>
           <Button color='standard' onClick={handleCreateProduct}>Ok</Button>
           {error.images && <FormHelperText><Color color='red'>{error.images}</Color></FormHelperText>}
-          {errorCreate && <FormHelperText><Color color='red'>{errorCreate}</Color></FormHelperText>}
         </Stack>
       </GridItem>
     </MainGridContainer>

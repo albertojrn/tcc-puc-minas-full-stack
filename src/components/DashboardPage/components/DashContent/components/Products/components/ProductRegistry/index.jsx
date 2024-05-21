@@ -15,7 +15,7 @@ function ProductRegistry({ product }) {
     <MainGridContainer container spacing={2}>
       <GridItem item xs={12}>
         <Stack direction='row' justifyContent='space-between' alignItems='cnter'>
-          <Typography variant='h5'>Novo Produto</Typography>
+          <Typography variant='h5'>{`${product ? 'Editar' : 'Novo'} Produto`}</Typography>
           <IconButton onClick={() => setDashboardParams({ openModal: false })}>
             <Close />
           </IconButton>
