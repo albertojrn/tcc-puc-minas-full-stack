@@ -7,6 +7,6 @@ export const USER_INIT_VALUES = {
   name: '',
   phone: '',
   role: '',
-  token: '',
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzE2MzgwMzEwfQ.PTtw9FRoveX--K6P5zmgxaeorpob69knVqLtMMzgD24',
   type: '',
 }

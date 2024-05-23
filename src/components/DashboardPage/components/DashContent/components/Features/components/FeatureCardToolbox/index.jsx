@@ -31,7 +31,7 @@ function FeatureCardToolbox({ featureValue }) {
       newFeatureValues[featureValue.feature_id] = newFeatureValues[featureValue.feature_id].filter(f => f.id !== featureValue.id)
       setDashboardData({ featureValues: newFeatureValues })
     }
-    else if (res?.response?.data?.error) {
+    else if (res?.data?.error) {
       setDashboardParams({
         dialogChild: (
           <DialogOk

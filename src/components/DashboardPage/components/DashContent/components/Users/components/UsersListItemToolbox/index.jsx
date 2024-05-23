@@ -4,44 +4,45 @@ import { MoreVert } from '@mui/icons-material'
 import { useDashboardContext } from '../../../../../../../../contexts/DashboardContext'
 import DialogYesNo from '../../../../../../../DialogYesNo'
 import { useLoadingContext } from '../../../../../../../../contexts/LoadingContext'
-import { deleteProducts } from '../../../../../../../../services/api/products'
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
-import ProductRegistry from '../ProductRegistry'
 import DialogRetry from '../../../../../../../DialogRetry'
+import { deleteUsers } from '../../../../../../../../services/api/users'
+import { useUserContext } from '../../../../../../../../contexts/UserContext'
 import { updateListPagesOnDelete } from '../../../../utils/updateListPagesOnDelete'
+import AddUser from '../AddUser'
 
-function ProductsListItemToolbox({ product, page }) {
+function UsersListItemToolbox({ user, page }) {
   const [anchorMenu, setAnchorMenu] = useState(null)
   const { setDashboardParams } = useDashboardContext()
-  const { products, setDashboardData } = useDashboardDataContext()
+  const { users, setDashboardData } = useDashboardDataContext()
   const { setLoading } = useLoadingContext()
+  const { token } = useUserContext()
   const open = Boolean(anchorMenu)
 
-  function handleOpenEditProduct() {
+  function handleOpenEditUser() {
     setAnchorMenu(null)
     setDashboardParams({
       modalChild: (
-        <ProductRegistry product={product} />
+        <AddUser user={user} />
       ),
       openModal: true,
-      blockModal: true,
     })
   }
 
-  async function handleDeleteProduct() {
+  async function handleDeleteUser() {
     setLoading({ show: true })
-    const res = await deleteProducts(product.id)
+    const res = await deleteUsers(user.id, token)
     if (res.status === 204) {
-      const newProducts = updateListPagesOnDelete(products, page, product)
-      setDashboardData({ products: newProducts })
+      const newUsers = updateListPagesOnDelete(users, page, user)
+      setDashboardData({ users: newUsers })
     }
     else if (res?.data?.error) {
       setDashboardParams({
         dialogChild: (
           <DialogRetry
-            text={`Não foi possível excluir o produto ${product.title}. Tente novamente.`}
+            text={`Não foi possível excluir o usuáirio ${user.name}. Tente novamente.`}
             title='Atenção'
-            onRetry={handleDeleteProduct}
+            onRetry={handleDeleteUser}
           />
         ),
         openDialog: true,
@@ -50,10 +51,10 @@ function ProductsListItemToolbox({ product, page }) {
     setLoading({ show: false })
   }
 
-  function confirmDeleteProduct() {
+  function confirmDeleteUser() {
     setDashboardParams({ openDialog: false })
     setAnchorMenu(null)
-    handleDeleteProduct()
+    handleDeleteUser()
   }
 
   function openDeleteConfirmation() {
@@ -61,8 +62,8 @@ function ProductsListItemToolbox({ product, page }) {
     setDashboardParams({
       dialogChild: (
         <DialogYesNo
-          onYes={confirmDeleteProduct}
-          text={`Tem certeza de que deseja excluir o produto '${product.title}'?`}
+          onYes={confirmDeleteUser}
+          text={`Tem certeza de que deseja excluir o usuário '${user.name}'?`}
           title='PRECISAMOS DA SUA CONFIRMAÇÃO'
         />
       ),
@@ -80,11 +81,11 @@ function ProductsListItemToolbox({ product, page }) {
         open={open}
         onClose={() => setAnchorMenu(null)}
       >
-        <MenuItem onClick={handleOpenEditProduct}>Editar</MenuItem>
+        <MenuItem onClick={handleOpenEditUser}>Editar</MenuItem>
         <MenuItem onClick={openDeleteConfirmation}>Excluir</MenuItem>
       </Menu>
     </>
   )
 }
 
-export default ProductsListItemToolbox
+export default UsersListItemToolbox

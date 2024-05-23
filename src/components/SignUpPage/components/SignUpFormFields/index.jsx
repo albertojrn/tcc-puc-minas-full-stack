@@ -1,43 +1,45 @@
-import React, { useState } from 'react'
-import { Button, FormControl, FormControlLabel, FormHelperText, FormLabel, IconButton, InputAdornment, Radio, RadioGroup } from '@mui/material'
+import React from 'react'
+import {
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  FormLabel,
+  IconButton,
+  InputAdornment,
+  Radio,
+  RadioGroup
+} from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import { GridItem } from '../../../../styles'
+import { GridItem, MainGridContainer } from '../../../../styles'
 import FormField from '../../../FormField'
-import { validateFields } from '../../../../utils/formMethods'
-import { CONSTRAINTS } from './constants/validationParams'
 
-function SignUpFormFields() {
-  const [birthDate, setBirthDate] = useState('')
-  const [cpf, setCpf] = useState('')
-  const [email, setEmail] = useState('')
-  const [error, setError] = useState({})
-  const [gender, setGender] = useState('')
-  const [password, setPassword] = useState('')
-  const [phone, setPhone] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [userName, setUserName] = useState('')
-
-  function handleSignUp() {
-    const validation = validateFields(
-      {
-        birthDate,
-        cpf,
-        email,
-        gender,
-        password,
-        phone,
-        userName,
-      },
-      CONSTRAINTS
-    )
-    setError(validation.error)
-    if (validation.passed) {
-      
-    }
-  }
+function SignUpFormFields({
+  birthDate,
+  setBirthDate,
+  cpf,
+  setCpf,
+  email,
+  setEmail,
+  error,
+  setError,
+  gender,
+  setGender,
+  password,
+  setPassword,
+  phone,
+  setPhone,
+  showPassword,
+  setShowPassword,
+  userName,
+  setUserName,
+  hidePassword
+}) {
 
   return (
-    <>
+    <MainGridContainer
+      container
+      spacing={2}
+    >
       <GridItem item xs={12}>
         <FormField
           autoComplete='name'
@@ -58,8 +60,8 @@ function SignUpFormFields() {
             value={gender}
             onChange={(e) => setGender(e.target.value)}
           >
-            <FormControlLabel value='F' control={<Radio />} label='Feminino' />
-            <FormControlLabel value='M' control={<Radio />} label='Masculino' />
+            <FormControlLabel value='feminino' control={<Radio />} label='Feminino' />
+            <FormControlLabel value='masculino' control={<Radio />} label='Masculino' />
           </RadioGroup>
           {error?.gender && <FormHelperText>{error.gender}</FormHelperText>}
         </FormControl>
@@ -125,33 +127,33 @@ function SignUpFormFields() {
           value={email}
         />
       </GridItem>
-      <GridItem item xs={12}>
-        <FormField
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position='end'>
-                <IconButton onClick={() => setShowPassword(prev => !prev)}>
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          autoComplete='current-password'
-          error={error}
-          field='password'
-          fullWidth
-          label='Senha'
-          required
-          setError={setError}
-          setField={setPassword}
-          type={showPassword ? 'text' : 'password'}
-          value={password}
-        />
-      </GridItem>
-      <GridItem item xs={12}>
-        <Button onClick={handleSignUp} variant='contained' fullWidth>Cadastrar</Button>
-      </GridItem>
-    </>
+      {!hidePassword
+        && (
+          <GridItem item xs={12}>
+            <FormField
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton onClick={() => setShowPassword(prev => !prev)}>
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              autoComplete='current-password'
+              error={error}
+              field='password'
+              fullWidth
+              label='Senha'
+              required
+              setError={setError}
+              setField={setPassword}
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+            />
+          </GridItem>
+        )}
+    </MainGridContainer>
   )
 }
 

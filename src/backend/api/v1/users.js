@@ -11,11 +11,24 @@ const ensureIsTheLoggedInUserOrAdmin = require('../../middlewares/ensureIsTheLog
 const router = express.Router()
 
 router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
+  const limit = req.query.limit
+  const offset = req.query.offset
   try {
-    db.query('SELECT * FROM users', (err, result) => {
-      if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, result)
-    })
+    db.query(
+      `
+      SELECT * FROM users
+      ${limit ? `LIMIT ${limit}` : ''}
+      ${offset ? `OFFSET ${offset}` : ''};
+      `,
+      (err, result) => {
+        if (err) return sqlErrorHandler(err, req, res, next)
+        for (const user of result) {
+          if (Object.prototype.hasOwnProperty.call(user, 'password')) delete user.password
+        }
+        delete result.password
+        responseHandler(req, res, result)
+      }
+    )
   }
   catch (err) {
     errorHandler(err, req, res, next)
@@ -60,8 +73,6 @@ router.post('/', async (req, res, next) => {
         name,
         password,
         phone,
-        role,
-        type
       ].some(item => !item)
     ) {
       return errorHandler({ status: 400, message: 'Bad Request' }, req, res, next)
@@ -77,9 +88,9 @@ router.post('/', async (req, res, next) => {
         gender,
         name,
         password,
-        phone,
-        role,
-        type
+        phone
+        ${role ? ',role' : ''}
+        ${type ? ',type' : ''}
       )
       VALUES (
         "${birth_date}",
@@ -88,13 +99,15 @@ router.post('/', async (req, res, next) => {
         "${gender}",
         "${name}",
         "${passwordHash}",
-        "${phone}",
-        "${role}",
-        "${type}"
+        "${phone}"
+        ${role ? `,"${role}"` : ''}
+        ${type ? `,"${type}"` : ''}
       );`,
       (err, result) => {
         if (err) return sqlErrorHandler(err, req, res, next)
-        responseHandler(req, res, { id: result.insertId, resourceUrl: `${req.baseUrl}/${result.insertId}` }, 201)
+        if (!req.body.role) req.body.role = 'standard'
+        if (!req.body.type) req.body.type = 'standard'
+        responseHandler(req, res, { ...req.body, id: result.insertId, resourceUrl: `${req.baseUrl}/${result.insertId}` }, 201)
       }
     )
   }

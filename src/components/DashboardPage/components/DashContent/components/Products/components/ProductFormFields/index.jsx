@@ -17,6 +17,7 @@ import { deleteProductFeatures } from '../../../../../../../../services/api/prod
 import { deleteProductVariations } from '../../../../../../../../services/api/productVariations'
 import DialogRetry from '../../../../../../../DialogRetry'
 import DialogOk from '../../../../../../../DialogOk'
+import { updateListPagesOnEdit } from '../../../../utils/updateListPagesOnEdit'
 
 function ProductFormFields({ product, selectedImages }) {
   const isUpdate = product !== undefined
@@ -177,24 +178,8 @@ function ProductFormFields({ product, selectedImages }) {
         setDashboardParams({ openModal: false })
       }
       else if (res.status === 200 && res.data) {
-        const newProducts = { ...products }
-        let newProductsPage = structuredClone(newProducts[productsPage])
-        let currentP
-        for (const p of newProductsPage) {
-          if (p.id === product.id) {
-            currentP = p
-            break
-          }
-        }
-        const index = newProductsPage.indexOf(currentP)
-        const newP = await readProducts(product.id).then(response => response.data?.[0])
-        if (newP) {
-          newProductsPage = [
-            ...newProductsPage.slice(0, index),
-            newP,
-            ...newProductsPage.slice(index + 1)
-          ]
-          newProducts[productsPage] = newProductsPage
+        const newProducts = await updateListPagesOnEdit(products, productsPage, product, readProducts)
+        if (newProducts) {
           setDashboardData({ products: newProducts })
           setDashboardParams({ openModal: false })
         }
@@ -213,8 +198,8 @@ function ProductFormFields({ product, selectedImages }) {
           )
         }
       }
-      else if (res?.response?.data?.error) {
-        const errorStatus = res.response.data.error.status
+      else if (res?.data?.error) {
+        const errorStatus = res.data.error.status
         const errorMessage = SQL_ERROR_STATUS_DICT[errorStatus]
         setDashboardParams({
           dialogChild: (

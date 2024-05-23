@@ -2,50 +2,52 @@ import React, { useEffect, useState } from 'react'
 import { GridItem, MainGridContainer } from '../../../../../../../../styles'
 import { COLUMNS } from './constants/gridParams'
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
-import { loadProducts } from '../../../../../../../../utils/products'
 import PleaseTryAgain from '../../../../../../../PleaseTryAgain'
-import ProductsListItem from '../ProductsListItem'
 import { useDashboardContext } from '../../../../../../../../contexts/DashboardContext'
+import { loadUsers } from '../../../../../../../../utils/users'
+import { useUserContext } from '../../../../../../../../contexts/UserContext'
+import UsersListItem from '../UsersListItem'
 import GridListHeader from '../../../GridListHeader'
 
-function ProductsList() {
-  const [errFetchProducts, setErrFetchProducts] = useState('')
+function UsersList() {
+  const [errFetch, setErrFetch] = useState('')
   const [loading, setLoading] = useState(false)
-  const { products, setDashboardData } = useDashboardDataContext()
-  const { productsPage, setDashboardParams } = useDashboardContext()
+  const { users, setDashboardData } = useDashboardDataContext()
+  const { usersPage, setDashboardParams } = useDashboardContext()
+  const { token } = useUserContext()
 
   async function fetchParams() {
     setLoading(true)
-    await loadProducts(products, productsPage, setDashboardData, setErrFetchProducts)
+    await loadUsers(users, usersPage, setDashboardData, token, setErrFetch)
     setLoading(false)
   }
 
   useEffect(() => {
     fetchParams()
     return (() => {
-      if (productsPage !== 1) setDashboardParams({ productsPage: 1 })
+      if (usersPage !== 1) setDashboardParams({ usersPage: 1 })
     })
   }, [])
 
   return (
     <MainGridContainer container spacing={2} alignItems='center'>
       <GridListHeader columns={COLUMNS} />
-      {errFetchProducts
+      {errFetch
         ? (
           <GridItem item xs={12}>
             <PleaseTryAgain
               onTryAgain={fetchParams}
-              text={errFetchProducts}
+              text={errFetch}
             />
           </GridItem>
         )
         : (
-          products[productsPage]?.map(product => (
-            <ProductsListItem key={product.id} product={product} />
+          users[usersPage]?.map(user => (
+            <UsersListItem key={user.id} user={user} />
           ))
         )}
     </MainGridContainer>
   )
 }
 
-export default ProductsList
+export default UsersList

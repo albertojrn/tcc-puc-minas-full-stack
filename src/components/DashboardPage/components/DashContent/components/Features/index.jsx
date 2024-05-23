@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Divider, Stack, Typography } from '@mui/material'
 import { GridItem, MainGridContainer } from '../../../../../../styles'
 import FeatureCard from './components/FeatureCard'
-import AddButton from '../AddButton'
 import { useLoadingContext } from '../../../../../../contexts/LoadingContext'
 import { useDashboardDataContext } from '../../../../../../contexts/DashboardDataContext'
 import PleaseTryAgain from '../../../../../PleaseTryAgain'
 import { loadFeatures } from '../../../../../../utils/features'
 import { loadFeatureValues } from '../../../../../../utils/featureValues'
+import ContentHeader from '../ContentHeader'
 
 function Features() {
   const [errorLoadingFeatures, setErrorLoadingFeatures] = useState('')
@@ -38,18 +37,7 @@ function Features() {
         )
         : (
           <>
-            <GridItem item xs={12}>
-              <Stack direction='row' spacing={1}>
-                <Typography component='div' variant='h5'>
-                  Características
-                  &nbsp;
-                </Typography>
-                <AddButton page='features' />
-              </Stack>
-            </GridItem>
-            <GridItem item xs={12}>
-              <Divider />
-            </GridItem>
+            <ContentHeader page='features' title='Características' />
             {features.map(feature => (
               <GridItem item xs={12} sm={4} md={3} key={feature.id}>
                 <FeatureCard feature={feature} />

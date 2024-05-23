@@ -4,6 +4,7 @@ import { useDashboardContext } from '../../../../../../contexts/DashboardContext
 import ProductRegistry from '../Products/components/ProductRegistry'
 import { AddButtonContainer } from './styles'
 import AddFeature from '../Features/components/AddFeature'
+import AddUser from '../Users/components/AddUser'
 
 function AddButton({ page, attr = {} }) {
   const { setDashboardParams } = useDashboardContext()
@@ -15,9 +16,13 @@ function AddButton({ page, attr = {} }) {
       data.openModal = true
       data.blockModal = true
     }
-    if (page === 'features') {
+    else if (page === 'features') {
       data.dialogChild = <AddFeature {...attr} />
       data.openDialog = true
+    }
+    else if (page === 'users') {
+      data.modalChild = <AddUser {...attr} />
+      data.openModal = true
     }
     setDashboardParams(data)
   }

@@ -34,7 +34,7 @@ function EditRemoveFeatureButtons({ feature }) {
       const newFeatures = features.filter(f => f.id !== feature.id)
       setDashboardData({ features: newFeatures })
     }
-    else if (res?.response?.data?.error) {
+    else if (res?.data?.error) {
       setDashboardParams({
         dialogChild: (
           <DialogOk
