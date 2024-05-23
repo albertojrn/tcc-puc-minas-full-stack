@@ -9,8 +9,12 @@ import Redirect from '../Redirect'
 import { StackedFormContainer, ViewboxContainer } from '../../styles'
 
 function LoginPage() {
-  const { isLoggedIn } = useUserContext()
-  if (isLoggedIn) return <Redirect to='/' />
+  const { token } = useUserContext()
+  if (token) return <Redirect to='/' />
+
+  function handleLoginSuccess(data) {
+    console.log({data})
+  }
 
   return (
     <ViewboxContainer>
@@ -21,10 +25,9 @@ function LoginPage() {
         <Typography component='div' variant='h4' align='center'>
           Login
         </Typography>
-        <StandardLoginForm />
+        <StandardLoginForm handleLoginSuccess={handleLoginSuccess} />
         <Divider>OU</Divider>
-        <GoogleLoginButton />
-        <GithubLoginButton />
+        <GoogleLoginButton handleLoginSuccess={handleLoginSuccess} />
         <CreateNewAccountLink />
       </StackedFormContainer>
     </ViewboxContainer>

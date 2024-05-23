@@ -30,6 +30,7 @@ export const GoogleButton = styled('button')`
   vertical-align: middle;
   white-space: nowrap;
   min-width: min-content;
+  width: 100%;
 
   & .gsi-material-button-icon {
     position: absolute;

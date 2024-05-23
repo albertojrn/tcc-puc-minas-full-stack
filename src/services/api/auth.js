@@ -9,3 +9,14 @@ export async function authUser(body) {
     .catch(error => error?.response)
   return result
 }
+export async function authGoogleUser(token) {
+  const url = `${v1BaseUrl}/auth/login-google`
+  const result = await axios.post(url, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+    .then(res => res)
+    .catch(error => error?.response)
+  return result
+}

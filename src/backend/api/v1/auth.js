@@ -5,33 +5,9 @@ const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
 const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
+const authGoogleTokenCheck = require('../../middlewares/authGoogleTokenCheck')
 
 const router = express.Router()
-
-router.get('/', (req, res, next) => {
-  try {
-    db.query('SELECT * FROM features', (err, result) => {
-      if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, result)
-    })
-  }
-  catch (err) {
-    errorHandler(err, req, res, next)
-  }
-})
-
-router.get('/:id', (req, res, next) => {
-  try {
-    const id = req.params.id
-    db.query('SELECT * FROM features WHERE id = ?', id, (err, result) => {
-      if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, result)
-    })
-  }
-  catch (err) {
-    errorHandler(err, req, res, next)
-  }
-})
 
 router.post('/login', async (req, res, next) => {
   try {
@@ -54,47 +30,78 @@ router.post('/login', async (req, res, next) => {
         const checkPassword = await bcrypt.compare(password, userPass)
         if (!checkPassword) return errorHandler({ status: 200, message: 'Senha incorreta.' }, req, res, next)
         const secret = process.env.REACT_APP_AUTH_SECRET
-        const token = jwt.sign({ id: user.id }, secret)
+        const token = jwt.sign({ id: user.id, role: user.role }, secret)
         delete user.password
         responseHandler(req, res, { ...user, token }, 200)
       }
     )
   }
   catch (err) {
-    console.log(err)
     errorHandler(err, req, res, next)
   }
 })
 
-router.put('/:id', (req, res, next) => {
+router.post('/login-google', authGoogleTokenCheck, async (req, res, next) => {
   try {
-    const id = req.params.id
-    const name = req.body.name
-    const is_multiple = req.body.is_multiple
-    if (!id || (name === undefined && is_multiple === undefined)) {
-      return errorHandler({ status: 400, message: 'Bad request.' }, req, res, next)
+    const { google_id, email, name } = req.verifiedGoogleUser
+    const user = {
+      id: '',
+      name,
+      birth_date: '',
+      cpf: '',
+      email,
+      gender: '',
+      phone: '',
+      role: '',
+      type: 'third',
+      third_id: google_id
     }
-    const propsArray = []
-    if (name) propsArray.push(`name = '${name}'`)
-    if (is_multiple) propsArray.push(`is_multiple = ${is_multiple}`)
-    const setStr = propsArray.join(', ')
-    db.query(`UPDATE features SET ${setStr} WHERE id = ?`, id, (err) => {
-      if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, { id, ...req.body }, 200)
-    })
-  }
-  catch (err) {
-    errorHandler(err, req, res, next)
-  }
-})
+    const secret = process.env.REACT_APP_AUTH_SECRET
+    if (!user.third_id || !user.email) {
+      return errorHandler({ status: 400, message: 'Bad Request' }, req, res, next)
+    }
 
-router.delete('/:id', (req, res, next) => {
-  try {
-    const id = req.params.id
-    db.query('DELETE FROM features WHERE id= ?', id, (err) => {
-      if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, undefined, 204)
-    })
+    db.query(
+      `SELECT * FROM users WHERE third_id = "${user.third_id}" AND email = "${user.email}";`,
+      async (err1, res1) => {
+        if (err1) return sqlErrorHandler(err1, req, res, next)
+        if (!res1?.[0]) {
+          db.query(
+            `INSERT INTO users (
+              third_id,
+              email,
+              name,
+              type
+            )
+            VALUES (
+              "${user.third_id}",
+              "${user.email}",
+              "${user.name}",
+              "${user.type}"
+            );`,
+            (err2) => {
+              if (err2) return sqlErrorHandler(err2, req, res, next)
+              db.query(
+                `SELECT * FROM users WHERE third_id = "${user.third_id}" AND email = "${user.email}";`,
+                (err3, res3) => {
+                  if (err3) return sqlErrorHandler(err3, req, res, next)
+                  const fetchedUser = res3[0]
+                  const token = jwt.sign({ id: fetchedUser.id, role: fetchedUser.role }, secret)
+                  delete fetchedUser.password
+                  responseHandler(req, res, { ...fetchedUser, token }, 200)
+                }
+              )
+            }
+          )
+        }
+        else {
+          const fetchedUser = res1[0]
+          const token = jwt.sign({ id: fetchedUser.id, role: fetchedUser.role }, secret)
+          delete fetchedUser.password
+          responseHandler(req, res, { ...fetchedUser, token }, 200)
+        }
+      }
+    )
   }
   catch (err) {
     errorHandler(err, req, res, next)

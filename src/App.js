@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 import { ThemeProvider, createTheme } from '@mui/material'
 import './App.css'
 import EcommRoutes from './routes/EcommRoutes'
@@ -15,13 +16,15 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <LoadingContextProvider>
-          <div id='app-main'>
-            <NavBar />
-            <EcommRoutes />
-            <Loading />
-          </div>
-        </LoadingContextProvider>
+        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}>
+          <LoadingContextProvider>
+            <div id='app-main'>
+              <NavBar />
+              <EcommRoutes />
+              <Loading />
+            </div>
+          </LoadingContextProvider>
+        </GoogleOAuthProvider>
       </ThemeProvider>
     </BrowserRouter>
   )

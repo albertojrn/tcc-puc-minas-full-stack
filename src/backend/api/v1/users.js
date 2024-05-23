@@ -1,15 +1,16 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
 const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
 const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
 const authTokenCheck = require('../../middlewares/authTokenCheck')
+const ensureIsAdmin = require('../../middlewares/ensureIsAdmin')
+const ensureIsTheLoggedInUserOrAdmin = require('../../middlewares/ensureIsTheLoggedInUserOrAdmin')
 
 const router = express.Router()
 
-router.get('/', (req, res, next) => {
+router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     db.query('SELECT * FROM users', (err, result) => {
       if (err) return sqlErrorHandler(err, req, res, next)
@@ -21,7 +22,7 @@ router.get('/', (req, res, next) => {
   }
 })
 
-router.get('/:id', authTokenCheck, (req, res, next) => {
+router.get('/:id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, async (req, res, next) => {
   try {
     const id = req.params.id
     db.query('SELECT * FROM users WHERE id = ?', id, (err, result) => {
@@ -102,21 +103,49 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, async (req, res, next) => {
   try {
     const id = req.params.id
-    const name = req.body.name
-    const is_multiple = req.body.is_multiple
-    if (!id || (name === undefined && is_multiple === undefined)) {
+    const body = structuredClone(req.body ?? {})
+    if (req.verifiedRole !== 'admin') {
+      if (body.cpf) delete body.cpf
+      if (body.role) delete body.role
+      if (body.type) delete body.type
+    }
+    if (!id || !Object.values(body ?? {}).length || (Object.values(body ?? {}).every(val => !val))) {
       return errorHandler({ status: 400, message: 'Bad request.' }, req, res, next)
     }
+    const {
+      birth_date,
+      cpf,
+      email,
+      gender,
+      name,
+      password,
+      phone,
+      role,
+      type
+    } = body
+    let passwordHash
+    if (password) {
+      const salt = await bcrypt.genSalt(12)
+      passwordHash = await bcrypt.hash(password, salt)
+    }
     const propsArray = []
-    if (name) propsArray.push(`name = '${name}'`)
-    if (is_multiple) propsArray.push(`is_multiple = ${is_multiple}`)
+    if (birth_date) propsArray.push(`birth_date = "${birth_date}"`)
+    if (cpf) propsArray.push(`cpf = "${cpf}"`)
+    if (email) propsArray.push(`email = "${email}"`)
+    if (gender) propsArray.push(`gender = "${gender}"`)
+    if (name) propsArray.push(`name = "${name}"`)
+    if (passwordHash) propsArray.push(`password = "${passwordHash}"`)
+    if (phone) propsArray.push(`phone = "${phone}"`)
+    if (role) propsArray.push(`role = "${role}"`)
+    if (type) propsArray.push(`type = "${type}"`)
     const setStr = propsArray.join(', ')
     db.query(`UPDATE users SET ${setStr} WHERE id = ?`, id, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, { id, ...req.body }, 200)
+      if (body.password) delete body.password
+      responseHandler(req, res, { id, ...body }, 200)
     })
   }
   catch (err) {
@@ -124,7 +153,7 @@ router.put('/:id', (req, res, next) => {
   }
 })
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     db.query('DELETE FROM users WHERE id= ?', id, (err) => {
