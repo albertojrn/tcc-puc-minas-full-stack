@@ -10,6 +10,8 @@ router.get('/', (req, res, next) => {
   try {
     const limit = req.query.limit
     const offset = req.query.offset
+    const orderby = req.query.orderby
+    const orderdirection = req.query.orderdirection
 
     const query = `
       SELECT
@@ -40,9 +42,11 @@ router.get('/', (req, res, next) => {
       AS images
       FROM products
       GROUP BY products.id
+      ${orderby ? `ORDER BY ${orderby}${orderdirection ? ` ${orderdirection}` : ''}` : ''}
       ${limit ? `LIMIT ${limit}` : ''}
       ${offset ? `OFFSET ${offset}` : ''};
     `
+    console.log(query)
     db.query(query, (err, result) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       if (Array.isArray(result)) {

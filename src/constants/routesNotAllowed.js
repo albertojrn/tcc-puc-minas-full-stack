@@ -1,7 +1,7 @@
 export const NAVBAR_HIDE_PART_ON_ROUTES = [
   '/login',
   '/sign-up',
-  '/password-recovery'
+  '/password-recovery',
 ]
 
 export const NAVBAR_HIDE_ON_ROUTES = [

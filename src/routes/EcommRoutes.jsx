@@ -6,15 +6,20 @@ import SignUpPage from '../components/SignUpPage'
 import ForgetPasswordPage from '../components/ForgetPasswordPage'
 import DashboardPage from '../components/DashboardPage'
 import { ContentMainConatiner } from '../styles'
+import { useUserContext } from '../contexts/UserContext'
 
 function EcommRoutes() {
+  const { role } = useUserContext()
   return (
     <Routes>
       <Route exact path='/' element={<ContentMainConatiner><HomePage /></ContentMainConatiner>} />
       <Route exact path='/login' element={<ContentMainConatiner><LoginPage /></ContentMainConatiner>} />
       <Route exact path='/sign-up' element={<ContentMainConatiner><SignUpPage /></ContentMainConatiner>} />
       <Route exact path='/password-recovery' element={<ContentMainConatiner><ForgetPasswordPage /></ContentMainConatiner>} />
-      <Route exact path='/dashboard' element={<DashboardPage />} />
+      {role === 'admin'
+        && (
+          <Route exact path='/dashboard' element={<DashboardPage />} />
+        )}
     </Routes>
   )
 }

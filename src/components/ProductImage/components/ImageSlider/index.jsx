@@ -13,7 +13,7 @@ function ImageSlider({ options, selectedImages, sliderIndex, setSliderIndex }) {
         onSelect={(selectedIndex) => setSliderIndex(selectedIndex)}
         {...options}
       >
-        {selectedImages.length
+        {selectedImages?.length
           ? (
             selectedImages.map(img => (
               <Carousel.Item key={img.name ?? img}>

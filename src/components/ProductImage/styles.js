@@ -1,6 +1,6 @@
 import { Typography, styled } from '@mui/material'
 
-export const CarouselContainer = styled('div', { shouldForwardProp: prop => !['height', 'sideBySide', 'width'].includes(prop) })`
+export const CarouselContainer = styled('div', { shouldForwardProp: prop => !['height', 'controlsColor', 'sideBySide', 'width'].includes(prop) })`
   ${({ width }) => width && `width: ${width};`}
   & img {
     height: auto;
@@ -11,13 +11,13 @@ export const CarouselContainer = styled('div', { shouldForwardProp: prop => !['h
     text-align: center;
   }
   & .MuiSvgIcon-root {
-    fill: black;
+    fill: ${({ controlsColor }) => controlsColor ?? 'black'};
   }
-  ${({ height }) => height && `
+  ${({ height, width }) => height && `
     height: ${height};
     & img {
       height: ${height};
-      width: ${height};
+      width: ${width ?? height};
     }
     & .carousel-item {
       height: ${height};

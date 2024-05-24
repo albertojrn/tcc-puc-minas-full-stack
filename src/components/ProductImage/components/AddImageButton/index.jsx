@@ -1,7 +1,7 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from '@mui/material'
 import { FileInput } from './styles'
-import { imgFileToDataUrl } from '../../../../../../../../../../utils/imageMethods'
+import { imgFileToDataUrl } from '../../../../utils/imageMethods'
 
 function AddImageButton({ selectedImages, setSelectedImages }) {
   const [loadingImages, setLoadingImages] = useState(false)

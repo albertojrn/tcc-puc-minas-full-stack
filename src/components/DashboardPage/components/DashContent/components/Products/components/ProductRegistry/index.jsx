@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import { Stack, Typography } from '@mui/material'
 import { GridItem, MainGridContainer } from '../../../../../../../../styles'
-import ProductImage from '../ProductImage'
+import ProductImage from '../../../../../../../ProductImage'
 import ProductFormFields from '../ProductFormFields'
-import AddImageButton from '../ProductImage/components/AddImageButton'
+import AddImageButton from '../../../../../../../ProductImage/components/AddImageButton'
 
 function ProductRegistry({ product }) {
   const [selectedImages, setSelectedImages] = useState(product?.images ?? [])
