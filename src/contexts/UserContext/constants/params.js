@@ -1,5 +1,6 @@
 export const USER_INIT_VALUES = {
   birth_date: '',
+  cart: [],
   cpf: '',
   email: '',
   gender: '',

@@ -3,9 +3,9 @@ import Carousel from 'react-bootstrap/Carousel'
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'
 import { CarouselContainer, NoImageContainer } from '../../styles'
 
-function ImageSlider({ options, selectedImages, sliderIndex, setSliderIndex }) {
+function ImageSlider({ options, selectedImages, sliderIndex, setSliderIndex, height = '350px' }) {
   return (
-    <CarouselContainer height='350px'>
+    <CarouselContainer height={height}>
       <Carousel
         activeIndex={sliderIndex}
         prevIcon={<ArrowBackIos />}

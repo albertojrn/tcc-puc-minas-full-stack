@@ -35,7 +35,7 @@ function FormField({
     let newValue = e.target.value
     if (onlyNumbers) newValue = newValue.replace(/[^0-9]/g, '')
     if (pattern) newValue = formatStringByPattern(pattern, newValue)
-    if (type === 'number') newValue = Number(newValue)
+    if (type === 'number' && newValue) newValue = Number(newValue)
     handleOnUserTyping(field, setField, newValue, setError)
   }
   return (

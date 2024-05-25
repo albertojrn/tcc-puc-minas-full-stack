@@ -31,10 +31,6 @@ export const CardContainer = styled(Stack)`
     line-height: 1.2;
     font-stretch: expanded;
   }
-  & .MuiDivider-root {
-    border-color: ${COLORS.lightBorder};
-    border-bottom-width: 2px;
-  }
   & .ProductCardPrice-label {
     font-size: 1.0;
     color: ${COLORS.urbanBlack};
@@ -43,10 +39,7 @@ export const CardContainer = styled(Stack)`
 
 export const LinkContainer = styled(Link)`
 text-decoration: none;
-  &:active {
-    color: black;
-  }
-  &:visited {
+  &:active, &:hover, &:visited, &:link {
     color: black;
   }
 `

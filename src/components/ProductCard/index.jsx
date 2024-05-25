@@ -1,27 +1,26 @@
 import React from 'react'
-import { Divider, Stack, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Stack, Typography } from '@mui/material'
 import { CardContainer, LinkContainer } from './styles'
 import { formatPrice } from '../../utils/formatMethods'
+import { CustomDivider } from '../../styles'
 
 function ProductCard({
-  variations,
+  productId,
   title,
-  url,
+  variations
 }) {
-  console.log({variations})
   const lowestPrice = Math.min(...variations.map(variation => variation.price))
   return (
-    <LinkContainer to={url}>
+    <LinkContainer to={`/product/${productId}`}>
       <CardContainer direction='column' spacing={1}>
         <div className='ProductCardImg-root'>
           <img src={`${process.env.PUBLIC_URL}/images/1716037704529-nike-revo-7-fem-1.jpg`} alt='banner_img' />
         </div>
-        <Divider />
+        <CustomDivider />
         <Typography className='ProductCardTitle-root' component='div'>
           {title}
         </Typography>
-        <Divider />
+        <CustomDivider />
         <Stack direction='row' alignItems='start' justifyContent='space-between'>
           <Typography className='ProductCardPrice-label' component='div'>
             A partir de:

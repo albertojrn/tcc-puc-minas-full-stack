@@ -1,6 +1,7 @@
-import { Box, Button, Grid, Stack, TextField, Typography, styled } from '@mui/material'
+import { Box, Button, Divider, Grid, Stack, TextField, Typography, styled } from '@mui/material'
 import { COLORS, NAVBAR_HEIGHT } from './constants/theme'
 import { formatCssProp } from './utils/cssMethods'
+import { Link } from 'react-router-dom'
 
 export const AppBarContainer = styled(Box)`
   background-color: ${COLORS.urbanBeige};
@@ -44,6 +45,16 @@ export const ContentMainConatiner = styled('div')`
     }
   `}
 `
+export const CustomDivider = styled(Divider, { shouldForwardProp: prop => !['color', 'thickness'].includes(prop) })`
+  border-color: ${({ color }) => color ?? COLORS.lightBorder};
+  border-bottom-width: ${({ thickness }) => thickness ?? '2px'};
+`
+export const CustomLink = styled(Link, { shouldForwardProp: prop => !['color', 'textDecoration'].includes(prop) })`
+  &:active, &:hover, &:visited, &:link {
+    color: ${({ color }) => color ?? 'black'};
+    ${({ textDecoration }) => textDecoration && `text-decoration: ${textDecoration};`}
+  }
+`
 
 export const FormContainer = styled(Box, { shouldForwardProp: prop => !['height', 'maxHeight'].includes(prop) })`
   border: 1px solid ${COLORS.inputBorderColor};
@@ -74,6 +85,7 @@ export const GridItem = styled(Grid, { shouldForwardProp: prop => !['align', 'al
     }
   `}
 `
+
 
 export const MainGridContainer = styled(Grid, { shouldForwardProp: prop => !['drawBorder', 'height', 'marginTop', 'maxWidth', 'minWidth', 'width'].includes(prop) })`
   ${({ height, theme }) => height && formatCssProp('height', height, theme)}

@@ -4,7 +4,6 @@ import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'
 import { Container, ControlsContainer, MainContainer, ScrollContainer } from './styles'
 import { GridItem } from '../../styles'
 import ProductCard from '../ProductCard'
-import { readProducts } from '../../services/api/products'
 
 function ProductScrollGrid({ fetchProducts, sizes, query }) {
   const [loading, setLoading] = useState(false)
@@ -37,7 +36,6 @@ function ProductScrollGrid({ fetchProducts, sizes, query }) {
       setLoading(true)
       const res = await fetchProducts()
       setLoading(true)
-      console.log({res})
       if (res?.data?.length) setProducts(res.data)
     }
   }
@@ -65,10 +63,11 @@ function ProductScrollGrid({ fetchProducts, sizes, query }) {
       <Container id='ProductsScrollGridContainer-root'>
         <ScrollContainer className='ProductsScrollContainer-root' container spacing={2}>
           {products.map((product) => (
-            <GridItem item {...sizes}>
+            <GridItem item {...sizes} key={product.id}>
               <ProductCard
-                variations={product.variations}
+                productId={product.id}
                 title={product.title}
+                variations={product.variations}
               />
             </GridItem>
           ))}

@@ -46,7 +46,6 @@ router.get('/', (req, res, next) => {
       ${limit ? `LIMIT ${limit}` : ''}
       ${offset ? `OFFSET ${offset}` : ''};
     `
-    console.log(query)
     db.query(query, (err, result) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       if (Array.isArray(result)) {

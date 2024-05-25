@@ -1,4 +1,4 @@
-import { Box, Button, styled } from '@mui/material'
+import { Box, Stack, Typography, styled } from '@mui/material'
 
 export const IconsContainer = styled(Box)`
   display: flex;
@@ -8,10 +8,18 @@ export const IconsContainer = styled(Box)`
     }
   `}
 `
+export const LoginContainer = styled(Stack)`
+  cursor: pointer;
+  ${({ theme }) => `
+    ${theme.breakpoints.down('sm')} {
+      display: none;
+    }
+  `}
+`
 
-export const LoginButton = styled(Button)`
-  color: white;
-  font-size: 0.8rem;
+export const LoginText = styled(Typography)`
+  font-size: 0.75rem;
+  line-height: 1;
   &:hover {
     text-decoration: underline;
   }
