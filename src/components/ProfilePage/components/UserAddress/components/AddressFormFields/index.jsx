@@ -22,7 +22,7 @@ function AddressFormFields({
 }) {
   return (
     <MainGridContainer container spacing={2}>
-      <GridItem item xs={8}>
+      <GridItem item xs={12} sm={8}>
         <FormField
           autoComplete='address-line1'
           error={error}
@@ -35,7 +35,7 @@ function AddressFormFields({
           value={address1}
         />
       </GridItem>
-      <GridItem item xs={4}>
+      <GridItem item xs={12} sm={4}>
         <FormField
           error={error}
           field='address1Num'
@@ -47,7 +47,7 @@ function AddressFormFields({
           value={address1Num}
         />
       </GridItem>
-      <GridItem item xs={8}>
+      <GridItem item xs={12} sm={8}>
         <FormField
           autoComplete='address-line2'
           error={error}
@@ -60,7 +60,7 @@ function AddressFormFields({
           value={address2}
         />
       </GridItem>
-      <GridItem item xs={4}>
+      <GridItem item xs={12} sm={4}>
         <FormField
           error={error}
           field='zipCode'
@@ -75,7 +75,7 @@ function AddressFormFields({
           value={zipCode}
         />
       </GridItem>
-      <GridItem item xs={8}>
+      <GridItem item xs={12} sm={8}>
         <FormField
           autoComplete='address-level2'
           error={error}
@@ -88,7 +88,7 @@ function AddressFormFields({
           value={city}
         />
       </GridItem>
-      <GridItem item xs={4}>
+      <GridItem item xs={12} sm={4}>
         <FormControl fullWidth>
           <InputLabel>Estado*</InputLabel>
           <NativeSelect

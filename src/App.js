@@ -8,6 +8,7 @@ import { StoreContextProvider } from './contexts/StoreContext'
 import NavBar from './components/NavBar'
 import CUSTOM_THEME from './constants/theme'
 import { LoadingContextProvider } from './contexts/LoadingContext'
+import { UserContextProvider } from './contexts/UserContext'
 import Loading from './components/Loading'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import DialogRoot from './components/DialogRoot'
@@ -18,18 +19,20 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <StoreContextProvider>
-          <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}>
-            <LoadingContextProvider>
-              <div id='app-main'>
-                <NavBar />
-                <EcommRoutes />
-                <Loading />
-                <DialogRoot />
-              </div>
-            </LoadingContextProvider>
-          </GoogleOAuthProvider>
-        </StoreContextProvider>
+        <UserContextProvider>
+          <StoreContextProvider>
+            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_AUTH_CLIENT_ID}>
+              <LoadingContextProvider>
+                <div id='app-main'>
+                  <NavBar />
+                  <EcommRoutes />
+                  <Loading />
+                  <DialogRoot />
+                </div>
+              </LoadingContextProvider>
+            </GoogleOAuthProvider>
+          </StoreContextProvider>
+        </UserContextProvider>
       </ThemeProvider>
     </BrowserRouter>
   )

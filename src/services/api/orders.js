@@ -26,7 +26,7 @@ export async function deleteOrders(id, token) {
   return result
 }
 
-export async function readOrders(id, reqQuery = {}, token) {
+export async function readOrders(user_id, token, reqQuery = {}) {
   let queryString = ''
   const queryProps = Object.keys(reqQuery)
   if (queryProps.length) {
@@ -36,7 +36,7 @@ export async function readOrders(id, reqQuery = {}, token) {
       queryString += `${i !== 0 ? '&' : ''}${prop}=${reqQuery[prop]}`
     }
   }
-  const url = `${v1BaseUrl}/orders${(id || id === 0) ? `/${id}` : ''}${queryString}`
+  const url = `${v1BaseUrl}/orders${(user_id || user_id === 0) ? `/${user_id}` : ''}${queryString}`
   const result = await axios.get(url, {
     headers: {
       Authorization: `Bearer ${token}`

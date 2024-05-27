@@ -3,15 +3,16 @@ import { COLORS } from '../../../../constants/theme'
 
 export const CardContainer = styled(Box, { shouldForwardProp: prop => !['cursor', 'preventUserSelection', 'selected'].includes(prop) })`
   align-items: center;
-  justify-self: stretch;
   align-self: stretch;
   border-radius: 8px;
   border: 1px solid ${COLORS.lightBorder};
   display: flex;
   justify-content: center;
-  overflow-y: auto;
+  justify-self: stretch;
   overflow-x: hidden;
+  overflow-y: auto;
   padding: 12px;
+  position: relative;
   width: 100%;
   ${({ cursor }) => cursor && `cursor: ${cursor};`}
   ${({ preventUserSelection }) => preventUserSelection && 'user-select: none;'}

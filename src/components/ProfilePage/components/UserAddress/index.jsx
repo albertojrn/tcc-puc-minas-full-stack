@@ -31,9 +31,9 @@ function UserAddress({ isCheckoutPage, selectedAddressId, setSelectedAddressId }
   return (
     <Stack direction='column' spacing={2} alignItems='stretch'>
       <Typography variant='h6'>
-        {isCheckoutPage ? 'Selecione o endereço de entrega' : 'Seus Endereços'}
+        {isCheckoutPage ? 'Selecione o endereço de entrega' : ''}
       </Typography>
-      <MainGridContainer container spacing={3}>
+      <MainGridContainer container columnSpacing={{ xs: 0, sm: 3 }} rowSpacing={{ xs: 3 }}>
         <GridItem isFlex item xs={12} sm={2}>
           <AddAddressBox />
         </GridItem>

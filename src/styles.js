@@ -45,9 +45,10 @@ export const ContentMainConatiner = styled('div')`
     }
   `}
 `
-export const CustomDivider = styled(Divider, { shouldForwardProp: prop => !['color', 'thickness'].includes(prop) })`
+export const CustomDivider = styled(Divider, { shouldForwardProp: prop => !['color', 'margin', 'thickness'].includes(prop) })`
   border-color: ${({ color }) => color ?? COLORS.lightBorder};
   border-bottom-width: ${({ thickness }) => thickness ?? '2px'};
+  ${({ margin }) => margin && `margin: ${margin}`};
 `
 export const CustomLink = styled(Link, { shouldForwardProp: prop => !['color', 'textDecoration'].includes(prop) })`
   &:active, &:hover, &:visited, &:link {

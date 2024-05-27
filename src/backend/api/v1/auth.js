@@ -6,6 +6,7 @@ const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
 const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
 const authGoogleTokenCheck = require('../../middlewares/authGoogleTokenCheck')
+const authTokenCheck = require('../../middlewares/authTokenCheck')
 
 const router = express.Router()
 
@@ -100,6 +101,29 @@ router.post('/login-google', authGoogleTokenCheck, async (req, res, next) => {
           delete fetchedUser.password
           responseHandler(req, res, { ...fetchedUser, token }, 200)
         }
+      }
+    )
+  }
+  catch (err) {
+    errorHandler(err, req, res, next)
+  }
+})
+
+router.get('/validate', authTokenCheck, async (req, res, next) => {
+  try {
+    const verifiedId = req.verifiedUser
+    if (!verifiedId) {
+      return errorHandler({ status: 400, message: 'Bad Request' }, req, res, next)
+    }
+
+    db.query(
+      `SELECT * FROM users WHERE id = "${verifiedId}";`,
+      async (err, result) => {
+        if (err) return sqlErrorHandler(err, req, res, next)
+        const user = result?.[0]
+        if (!user?.id) return errorHandler({ status: 400, message: 'Usuário não encontrado' }, req, res, next)
+        delete user.password
+        responseHandler(req, res, { ...user }, 200)
       }
     )
   }

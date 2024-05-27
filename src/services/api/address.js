@@ -14,8 +14,8 @@ export async function createUserAddress(body, token) {
   return result
 }
 
-export async function deleteUserAddress(id, token) {
-  const url = `${v1BaseUrl}/address/${id}`
+export async function deleteUserAddress(id, user_id, token) {
+  const url = `${v1BaseUrl}/address/${id}${user_id ? `?user=${user_id}` : ''}`
   const result = await axios.delete(url, {
     headers: {
       Authorization: `Bearer ${token}`

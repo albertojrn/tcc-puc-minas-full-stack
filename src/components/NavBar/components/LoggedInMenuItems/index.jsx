@@ -1,12 +1,23 @@
 import React from 'react'
 import { MenuItem } from '@mui/material'
 import { DICTIONARY } from '../../../../constants/dictionary'
+import { CustomLink } from '../../../../styles'
+import { useUserContext } from '../../../../contexts/UserContext'
 
-function LoggedInMenuItems() {
+function LoggedInMenuItems({ setAnchor }) {
+  const { logoutUser } = useUserContext()
+
+  function handleLogout() {
+    setAnchor(null)
+    logoutUser()
+  }
+
   return (
     <>
-      <MenuItem onClick={() => null}>{DICTIONARY.MY_ACCOUNT}</MenuItem>
-      <MenuItem onClick={() => null}>{DICTIONARY.LEAVE}</MenuItem>
+      <CustomLink color='black' textDecoration='none' to='/my-profile'>
+        <MenuItem onClick={() => setAnchor(null)}>{DICTIONARY.MY_ACCOUNT}</MenuItem>
+      </CustomLink>
+      <MenuItem onClick={handleLogout}>{DICTIONARY.LEAVE}</MenuItem>
     </>
   )
 }

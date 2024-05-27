@@ -105,13 +105,13 @@ router.put('/:id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, ne
       return errorHandler({ status: 400, message: 'Bad request.' }, req, res, next)
     }
     const propsArray = []
-    if (address_1) propsArray.push(`address_1 = ${address_1}`)
-    if (address_1_num) propsArray.push(`address_1_num = ${address_1_num}`)
-    if (address_2) propsArray.push(`address_2 = ${address_2}`)
-    if (city) propsArray.push(`city = ${city}`)
-    if (state) propsArray.push(`state = ${state}`)
+    if (address_1) propsArray.push(`address_1 = "${address_1}"`)
+    if (address_1_num) propsArray.push(`address_1_num = "${address_1_num}"`)
+    if (address_2) propsArray.push(`address_2 = "${address_2}"`)
+    if (city) propsArray.push(`city = "${city}"`)
+    if (state) propsArray.push(`state = "${state}"`)
     if (user_id) propsArray.push(`user_id = ${user_id}`)
-    if (zip_code) propsArray.push(`zip_code = ${zip_code}`)
+    if (zip_code) propsArray.push(`zip_code = "${zip_code}"`)
     const setStr = propsArray.join(', ')
     db.query(`UPDATE users_address SET ${setStr} WHERE id = ${id}`, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)

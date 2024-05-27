@@ -1,7 +1,12 @@
 import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import React from 'react'
 
-function DialogOk({ text, title, setDialogParams }) {
+function DialogOk({ text, title, setDialogParams, onOk }) {
+  function handleOkClick() {
+    if (typeof onOk === 'function') onOk()
+    setDialogParams({ openDialog: false })
+  }
+
   return (
     <>
       <DialogTitle>{title}</DialogTitle>
@@ -9,7 +14,7 @@ function DialogOk({ text, title, setDialogParams }) {
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button color='standard' onClick={() => setDialogParams({ openDialog: false })}>Ok</Button>
+        <Button color='standard' onClick={handleOkClick}>Ok</Button>
       </DialogActions>
     </>
   )

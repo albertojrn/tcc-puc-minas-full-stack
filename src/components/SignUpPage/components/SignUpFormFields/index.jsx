@@ -32,7 +32,8 @@ function SignUpFormFields({
   setShowPassword,
   userName,
   setUserName,
-  hidePassword
+  hidePassword,
+  isMyAccountPage
 }) {
 
   return (
@@ -66,7 +67,7 @@ function SignUpFormFields({
           {error?.gender && <FormHelperText>{error.gender}</FormHelperText>}
         </FormControl>
       </GridItem>
-      <GridItem item xs={12}>
+      <GridItem item xs={12} md={isMyAccountPage ? 4 : 12}>
         <FormField
           autoComplete='bday'
           error={error}
@@ -81,8 +82,9 @@ function SignUpFormFields({
           value={birthDate}
         />
       </GridItem>
-      <GridItem item xs={12}>
+      <GridItem item xs={12} md={isMyAccountPage ? 4 : 12}>
         <FormField
+          disabled={isMyAccountPage}
           error={error}
           field='cpf'
           fullWidth
@@ -97,7 +99,7 @@ function SignUpFormFields({
           value={cpf}
         />
       </GridItem>
-      <GridItem item xs={12}>
+      <GridItem item xs={12} md={isMyAccountPage ? 4 : 12}>
         <FormField
           error={error}
           field='phone'
@@ -113,9 +115,10 @@ function SignUpFormFields({
           value={phone}
         />
       </GridItem>
-      <GridItem item xs={12}>
+      <GridItem item xs={12} md={isMyAccountPage ? 6 : 12}>
         <FormField
           autoComplete='email'
+          disabled={isMyAccountPage}
           error={error}
           field='email'
           fullWidth
@@ -129,7 +132,7 @@ function SignUpFormFields({
       </GridItem>
       {!hidePassword
         && (
-          <GridItem item xs={12}>
+          <GridItem item xs={12} md={isMyAccountPage ? 6 : 12}>
             <FormField
               InputProps={{
                 endAdornment: (
@@ -145,7 +148,7 @@ function SignUpFormFields({
               field='password'
               fullWidth
               label='Senha'
-              required
+              required={!isMyAccountPage}
               setError={setError}
               setField={setPassword}
               type={showPassword ? 'text' : 'password'}

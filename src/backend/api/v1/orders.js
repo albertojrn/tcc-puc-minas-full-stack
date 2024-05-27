@@ -56,16 +56,16 @@ router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   }
 })
 
-router.get('/:id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, next) => {
+router.get('/:user_id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, next) => {
   try {
-    const id = req.params.id
+    const user_id = req.params.user_id
     const onlyinfo = req.query.onlyinfo
 
     const query = `
       SELECT
       *
-      ${onlyinfo === 'true' ? '' : `,
-      (
+      ${onlyinfo === 'true' ? '' : `
+      ,(
       SELECT JSON_ARRAYAGG(JSON_OBJECT(
       'order_id', oi.order_id,
       'primary_color_id', oi.primary_color_id,
@@ -76,12 +76,12 @@ router.get('/:id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, ne
       'price', oi.price
       ))
       FROM orders_items oi
-      WHERE ${id} = oi.order_id
+      WHERE orders.id = oi.order_id
       )
       AS items`}
       FROM orders
-      GROUP BY orders.id
-      WHERE orders.id = ${id};
+      WHERE orders.user_id = ${user_id}
+      GROUP BY orders.id;
     `
 
     db.query(query, (err, result) => {
@@ -99,7 +99,7 @@ router.get('/:id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, ne
   }
 })
 
-router.post('/', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, next) => {
+router.post('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const user_id = req.body.user_id
     const shipping_fee = req.body.shipping_fee
@@ -133,7 +133,7 @@ router.post('/', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, next
   }
 })
 
-router.put('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
+router.put('/:id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     const {

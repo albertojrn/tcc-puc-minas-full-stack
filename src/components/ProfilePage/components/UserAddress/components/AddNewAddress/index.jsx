@@ -16,7 +16,7 @@ function AddNewAddress({ address }) {
   const [address1, setAddress1] = useState(address?.address_1 ?? '')
   const [address1Num, setAddress1Num] = useState(address?.address_1_num ?? '')
   const [address2, setAddress2] = useState(address?.address_2 ?? '')
-  const [addressState, setAddressState] = useState(address?.state ?? '')
+  const [addressState, setAddressState] = useState(address?.state ?? 'AC')
   const [city, setCity] = useState(address?.city ?? '')
   const [error, setError] = useState({})
   const [zipCode, setZipCode] = useState(address?.zip_code ?? '')
@@ -47,6 +47,18 @@ function AddNewAddress({ address }) {
         user_id: id,
         zip_code: zipCode,
       }
+      if (isUpdate) {
+        if (body.address_1 === address.address_1) delete body.address_1
+        if (body.address_1_num === address.address_1_num) delete body.address_1_num
+        if (body.address_2 === address.address_2) delete body.address_2
+        if (body.state === address.state) delete body.state
+        if (body.city === address.city) delete body.city
+        if (body.zip_code === address.zip_code) delete body.zip_code
+        if (Object.keys(body).length === 1) {
+          setLoading({ show: false })
+          return setError({ create: 'Nenhuma alteração foi feita.' })
+        }
+      }
       const res = (
         isUpdate
           ? await updateUserAddress(address.id, body, token)
@@ -63,7 +75,7 @@ function AddNewAddress({ address }) {
         const newAddrasses = structuredClone(addresses)
         const changedAddress = newAddrasses.find(item => item.id === address.id)
         const addressIndex = newAddrasses.indexOf(changedAddress)
-        newAddrasses[addressIndex] = res.data
+        newAddrasses[addressIndex] = { ...newAddrasses[addressIndex], ...res.data }
         setUser({ addresses: newAddrasses })
         setStorePersistent({ openDialog: false })
       }

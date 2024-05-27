@@ -12,6 +12,7 @@ import CartPage from '../components/CartPage'
 import Redirect from '../components/Redirect'
 import CheckoutPage from '../components/CheckoutPage'
 import OrderConfirmationPage from '../components/OrderConfirmationPage'
+import ProfilePage from '../components/ProfilePage'
 
 function EcommRoutes() {
   const { role, token } = useUserContext()
@@ -35,6 +36,15 @@ function EcommRoutes() {
           !token
             ? <Redirect to='/login?redirectUrl=/checkout' />
             : <ContentMainConatiner><CheckoutPage /></ContentMainConatiner>
+      }
+      />
+      <Route
+        exact
+        path='/my-profile'
+        element={
+          !token
+            ? <Redirect to='/login?redirectUrl=/my-profile' />
+            : <ContentMainConatiner><ProfilePage /></ContentMainConatiner>
       }
       />
       <Route exact path='/order-confirmation/:slug' element={<ContentMainConatiner><OrderConfirmationPage /></ContentMainConatiner>} />

@@ -2,20 +2,25 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { USER_INIT_VALUES } from './constants/params'
 import { readCartProduct } from '../../services/api/cart'
 import { readUserAddress } from '../../services/api/address'
+import { validateUser } from '../../services/api/auth'
+import { useNavigate } from 'react-router-dom'
 
 const context = createContext({
   ...USER_INIT_VALUES,
-  setUser: () => {}
+  setUser: () => {},
+  logoutUser: () => {},
 })
 
 const useUserContext = () => useContext(context)
 
 const UserContextProvider = ({ children }) => {
   const [data, setData] = useState(USER_INIT_VALUES)
+  const navigate = useNavigate()
 
   const value = useMemo(() => ({
     ...data,
     setUser: (newData) => setData(prev => ({ ...prev, ...newData })),
+    logoutUser: (redirectUrl) => logoutUser(redirectUrl)
   }), [data])
 
   async function loadDataOnLoggedIn() {
@@ -37,6 +42,23 @@ const UserContextProvider = ({ children }) => {
         }
       }
     }
+    else {
+      const savedToken = sessionStorage.getItem('token') ?? localStorage.getItem('token')
+      if (savedToken) {
+        const resValidation = await validateUser(savedToken)
+        if (resValidation.status === 200 && resValidation.data?.id) {
+          setData(prev => ({ ...prev, ...resValidation.data, token: savedToken }))
+        }
+      }
+    }
+  }
+
+  function logoutUser(redirectUrl) {
+    localStorage.removeItem('token')
+    sessionStorage.removeItem('token')
+    setData(USER_INIT_VALUES)
+    const navigateTo = redirectUrl ?? '/'
+    navigate(navigateTo)
   }
 
   useEffect(() => {

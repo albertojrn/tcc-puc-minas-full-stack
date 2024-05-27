@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Button, IconButton, InputAdornment } from '@mui/material'
+import { Button, Checkbox, FormControlLabel, FormGroup, IconButton, InputAdornment } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { MinimalButton } from '../../../../styles'
 import { CONSTRAINTS } from './constants/validationParams'
@@ -9,7 +9,7 @@ import FormField from '../../../FormField'
 import { loginUser } from '../../../../utils/auth'
 import { useLoadingContext } from '../../../../contexts/LoadingContext'
 
-function StandardLoginForm({ handleLoginSuccess }) {
+function StandardLoginForm({ handleLoginSuccess, rememberMe, setRememberMe }) {
   const [error, setError] = useState({})
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -60,6 +60,17 @@ function StandardLoginForm({ handleLoginSuccess }) {
         type={showPassword ? 'text' : 'password'}
         value={password}
       />
+      <FormGroup>
+        <FormControlLabel
+          control={(
+            <Checkbox
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+      )}
+          label='Lembrar de mim'
+        />
+      </FormGroup>
       <Button onClick={handleLogin} variant='contained'>Entrar</Button>
       <Link to='/password-recovery'>
         <MinimalButton edge='end'>Esqueci a minha senha</MinimalButton>

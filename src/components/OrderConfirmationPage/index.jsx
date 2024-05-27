@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import { Typography } from '@mui/material'
 import { CheckCircle } from '@mui/icons-material'
@@ -8,14 +8,11 @@ import { useStoreContext } from '../../contexts/StoreContext'
 import Redirect from '../Redirect'
 
 function OrderConfirmationPage() {
-  const { orderConfirmationSlug, setStorePersistent } = useStoreContext()
+  const { orderConfirmationSlug } = useStoreContext()
   const { slug } = useParams()
 
   if (!orderConfirmationSlug || orderConfirmationSlug !== slug) return <Redirect to='/' />
 
-  useEffect(() => (() => {
-    setStorePersistent({ orderConfirmationSlug: '' })
-  }), [])
   return (
     <MainGridContainer container spacing={2} maxWidth={{ md: '1200px' }}>
       <GridItem item xs={12}>

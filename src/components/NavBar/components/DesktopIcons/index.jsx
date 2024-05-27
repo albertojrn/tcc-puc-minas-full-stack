@@ -68,7 +68,7 @@ function DesktopIcons() {
           horizontal: 'right',
         }}
       >
-        <LoggedInMenuItems />
+        <LoggedInMenuItems setAnchor={setAnchor} />
       </Menu>
     </>
   )
