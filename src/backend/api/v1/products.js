@@ -151,7 +151,7 @@ router.post('/', (req, res, next) => {
       query,
       (err, result) => {
         if (err) return sqlErrorHandler(err, req, res, next)
-        responseHandler(req, res, { ...req.body, id: result.insertId, resourceUrl: `${req.baseUrl}/${result.insertId}` }, 201)
+        responseHandler(req, res, { ...req.body, id: result[0].insertId, resourceUrl: `${req.baseUrl}/${result[0].insertId}` }, 201)
       }
     )
   }

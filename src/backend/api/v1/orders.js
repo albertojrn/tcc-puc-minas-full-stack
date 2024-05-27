@@ -120,12 +120,10 @@ router.post('/', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, next
         VALUES ${items.map(item => `(@orderId, ${item.primary_color_id}, ${item.secondary_color_id || null}, ${item.size_id}, ${item.product_id}, ${item.quantity}, ${item.price})`).join(', ')}
       ;` : ''}
     `
-    console.log(query)
     db.query(
       query,
       (err, result) => {
         if (err) return sqlErrorHandler(err, req, res, next)
-        console.log(result)
         responseHandler(req, res, { ...req.body, id: result[0].insertId, resourceUrl: `${req.baseUrl}/${result[0].insertId}` }, 201)
       }
     )

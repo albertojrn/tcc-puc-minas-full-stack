@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { v4 } from 'uuid'
 import { FormHelperText, Stack, Typography } from '@mui/material'
 import { Color, GridItem, MainGridContainer } from '../../../../styles'
 import { formatPrice } from '../../../../utils/formatMethods'
@@ -8,7 +9,6 @@ import { CheckoutButton } from './styles'
 import { createOrders } from '../../../../services/api/orders'
 import { deleteCartProduct } from '../../../../services/api/cart'
 import { useStoreContext } from '../../../../contexts/StoreContext'
-import { v4 } from 'uuid'
 
 function CheckoutTotals({
   cartProductsInfo,
@@ -77,11 +77,10 @@ function CheckoutTotals({
         setUser({ cart: [] })
       }
       const orderConfirmationSlug = v4()
-      setStorePersistent({ orderConfirmationSlug})
+      setStorePersistent({ orderConfirmationSlug })
       navigate(`/order-confirmation/${orderConfirmationSlug}`)
     }
     else setCreateError('Não foi possível criar o pedido. Tente novamente.')
-    console.log({orderData, res})
   }
 
   return (

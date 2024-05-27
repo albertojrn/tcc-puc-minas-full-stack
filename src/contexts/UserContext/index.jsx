@@ -21,7 +21,6 @@ const UserContextProvider = ({ children }) => {
   async function loadDataOnLoggedIn() {
     const id = data.id
     const token = data.token
-    console.log({setData})
     if (data.token) {
       if (data.id) {
         const promises = [readCartProduct(id, token), readUserAddress(id, token)]
