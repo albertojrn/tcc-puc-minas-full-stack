@@ -3,10 +3,13 @@ const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
 const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
+const authTokenCheck = require('../../middlewares/authTokenCheck')
+const ensureIsTheLoggedInUserOrAdmin = require('../../middlewares/ensureIsTheLoggedInUserOrAdmin')
+const ensureIsAdmin = require('../../middlewares/ensureIsAdmin')
 
 const router = express.Router()
 
-router.get('/', (req, res, next) => {
+router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const limit = req.query.limit
     const offset = req.query.offset
@@ -16,34 +19,24 @@ router.get('/', (req, res, next) => {
 
     const query = `
       SELECT
-      *,
-      ${onlyinfo === 'true' ? '' : `
-      (
-      SELECT JSON_ARRAYAGG(pf.feature_values_id)
-      FROM products_features_values pf
-      WHERE products.id = pf.product_id
-      )
-      AS selectedFeatures,
+      *
+      ${onlyinfo === 'true' ? '' : `,
       (
       SELECT JSON_ARRAYAGG(JSON_OBJECT(
-      'size', pv.size_id,
-      'quantity', pv.quantity,
-      'price', pv.price,
-      'primaryColor', pv.primary_color_id,
-      'secondaryColor', pv.secondary_color_id
+      'order_id', oi.order_id,
+      'primary_color_id', oi.primary_color_id,
+      'secondary_color_id', oi.secondary_color_id,
+      'size_id', oi.size_id,
+      'product_id', oi.product_id,
+      'quantity', oi.quantity,
+      'price', oi.price
       ))
-      FROM products_variations pv
-      WHERE products.id = pv.product_id
+      FROM orders_items oi
+      WHERE orders.id = oi.order_id
       )
-      AS variations,`}
-      (
-      SELECT JSON_ARRAYAGG(pImg.name)
-      FROM products_images pImg
-      WHERE products.id = pImg.product_id
-      )
-      AS images
+      AS items`}
       FROM orders
-      GROUP BY products.id
+      GROUP BY orders.id
       ${orderby ? `ORDER BY ${orderby}${orderdirection ? ` ${orderdirection}` : ''}` : ''}
       ${limit ? `LIMIT ${limit}` : ''}
       ${offset ? `OFFSET ${offset}` : ''};
@@ -52,9 +45,7 @@ router.get('/', (req, res, next) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       if (Array.isArray(result)) {
         for (const item of result) {
-          if (item.selectedFeatures) item.selectedFeatures = JSON.parse(item.selectedFeatures)
-          if (item.variations) item.variations = JSON.parse(item.variations)
-          if (item.images) item.images = JSON.parse(item.images)
+          if (item.items) item.items = JSON.parse(item.items)
         }
       }
       responseHandler(req, res, result)
@@ -65,49 +56,39 @@ router.get('/', (req, res, next) => {
   }
 })
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     const onlyinfo = req.query.onlyinfo
 
     const query = `
       SELECT
-      *,
-      ${onlyinfo === 'true' ? '' : `
-      (
-      SELECT JSON_ARRAYAGG(pf.feature_values_id)
-      FROM products_features_values pf
-      WHERE ${id} = pf.product_id
-      )
-      AS selectedFeatures,
+      *
+      ${onlyinfo === 'true' ? '' : `,
       (
       SELECT JSON_ARRAYAGG(JSON_OBJECT(
-      'size', pv.size_id,
-      'quantity', pv.quantity,
-      'price', pv.price,
-      'primaryColor', pv.primary_color_id,
-      'secondaryColor', pv.secondary_color_id
+      'order_id', oi.order_id,
+      'primary_color_id', oi.primary_color_id,
+      'secondary_color_id', oi.secondary_color_id,
+      'size_id', oi.size_id,
+      'product_id', oi.product_id,
+      'quantity', oi.quantity,
+      'price', oi.price
       ))
-      FROM products_variations pv
-      WHERE ${id} = pv.product_id
+      FROM orders_items oi
+      WHERE ${id} = oi.order_id
       )
-      AS variations,`}
-      (
-      SELECT JSON_ARRAYAGG(pImg.name)
-      FROM products_images pImg
-      WHERE ${id} = pImg.product_id
-      )
-      AS images
+      AS items`}
       FROM orders
+      GROUP BY orders.id
       WHERE orders.id = ${id};
     `
+
     db.query(query, (err, result) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       if (Array.isArray(result)) {
         for (const item of result) {
-          if (item.selectedFeatures) item.selectedFeatures = JSON.parse(item.selectedFeatures)
-          if (item.variations) item.variations = JSON.parse(item.variations)
-          if (item.images) item.images = JSON.parse(item.images)
+          if (item.items) item.items = JSON.parse(item.items)
         }
       }
       responseHandler(req, res, result)
@@ -118,40 +99,34 @@ router.get('/:id', (req, res, next) => {
   }
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, next) => {
   try {
-    const title = req.body.title
-    const description = req.body.description
-    const depth = req.body.depth
-    const sku = req.body.sku
-    const width = req.body.width
-    const height = req.body.height
-    const variations = req.body.variations
-    const selectedFeatures = req.body.selectedFeatures
-    const images = req.body.images
-
+    const user_id = req.body.user_id
+    const shipping_fee = req.body.shipping_fee
+    const shipping_method = req.body.shipping_method
+    const shipping_days = req.body.shipping_days
+    const shipping_address_id = req.body.shipping_address_id
+    const payment_method = req.body.payment_method
+    const discount = req.body.discount
+    const total_products = req.body.total_products
+    const coupon = req.body.coupon
+    const installments = req.body.installments
+    const items = req.body.items
     const query = `
-      INSERT INTO orders (title, description, depth, sku, width, height) VALUES ("${title}","${description}",${depth},${sku ? `"${sku}"` : null},${width},${height});
+      INSERT INTO orders (user_id, shipping_fee, shipping_method, shipping_days, shipping_address_id, payment_method, discount, total_products, coupon, installments) VALUES (${user_id},${shipping_fee},"${shipping_method}",${shipping_days},${shipping_address_id},"${payment_method}",${discount || null},${total_products},${coupon ? `"${coupon}"` : null},${installments});
       SELECT LAST_INSERT_ID() INTO @orderId;
-      ${variations?.length ? `
-        INSERT INTO products_variations (product_id, size_id, quantity, price, primary_color_id, secondary_color_id) 
-        VALUES ${variations.map(variation => `(@orderId, ${variation.size}, ${variation.quantity}, ${variation.price}, ${variation.primaryColor}, ${variation.secondaryColor || null})`).join(', ')}
-      ;` : ''}
-      ${selectedFeatures?.length ? `
-        INSERT INTO products_features_values (product_id, feature_values_id) 
-        VALUES ${selectedFeatures.map(id => `(@orderId, ${id})`).join(', ')}
-      ;` : ''}
-      ${images?.length ? `
-        INSERT INTO products_images (product_id, name) 
-        VALUES ${images.map(imgName => `(@orderId, "${imgName}")`).join(', ')}
+      ${items?.length ? `
+        INSERT INTO orders_items (order_id, primary_color_id, secondary_color_id, size_id, product_id, quantity, price) 
+        VALUES ${items.map(item => `(@orderId, ${item.primary_color_id}, ${item.secondary_color_id || null}, ${item.size_id}, ${item.product_id}, ${item.quantity}, ${item.price})`).join(', ')}
       ;` : ''}
     `
-
+    console.log(query)
     db.query(
       query,
       (err, result) => {
         if (err) return sqlErrorHandler(err, req, res, next)
-        responseHandler(req, res, { ...req.body, id: result.insertId, resourceUrl: `${req.baseUrl}/${result[0].insertId}` }, 201)
+        console.log(result)
+        responseHandler(req, res, { ...req.body, id: result[0].insertId, resourceUrl: `${req.baseUrl}/${result[0].insertId}` }, 201)
       }
     )
   }
@@ -160,44 +135,44 @@ router.post('/', (req, res, next) => {
   }
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     const {
-      title,
-      description,
-      depth,
-      sku,
-      width,
-      height,
-      variations,
-      selectedFeatures,
-      images,
+      user_id,
+      status,
+      shipping_fee,
+      shipping_address_id,
+      payment_method,
+      discount,
+      total_products,
+      coupon,
+      installments,
+      shipping_method,
+      shipping_days,
+      items,
     } = req.body
     if (!id) {
-      return errorHandler({ status: 400, message: 'Bad request. Missing rpduct id.' }, req, res, next)
+      return errorHandler({ status: 400, message: 'Bad request.' }, req, res, next)
     }
-    const productPropsToChange = []
-    if (title) productPropsToChange.push(`title = '${title}'`)
-    if (description) productPropsToChange.push(`description = '${description}'`)
-    if (depth) productPropsToChange.push(`depth = ${depth}`)
-    if (sku !== undefined && sku !== null) productPropsToChange.push(`sku = ${sku ? `'${sku}'` : null}`)
-    if (width) productPropsToChange.push(`width = ${width}`)
-    if (height) productPropsToChange.push(`height = ${height}`)
-    const setProductStr = productPropsToChange.join(', ')
+    const propsToChange = []
+    if (user_id) propsToChange.push(`user_id = ${user_id}`)
+    if (status) propsToChange.push(`status = "${status}"`)
+    if (shipping_fee) propsToChange.push(`shipping_fee = ${shipping_fee}`)
+    if (shipping_address_id) propsToChange.push(`shipping_address_id = ${shipping_address_id}`)
+    if (payment_method) propsToChange.push(`payment_method = "${payment_method}"`)
+    if (discount || discount === 0) propsToChange.push(`discount = ${discount}`)
+    if (total_products) propsToChange.push(`total_products = ${total_products}`)
+    if (coupon) propsToChange.push(`coupon = ${coupon ? `"${coupon}"` : null}`)
+    if (installments) propsToChange.push(`installments = ${installments}`)
+    if (shipping_method) propsToChange.push(`shipping_method = "${shipping_method}"`)
+    if (shipping_days) propsToChange.push(`shipping_days = ${shipping_days}`)
+    const setUpdateStr = propsToChange.join(', ')
     const query = `
-      UPDATE orders SET ${setProductStr} WHERE id = ${id};
-      ${variations?.length ? `
-        INSERT INTO products_variations (product_id, size_id, quantity, price, primary_color_id, secondary_color_id) 
-        VALUES ${variations.map(variation => `(${id}, ${variation.size}, ${variation.quantity}, ${variation.price}, ${variation.primaryColor}, ${variation.secondaryColor || null})`).join(', ')}
-      ;` : ''}
-      ${selectedFeatures?.length ? `
-        INSERT INTO products_features_values (product_id, feature_values_id) 
-        VALUES ${selectedFeatures.map(featureId => `(${id}, ${featureId})`).join(', ')}
-      ;` : ''}
-      ${images?.length ? `
-        INSERT INTO products_images (product_id, name) 
-        VALUES ${images.map(imgName => `(${id}, "${imgName}")`).join(', ')}
+      UPDATE orders SET ${setUpdateStr} WHERE id = ${id};
+      ${items?.length ? `
+        INSERT INTO orders_items (order_id, primary_color_id, secondary_color_id, size_id, product_id, quantity, price) 
+        VALUES ${items.map(item => `(${id}, ${item.primary_color_id}, ${item.secondary_color_id || null}, ${item.size}, ${item.product_id}, ${item.quantity}, ${item.price})`).join(', ')}
       ;` : ''}
     `
     db.query(query, (err) => {
@@ -210,10 +185,10 @@ router.put('/:id', (req, res, next) => {
   }
 })
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const id = req.params.id
-    db.query('DELETE FROM products WHERE id= ?', id, (err) => {
+    db.query('DELETE FROM orders WHERE id= ?', id, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, undefined, 204)
     })

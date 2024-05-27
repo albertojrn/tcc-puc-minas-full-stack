@@ -3,6 +3,7 @@ import { createContext, useContext, useMemo, useState } from 'react'
 const DASHBOARD_INIT_VALUES = {
   dialogChild: null,
   openDialog: false,
+  orderConfirmationSlug: '',
 }
 
 const context = createContext({

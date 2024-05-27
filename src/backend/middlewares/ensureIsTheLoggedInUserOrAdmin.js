@@ -2,7 +2,7 @@ const errorHandler = require('./errorHandler')
 
 function ensureIsTheLoggedInUserOrAdmin(req, res, next) {
   try {
-    const reqUserId = req.params.id ?? req.params.user_id ?? req.body.user_id
+    const reqUserId = req.params.id ?? req.params.user_id ?? req.body.user_id ?? req.query.user
     const verifiedUser = req.verifiedUser
     const verifiedRole = req.verifiedRole
     if (!verifiedUser || !verifiedRole) return errorHandler({ status: 401, message: 'Unauthorized' }, req, res, next)

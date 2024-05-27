@@ -103,14 +103,6 @@ router.put('/:user_id/:product_id/:primary_color_id/:secondary_color_id/:size_id
     if (!user_id || !Object.values(req.body ?? {}).length || (Object.values(req.body ?? {}).every(val => !val))) {
       return errorHandler({ status: 400, message: 'Bad request.' }, req, res, next)
     }
-    console.log({
-      user_id,
-req_primary_color_id,
-req_secondary_color_id,
-req_size_id,
-req_product_id,
-    })
-    console.log(req.body)
     const {
       primary_color_id,
       product_id,
@@ -131,6 +123,19 @@ req_product_id,
     db.query(`UPDATE users_cart_products SET ${setStr} WHERE user_id = ${user_id} AND product_id = ${req_product_id} AND primary_color_id = ${req_primary_color_id} AND secondary_color_id = ${req_secondary_color_id} AND size_id = ${req_size_id}`, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, req.body, 200)
+    })
+  }
+  catch (err) {
+    errorHandler(err, req, res, next)
+  }
+})
+
+router.delete('/:user_id', authTokenCheck, ensureIsTheLoggedInUser, (req, res, next) => {
+  try {
+    const user_id = Number(req.params.user_id)
+    db.query(`DELETE FROM users_cart_products WHERE user_id = ${user_id}`, (err) => {
+      if (err) return sqlErrorHandler(err, req, res, next)
+      responseHandler(req, res, undefined, 204)
     })
   }
   catch (err) {

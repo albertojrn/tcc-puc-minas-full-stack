@@ -118,7 +118,7 @@ function CartProductsRow({ cartItem, cartProductsInfo, featuresValues, isCheckou
             />
           )}
       </GridItem>
-      <GridItem item xs={3}>
+      <GridItem item xs={isCheckoutPage ? 3 : 2}>
         <Stack direction='column' spacing={0}>
           <Typography align='right' variant='caption'>
             Total:

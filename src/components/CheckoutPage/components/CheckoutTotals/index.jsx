@@ -1,10 +1,14 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { Stack, Typography } from '@mui/material'
-import { GridItem, MainGridContainer } from '../../../../styles'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { FormHelperText, Stack, Typography } from '@mui/material'
+import { Color, GridItem, MainGridContainer } from '../../../../styles'
 import { formatPrice } from '../../../../utils/formatMethods'
 import { useUserContext } from '../../../../contexts/UserContext'
 import { CheckoutButton } from './styles'
+import { createOrders } from '../../../../services/api/orders'
+import { deleteCartProduct } from '../../../../services/api/cart'
+import { useStoreContext } from '../../../../contexts/StoreContext'
+import { v4 } from 'uuid'
 
 function CheckoutTotals({
   cartProductsInfo,
@@ -12,7 +16,10 @@ function CheckoutTotals({
   selectedAddressId,
   shippingFee
 }) {
-  const { cart, id, token } = useUserContext()
+  const { cart, id, setUser, token } = useUserContext()
+  const { setStorePersistent } = useStoreContext()
+  const [createError, setCreateError] = useState('')
+  const navigate = useNavigate()
   let totalProducts = 0
   for (const cartItem of cart) {
     const product = cartProductsInfo?.[cartItem.product_id]
@@ -27,7 +34,7 @@ function CheckoutTotals({
   }
   const cartTotals = totalProducts + (shippingFee?.fee ?? 0)
 
-  function placeOrder() {
+  async function placeOrder() {
     const orderData = {
       user_id: id,
       shipping_fee: shippingFee.fee,
@@ -63,7 +70,18 @@ function CheckoutTotals({
       if (!itemData.secondary_color_id) itemData.secondary_color_id = -1
       orderData.items.push(itemData)
     }
-    console.log({orderData})
+    const res = await createOrders(orderData, token)
+    if (res.status === 201 && res.data.id) {
+      const deleteCartRes = await deleteCartProduct(id, null, null, null, null, token)
+      if (deleteCartRes.status === 204) {
+        setUser({ cart: [] })
+      }
+      const orderConfirmationSlug = v4()
+      setStorePersistent({ orderConfirmationSlug})
+      navigate(`/order-confirmation/${orderConfirmationSlug}`)
+    }
+    else setCreateError('Não foi possível criar o pedido. Tente novamente.')
+    console.log({orderData, res})
   }
 
   return (
@@ -122,6 +140,7 @@ function CheckoutTotals({
         <Link to='/checkout'>
           <CheckoutButton onClick={placeOrder} variant='container' fullWidth>Finalizar compra</CheckoutButton>
         </Link>
+        {createError && <FormHelperText><Color color='red'>{createError}</Color></FormHelperText>}
       </GridItem>
     </MainGridContainer>
   )
