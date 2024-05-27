@@ -24,7 +24,7 @@ export async function loadFeatureValues(featureValues, setDashboardData, setErro
 
 export async function loadFeaturesValuesById(features) {
   const res = { status: 200, data: [] }
-  const promises = features.map(id => readFeatureValues(id))
+  const promises = features.map(id => (id ? readFeatureValues(id) : undefined))
   const resAll = await Promise.allSettled(promises)
   for (const response of resAll) {
     if (response?.value?.status === 200
@@ -33,7 +33,7 @@ export async function loadFeaturesValuesById(features) {
       res.data = [...res.data, ...response.value.data]
     }
   }
-  if (res.data.length !== promises.length) {
+  if (res.data.length !== promises.filter(p => p).length) {
     res.status = 500
     res.error = { message: 'Não foi possível baixar todos os valores.' }
   }

@@ -42,6 +42,7 @@ function ProductsListItemToolbox({ product, page }) {
             text={`Não foi possível excluir o produto ${product.title}. Tente novamente.`}
             title='Atenção'
             onRetry={handleDeleteProduct}
+            setDialogParams={setDashboardParams}
           />
         ),
         openDialog: true,
@@ -64,6 +65,7 @@ function ProductsListItemToolbox({ product, page }) {
           onYes={confirmDeleteProduct}
           text={`Tem certeza de que deseja excluir o produto '${product.title}'?`}
           title='PRECISAMOS DA SUA CONFIRMAÇÃO'
+          setDialogParams={setDashboardParams}
         />
       ),
       openDialog: true,

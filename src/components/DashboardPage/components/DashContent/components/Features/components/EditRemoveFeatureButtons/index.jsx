@@ -40,6 +40,7 @@ function EditRemoveFeatureButtons({ feature }) {
           <DialogOk
             text={`Não foi possível remover a característica ${feature.name}. Tente novamente.`}
             title='Atenção'
+            setDialogParams={setDashboardParams}
           />
         ),
         openDialog: true,
@@ -60,6 +61,7 @@ function EditRemoveFeatureButtons({ feature }) {
           onYes={confirmDeleteFeature}
           text={`Tem certeza de que deseja apagar a característica '${feature.name}'?`}
           title='PRECISAMOS DA SUA CONFIRMAÇÃO'
+          setDialogParams={setDashboardParams}
         />
       ),
       openDialog: true,

@@ -15,7 +15,7 @@ const authTokenCheck = (req, res, next) => {
     next()
   }
   catch (err) {
-    errorHandler({ status: 498, message: 'Token inválido.' }, req, res, next)
+    errorHandler({ status: 498, message: 'Token é inválido.' }, req, res, next)
   }
 }
 

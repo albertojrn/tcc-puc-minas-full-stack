@@ -14,8 +14,8 @@ export async function createCartProduct(body, token) {
   return result
 }
 
-export async function deleteCartProduct(user_id, primary_color_id, secondary_color_id, size_id, token) {
-  const url = `${v1BaseUrl}/cart/${user_id}/${primary_color_id}/${secondary_color_id}/${size_id}`
+export async function deleteCartProduct(user_id, product_id, primary_color_id, secondary_color_id, size_id, token) {
+  const url = `${v1BaseUrl}/cart/${user_id}/${product_id}/${primary_color_id}/${secondary_color_id}/${size_id}`
   const result = await axios.delete(url, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -38,8 +38,8 @@ export async function readCartProduct(user_id, token) {
   return result
 }
 
-export async function updateCartProduct(user_id, primary_color_id, secondary_color_id, size_id, body, token) {
-  const url = `${v1BaseUrl}/cart/${user_id}/${primary_color_id}/${secondary_color_id}/${size_id}`
+export async function updateCartProduct(user_id, product_id, primary_color_id, secondary_color_id, size_id, body, token) {
+  const url = `${v1BaseUrl}/cart/${user_id}/${product_id}/${primary_color_id}/${secondary_color_id}/${size_id}`
   const result = await axios.put(url, body, {
     headers: {
       Authorization: `Bearer ${token}`

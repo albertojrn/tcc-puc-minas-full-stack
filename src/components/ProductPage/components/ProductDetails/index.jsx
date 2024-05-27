@@ -14,7 +14,6 @@ function ProductDetails({ product }) {
   const [selectedVariation, setSelectedVariation] = useState(null)
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const description = product?.description ?? ''
-  const features = product?.features ?? []
   const price = formatPrice(selectedVariation?.price)
   const title = product?.title ?? ''
   const variations = product?.variations ?? []
@@ -65,6 +64,8 @@ function ProductDetails({ product }) {
           selectedVariation={selectedVariation}
           setError={setError}
         />
+        {error.cart
+          && <FormHelperText><Color color='red'>{error.cart}</Color></FormHelperText>}
       </GridItem>
     </DetailsContainer>
   )

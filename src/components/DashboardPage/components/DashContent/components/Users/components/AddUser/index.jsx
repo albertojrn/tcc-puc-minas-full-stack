@@ -81,6 +81,7 @@ function AddUser({ user }) {
                 <DialogOk
                   title='Erro'
                   text='O usuário foi editado mas houve um erro ao tentar atualizar a lista.'
+                  setDialogParams={setDashboardParams}
                 />
               ),
               openDialog: true
@@ -97,6 +98,7 @@ function AddUser({ user }) {
               title='Erro'
               text={errorMessage ?? `Não foi possível ${isUpdate ? 'editar' : 'criar'} o usuário.`}
               onRetry={handleOnOkClick}
+              setDialogParams={setDashboardParams}
             />
           ),
           openDialog: true

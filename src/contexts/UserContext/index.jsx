@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { USER_INIT_VALUES } from './constants/params'
 import { readCartProduct } from '../../services/api/cart'
+import { readUserAddress } from '../../services/api/address'
 
 const context = createContext({
   ...USER_INIT_VALUES,
@@ -18,11 +19,22 @@ const UserContextProvider = ({ children }) => {
   }), [data])
 
   async function loadDataOnLoggedIn() {
+    const id = data.id
+    const token = data.token
+    console.log({setData})
     if (data.token) {
       if (data.id) {
-        const res = await readCartProduct(data.id, data.token)
-        if (res.status === 200 && Array.isArray(res.data) && res.data.length) {
-          setData(prev => ({ ...prev, cart: res.data }))
+        const promises = [readCartProduct(id, token), readUserAddress(id, token)]
+        const res = await Promise.all(promises)
+        const newData = {}
+        if (res[0]?.status === 200 && Array.isArray(res[0]?.data) && res[0]?.data.length) {
+          newData.cart = res[0].data
+        }
+        if (res[1]?.status === 200 && Array.isArray(res[1]?.data) && res[1]?.data.length) {
+          newData.addresses = res[1].data
+        }
+        if (Object.keys(newData).length) {
+          setData(prev => ({ ...prev, ...newData }))
         }
       }
     }

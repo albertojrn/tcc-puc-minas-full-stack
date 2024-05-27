@@ -1,6 +1,6 @@
 export const CONSTRAINTS = {
   email: {
-    email: { message: '^O email não é válido' },
+    email: { message: '^O email é inválido' },
   },
   password: {
     presence: true,

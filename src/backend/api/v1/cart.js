@@ -11,7 +11,9 @@ const router = express.Router()
 
 router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
-    db.query('SELECT * FROM users_cart_products', (err, result) => {
+    db.query(`SELECT user_id, product_id, primary_color_id, size_id, quantity,
+    CASE secondary_color_id WHEN -1 THEN NULL ELSE secondary_color_id END AS secondary_color_id
+    FROM users_cart_products`, (err, result) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, result)
     })
@@ -24,10 +26,18 @@ router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
 router.get('/:user_id', authTokenCheck, ensureIsTheLoggedInUser, (req, res, next) => {
   try {
     const user_id = req.params.user_id
-    db.query('SELECT * FROM users_cart_products WHERE user_id = ?', user_id, (err, result) => {
-      if (err) return sqlErrorHandler(err, req, res, next)
-      responseHandler(req, res, result)
-    })
+    db.query(
+      `SELECT user_id, product_id, primary_color_id, size_id, quantity,
+    CASE secondary_color_id
+    WHEN -1 THEN NULL
+    ELSE secondary_color_id
+    END AS secondary_color_id
+    FROM users_cart_products WHERE user_id = ${user_id}`,
+      (err, result) => {
+        if (err) return sqlErrorHandler(err, req, res, next)
+        responseHandler(req, res, result)
+      }
+    )
   }
   catch (err) {
     errorHandler(err, req, res, next)
@@ -68,7 +78,7 @@ router.post('/', authTokenCheck, ensureIsTheLoggedInUser, (req, res, next) => {
         ${primary_color_id},
         ${product_id},
         ${quantity},
-        ${secondary_color_id},
+        ${secondary_color_id ?? -1},
         ${size_id},
         ${user_id}
       );`,
@@ -83,15 +93,24 @@ router.post('/', authTokenCheck, ensureIsTheLoggedInUser, (req, res, next) => {
   }
 })
 
-router.put('/:user_id/:primary_color_id/:secondary_color_id/:size_id', authTokenCheck, ensureIsTheLoggedInUser, (req, res, next) => {
+router.put('/:user_id/:product_id/:primary_color_id/:secondary_color_id/:size_id', authTokenCheck, ensureIsTheLoggedInUser, (req, res, next) => {
   try {
-    const user_id = req.params.user_id
-    const req_primary_color_id = req.params.primary_color_id
-    const req_secondary_color_id = req.params.secondary_color_id
-    const req_size_id = req.params.size_id
+    const user_id = Number(req.params.user_id)
+    const req_primary_color_id = Number(req.params.primary_color_id)
+    const req_secondary_color_id = !isNaN(Number(req.params.secondary_color_id)) ? Number(req.params.secondary_color_id) : -1
+    const req_size_id = Number(req.params.size_id)
+    const req_product_id = Number(req.params.product_id)
     if (!user_id || !Object.values(req.body ?? {}).length || (Object.values(req.body ?? {}).every(val => !val))) {
       return errorHandler({ status: 400, message: 'Bad request.' }, req, res, next)
     }
+    console.log({
+      user_id,
+req_primary_color_id,
+req_secondary_color_id,
+req_size_id,
+req_product_id,
+    })
+    console.log(req.body)
     const {
       primary_color_id,
       product_id,
@@ -99,7 +118,7 @@ router.put('/:user_id/:primary_color_id/:secondary_color_id/:size_id', authToken
       secondary_color_id,
       size_id,
     } = req.body
-    if (!primary_color_id || !product_id || !secondary_color_id || !size_id) {
+    if (!req_primary_color_id || !req_product_id || !req_secondary_color_id || !req_size_id) {
       return errorHandler({ status: 400, message: 'Bad request.' }, req, res, next)
     }
     const propsArray = []
@@ -109,7 +128,7 @@ router.put('/:user_id/:primary_color_id/:secondary_color_id/:size_id', authToken
     if (secondary_color_id) propsArray.push(`secondary_color_id = ${secondary_color_id}`)
     if (size_id) propsArray.push(`size_id = ${size_id}`)
     const setStr = propsArray.join(', ')
-    db.query(`UPDATE users_cart_products SET ${setStr} WHERE user_id = ${user_id} AND primary_color_id = ${req_primary_color_id} AND secondary_color_id = ${req_secondary_color_id} AND size_id = ${req_size_id}`, (err) => {
+    db.query(`UPDATE users_cart_products SET ${setStr} WHERE user_id = ${user_id} AND product_id = ${req_product_id} AND primary_color_id = ${req_primary_color_id} AND secondary_color_id = ${req_secondary_color_id} AND size_id = ${req_size_id}`, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, req.body, 200)
     })
@@ -119,13 +138,14 @@ router.put('/:user_id/:primary_color_id/:secondary_color_id/:size_id', authToken
   }
 })
 
-router.delete('/:user_id/:primary_color_id/:secondary_color_id/:size_id', authTokenCheck, ensureIsTheLoggedInUser, (req, res, next) => {
+router.delete('/:user_id/:product_id/:primary_color_id/:secondary_color_id/:size_id', authTokenCheck, ensureIsTheLoggedInUser, (req, res, next) => {
   try {
-    const user_id = req.params.user_id
-    const req_primary_color_id = req.params.primary_color_id
-    const req_secondary_color_id = req.params.secondary_color_id
-    const req_size_id = req.params.size_id
-    db.query(`DELETE FROM users_cart_products WHERE user_id = ${user_id} AND primary_color_id = ${req_primary_color_id} AND secondary_color_id = ${req_secondary_color_id} AND size_id = ${req_size_id}`, (err) => {
+    const user_id = Number(req.params.user_id)
+    const req_primary_color_id = Number(req.params.primary_color_id)
+    const req_secondary_color_id = !isNaN(Number(req.params.secondary_color_id)) ? Number(req.params.secondary_color_id) : -1
+    const req_size_id = Number(req.params.size_id)
+    const req_product_id = Number(req.params.product_id)
+    db.query(`DELETE FROM users_cart_products WHERE user_id = ${user_id} AND product_id = ${req_product_id} AND primary_color_id = ${req_primary_color_id} AND secondary_color_id = ${req_secondary_color_id} AND size_id = ${req_size_id}`, (err) => {
       if (err) return sqlErrorHandler(err, req, res, next)
       responseHandler(req, res, undefined, 204)
     })

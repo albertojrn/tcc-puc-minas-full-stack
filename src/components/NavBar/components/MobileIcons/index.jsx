@@ -21,7 +21,6 @@ function MobileIcons() {
           <MoreVert />
         </IconButton>
       </IconsContainer>
-      
       <Menu
         anchorEl={anchor}
         anchorOrigin={{

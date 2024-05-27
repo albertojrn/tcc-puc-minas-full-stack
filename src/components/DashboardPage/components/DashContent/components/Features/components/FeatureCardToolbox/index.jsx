@@ -37,6 +37,7 @@ function FeatureCardToolbox({ featureValue }) {
           <DialogOk
             text={`Não foi possível remover o valor ${featureValue.name}. Tente novamente.`}
             title='Atenção'
+            setDialogParams={setDashboardParams}
           />
         ),
         openDialog: true,
@@ -57,6 +58,7 @@ function FeatureCardToolbox({ featureValue }) {
           onYes={confirmDeleteFeature}
           text={`Tem certeza de que deseja apagar o valor '${featureValue.name}'?`}
           title='PRECISAMOS DA SUA CONFIRMAÇÃO'
+          setDialogParams={setDashboardParams}
         />
       ),
       openDialog: true,

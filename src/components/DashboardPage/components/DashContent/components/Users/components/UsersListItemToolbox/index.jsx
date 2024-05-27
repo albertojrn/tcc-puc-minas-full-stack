@@ -43,6 +43,7 @@ function UsersListItemToolbox({ user, page }) {
             text={`Não foi possível excluir o usuáirio ${user.name}. Tente novamente.`}
             title='Atenção'
             onRetry={handleDeleteUser}
+            setDialogParams={setDashboardParams}
           />
         ),
         openDialog: true,
@@ -65,6 +66,7 @@ function UsersListItemToolbox({ user, page }) {
           onYes={confirmDeleteUser}
           text={`Tem certeza de que deseja excluir o usuário '${user.name}'?`}
           title='PRECISAMOS DA SUA CONFIRMAÇÃO'
+          setDialogParams={setDashboardParams}
         />
       ),
       openDialog: true,

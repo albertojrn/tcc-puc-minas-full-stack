@@ -1,6 +1,6 @@
 export const CONSTRAINTS = {
   email: {
-    email: { message: '^O email não é válido' },
+    email: { message: '^O email é inválido' },
   },
   password: {
     presence: true,
@@ -12,31 +12,31 @@ export const CONSTRAINTS = {
   cpf: {
     presence: {
       allowEmpty: false,
-      message: '^O CPF não é válido.'
+      message: '^O CPF é inválido.'
     },
   },
   birthDate: {
     presence: {
       allowEmpty: false,
-      message: '^A data de nascimento não é válida.'
+      message: '^A data de nascimento é inválida.'
     },
   },
   gender: {
     presence: {
       allowEmpty: false,
-      message: '^O gênero não é válido.'
+      message: '^O gênero é inválido.'
     },
   },
   phone: {
     presence: {
       allowEmpty: false,
-      message: '^O telefone não é válido.'
+      message: '^O telefone é inválido.'
     },
   },
   userName: {
     presence: {
       allowEmpty: false,
-      message: '^O nome não é válido.'
+      message: '^O nome é inválido.'
     },
   },
 }

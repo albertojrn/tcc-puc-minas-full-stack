@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { readProducts } from '../../services/api/products'
-import { MainGridContainer } from '../../styles'
-import ProductPageHeader from './components/ProductPageHeader'
+import { GridItem, MainGridContainer } from '../../styles'
+import PageHeader from '../PageHeader'
 import ProductAboveTheFold from './components/ProductAboveTheFold'
 
 function ProductPage() {
@@ -23,7 +23,6 @@ function ProductPage() {
 
   return (
     <MainGridContainer container spacing={1} maxWidth={{ md: '1200px' }}>
-      <ProductPageHeader title={product?.title} />
       <ProductAboveTheFold product={product} />
     </MainGridContainer>
   )

@@ -22,6 +22,7 @@ const productVariationsRoute = require('./api/v1/product-variations')
 const usersRoute = require('./api/v1/users')
 const authRoute = require('./api/v1/auth')
 const cart = require('./api/v1/cart')
+const address = require('./api/v1/address')
 
 app.use('/api/v1/features', featuresRoute)
 app.use('/api/v1/feature-values', featureValuesRoute)
@@ -33,6 +34,7 @@ app.use('/api/v1/product-variations', productVariationsRoute)
 app.use('/api/v1/users', usersRoute)
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/cart', cart)
+app.use('/api/v1/address', address)
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`)

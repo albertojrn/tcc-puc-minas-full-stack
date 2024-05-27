@@ -1,4 +1,5 @@
 export const USER_INIT_VALUES = {
+  addresses: [],
   birth_date: '',
   cart: [],
   cpf: '',

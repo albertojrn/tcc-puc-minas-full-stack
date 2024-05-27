@@ -4,6 +4,7 @@ export const COLORS = {
   red: '#D2011A',
   lightBorder: 'lightgray',
   lightgray: '#fafafa',
+  mediumgray: '#f0f0f0',
   inputBorderColor: 'rgba(0, 0, 0, 0.23)',
   urbanBeige: '#E3E2DD',
   urbanBlack: '#454545',

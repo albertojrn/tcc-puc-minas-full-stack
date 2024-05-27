@@ -1,9 +1,7 @@
 import { Button, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
 import React from 'react'
-import { useDashboardContext } from '../../contexts/DashboardContext'
 
-function DialogOk({ text, title }) {
-  const { setDashboardParams } = useDashboardContext()
+function DialogOk({ text, title, setDialogParams }) {
   return (
     <>
       <DialogTitle>{title}</DialogTitle>
@@ -11,7 +9,7 @@ function DialogOk({ text, title }) {
         <DialogContentText>{text}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button color='standard' onClick={() => setDashboardParams({ openDialog: false })}>Ok</Button>
+        <Button color='standard' onClick={() => setDialogParams({ openDialog: false })}>Ok</Button>
       </DialogActions>
     </>
   )

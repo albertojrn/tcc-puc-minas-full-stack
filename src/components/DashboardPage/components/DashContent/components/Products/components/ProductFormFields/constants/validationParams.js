@@ -2,13 +2,13 @@ export const CONSTRAINTS = {
   title: {
     presence: {
       allowEmpty: false,
-      message: '^O título não é válido.'
+      message: '^O título é inválido.'
     },
   },
   description: {
     presence: {
       allowEmpty: false,
-      message: '^A descrição não é válida.'
+      message: '^A descrição é inválida.'
     },
   },
   depth: {

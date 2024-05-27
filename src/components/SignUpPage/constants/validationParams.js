@@ -4,7 +4,7 @@ export const CONSTRAINTS = {
   birthDate: {
     datetime: {
       latest: moment.utc().subtract(16, 'years'),
-      message: '^A data de nascimento não é válida ou sua idade é menor do que 16 anos',
+      message: '^A data de nascimento é inválida ou sua idade é menor do que 16 anos',
     }
   },
   cpf: {
@@ -14,11 +14,11 @@ export const CONSTRAINTS = {
     },
     length: {
       is: 14,
-      message: '^O cpf não é válido'
+      message: '^O cpf é inválido'
     }
   },
   email: {
-    email: { message: '^O email não é válido' },
+    email: { message: '^O email é inválido' },
   },
   gender: {
     presence: {
@@ -40,7 +40,7 @@ export const CONSTRAINTS = {
     length: {
       minimum: 14,
       maximum: 15,
-      message: '^O telefone não é válido'
+      message: '^O telefone é inválido'
     }
   },
   userName: {

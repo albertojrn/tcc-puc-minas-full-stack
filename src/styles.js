@@ -1,7 +1,7 @@
+import { Link } from 'react-router-dom'
 import { Box, Button, Divider, Grid, Stack, TextField, Typography, styled } from '@mui/material'
 import { COLORS, NAVBAR_HEIGHT } from './constants/theme'
 import { formatCssProp } from './utils/cssMethods'
-import { Link } from 'react-router-dom'
 
 export const AppBarContainer = styled(Box)`
   background-color: ${COLORS.urbanBeige};
@@ -65,17 +65,21 @@ export const FormContainer = styled(Box, { shouldForwardProp: prop => !['height'
   ${({ maxHeight }) => maxHeight && `max-height: ${maxHeight};`}
 `
 
-export const FormTextField = styled(TextField, { shouldForwardProp: prop => !['helperTextColor'].includes(prop) })`
+export const FormTextField = styled(TextField, { shouldForwardProp: prop => !['helperTextColor', 'padding'].includes(prop) })`
   & .MuiInputAdornment-root button.MuiButtonBase-root {
     padding: 0;
   }
   & .MuiFormHelperText-root {
     color: ${({ helperTextColor }) => helperTextColor};
   }
+  & input {
+    ${({ padding }) => padding && `padding: ${padding};`}
+  }
 `
-export const GridItem = styled(Grid, { shouldForwardProp: prop => !['align', 'alignItems', 'direction', 'isFlex', 'hideInMobile', 'justifyContent'].includes(prop) })`
+export const GridItem = styled(Grid, { shouldForwardProp: prop => !['align', 'alignItems', 'backgroundColor', 'direction', 'isFlex', 'hideInMobile', 'justifyContent'].includes(prop) })`
   ${({ align }) => align && `text-align: ${align};`}
   ${({ alignItems }) => alignItems && `align-tems: ${alignItems};`}
+  ${({ backgroundColor }) => backgroundColor && `background-color: ${backgroundColor};`}
   ${({ direction }) => direction && `flex-direction: ${direction};`}
   ${({ justifyContent }) => justifyContent && `justify-content: ${justifyContent};`}
   ${({ isFlex }) => isFlex && 'display: flex;'}
@@ -86,17 +90,29 @@ export const GridItem = styled(Grid, { shouldForwardProp: prop => !['align', 'al
   `}
 `
 
+export const ListImgThumb = styled('img')`
+  height: auto;
+  padding: 8px;
+  object-fit: cover;
+  width: 100%;
+`
 
-export const MainGridContainer = styled(Grid, { shouldForwardProp: prop => !['drawBorder', 'height', 'marginTop', 'maxWidth', 'minWidth', 'width'].includes(prop) })`
+export const MainGridContainer = styled(Grid, { shouldForwardProp: prop => !['backgroundColor', 'disabled', 'drawBorder', 'height', 'marginTop', 'maxWidth', 'minWidth', 'width'].includes(prop) })`
+  ${({ backgroundColor }) => backgroundColor && `background-color: ${backgroundColor};`}
   ${({ height, theme }) => height && formatCssProp('height', height, theme)}
   ${({ maxWidth, theme }) => maxWidth && formatCssProp('max-width', maxWidth, theme)}
   ${({ minWidth, theme }) => minWidth && formatCssProp('min-width', minWidth, theme)}
   ${({ width, theme }) => width && formatCssProp('width', width, theme)}
   ${({ marginTop, theme }) => marginTop && formatCssProp('margin-top', marginTop, theme)}
-  ${({ drawBorder }) => drawBorder && `
-    border: 1px solid ${COLORS.lightBorder};
+  ${({ backgroundColor, drawBorder }) => drawBorder && `
+    border: 1px solid ${backgroundColor ?? COLORS.lightBorder};
     border-radius: 8px;
     padding: 8px;
+  `}
+  ${({ disabled }) => disabled && `
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.5;
   `}
 `
 

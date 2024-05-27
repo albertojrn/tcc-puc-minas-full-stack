@@ -12,10 +12,12 @@ router.get('/', (req, res, next) => {
     const offset = req.query.offset
     const orderby = req.query.orderby
     const orderdirection = req.query.orderdirection
+    const onlyinfo = req.query.onlyinfo
 
     const query = `
       SELECT
       *,
+      ${onlyinfo === 'true' ? '' : `
       (
       SELECT JSON_ARRAYAGG(pf.feature_values_id)
       FROM products_features_values pf
@@ -33,7 +35,7 @@ router.get('/', (req, res, next) => {
       FROM products_variations pv
       WHERE products.id = pv.product_id
       )
-      AS variations,
+      AS variations,`}
       (
       SELECT JSON_ARRAYAGG(pImg.name)
       FROM products_images pImg
@@ -66,10 +68,12 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   try {
     const id = req.params.id
+    const onlyinfo = req.query.onlyinfo
 
     const query = `
       SELECT
       *,
+      ${onlyinfo === 'true' ? '' : `
       (
       SELECT JSON_ARRAYAGG(pf.feature_values_id)
       FROM products_features_values pf
@@ -87,7 +91,7 @@ router.get('/:id', (req, res, next) => {
       FROM products_variations pv
       WHERE ${id} = pv.product_id
       )
-      AS variations,
+      AS variations,`}
       (
       SELECT JSON_ARRAYAGG(pImg.name)
       FROM products_images pImg

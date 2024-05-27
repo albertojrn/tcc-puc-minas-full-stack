@@ -6,6 +6,7 @@ import { handleOnUserTyping } from '../../utils/formMethods'
 function FormField({
   autoComplete,
   autoFocus = false,
+  disabled = false,
   error,
   field,
   fullWidth = false,
@@ -16,8 +17,11 @@ function FormField({
   label,
   multiline = false,
   onlyNumbers,
+  onBlurNum,
+  padding,
   pattern,
   placeholder,
+  preventTyping = false,
   required = false,
   rows,
   setError,
@@ -38,6 +42,13 @@ function FormField({
     if (type === 'number' && newValue) newValue = Number(newValue)
     handleOnUserTyping(field, setField, newValue, setError)
   }
+  function handleOnBlurNum(e) {
+    const newValue = Number(e.target.value)
+    if (!isNaN(newValue) && newValue < onBlurNum) {
+      handleOnUserTyping(field, setField, onBlurNum, setError)
+    }
+  }
+
   return (
     <FormTextField
       InputLabelProps={keepLabelOnTop ? { shrink: true } : {}}
@@ -45,13 +56,17 @@ function FormField({
       autoComplete={autoComplete}
       autoFocus={autoFocus}
       color='info'
+      disabled={disabled}
       error={Boolean(error?.[field])}
       fullWidth={fullWidth}
       helperText={error?.[field] ?? helperText ?? ''}
       helperTextColor={error?.[field] ? 'red' : 'black'}
       label={label}
       multiline={multiline}
+      onBlur={onBlurNum ? handleOnBlurNum : undefined}
       onChange={handleOnChange}
+      onKeyDown={preventTyping ? ((e) => e.preventDefault()) : undefined}
+      padding={padding}
       placeholder={placeholder}
       required={required}
       type={type}

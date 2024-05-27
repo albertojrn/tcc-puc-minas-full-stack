@@ -2,11 +2,13 @@ import { Box, Stack, Typography, styled } from '@mui/material'
 
 export const IconsContainer = styled(Box)`
   display: flex;
-  ${({ theme }) => `
-    ${theme.breakpoints.down('sm')} {
-      display: none;
-    }
-  `}
+  & .hideInMobile {
+    ${({ theme }) => `
+      ${theme.breakpoints.down('sm')} {
+        display: none;
+      }
+    `}
+  }
 `
 export const LoginContainer = styled(Stack)`
   cursor: pointer;

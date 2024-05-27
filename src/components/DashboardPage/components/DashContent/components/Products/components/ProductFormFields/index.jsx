@@ -128,6 +128,7 @@ function ProductFormFields({ product, selectedImages }) {
                 title='Erro'
                 text='Ocorreu um erro ao enviar as imagens.'
                 onRetry={handleCreateProduct}
+                setDialogParams={setDashboardParams}
               />
             ),
             openDialog: true
@@ -145,6 +146,7 @@ function ProductFormFields({ product, selectedImages }) {
                 title='Erro'
                 text='Ocorreu um erro ao excluir os parâmetros removidos.'
                 onRetry={handleCreateProduct}
+                setDialogParams={setDashboardParams}
               />
             ),
             openDialog: true
@@ -191,6 +193,7 @@ function ProductFormFields({ product, selectedImages }) {
                 <DialogOk
                   title='Erro'
                   text='O produto foi editado mas houve um erro ao tentar atualizar a lista.'
+                  setDialogParams={setDashboardParams}
                 />
               ),
               openDialog: true
@@ -207,6 +210,7 @@ function ProductFormFields({ product, selectedImages }) {
               title='Erro'
               text={errorMessage ?? `Não foi possível ${isUpdate ? 'editar' : 'criar'} o produto.`}
               onRetry={handleCreateProduct}
+              setDialogParams={setDashboardParams}
             />
           ),
           openDialog: true
