@@ -6,7 +6,7 @@ export const DesktopDrawerContainer = styled(Drawer)`
   display: none;
   width: ${DRAWER_WIDTH}px;
   ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
+    ${theme.breakpoints.up('md')} {
       display: block;
     }
   `}

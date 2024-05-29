@@ -47,7 +47,6 @@ router.get('/', (req, res, next) => {
     }
     whereQuery += whereParts.join(' AND ')
     if (whereQuery === 'WHERE ') whereQuery = ''
-    console.log({searchquery, whereParts, whereQuery})
 
     const query = `
       ${count === 'true' ? `

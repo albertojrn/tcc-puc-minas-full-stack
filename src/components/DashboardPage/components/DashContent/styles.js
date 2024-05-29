@@ -15,12 +15,12 @@ export const DashboardContentContainer = styled(Box)`
   justify-content: center;
   padding: ${CONTAINER_PADDING}px;
   ${({ theme }) => `
-    ${theme.breakpoints.down('sm')} {
+    ${theme.breakpoints.down('md')} {
       margin-top: ${NAVBAR_MIN_HEIGHT_MOBILE}px;
     }
   `}
   ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
+    ${theme.breakpoints.up('md')} {
       margin-top: ${NAVBAR_MIN_HEIGHT}px;
       margin-left: ${DRAWER_WIDTH}px;
       /* width: calc(100vw - ${DRAWER_WIDTH}px - ${CONTAINER_PADDING}px - ${CONTAINER_PADDING}px); */

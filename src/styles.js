@@ -16,7 +16,7 @@ export const AppBarContainer = styled(Box)`
     }
   `} 
   ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
+    ${theme.breakpoints.up('md')} {
       min-height: ${NAVBAR_MIN_HEIGHT}px;
     }
   `}
@@ -51,7 +51,7 @@ export const ContentMainConatiner = styled('div')`
   justify-content: center;
   padding: 8px;
   ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
+    ${theme.breakpoints.up('md')} {
       padding: 24px;
     }
   `}
@@ -164,7 +164,7 @@ export const StackedFormContainer = styled(Stack)`
   padding: 8px;
   width: 100%;
   ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
+    ${theme.breakpoints.up('md')} {
       min-width: 370px;
       padding: 24px;
       width: 25%;
@@ -178,7 +178,7 @@ export const ViewboxContainer = styled(Box)`
   justify-content: center;
   width: 100%;
   ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
+    ${theme.breakpoints.up('md')} {
       height: calc(100vh - var(--menu-height) - (2 * 24px));
     }
   `}

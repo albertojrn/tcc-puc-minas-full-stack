@@ -1,4 +1,5 @@
 import { Box, InputBase, styled } from '@mui/material'
+import { COLORS } from '../../../../constants/theme'
 
 export const SearchContainer = styled(Box)`
   align-items: center;
@@ -13,14 +14,18 @@ export const SearchContainer = styled(Box)`
 
 export const SearchInput = styled(InputBase)`
   color: white;
+  width: 100%;
   & svg {
-    fill: black;
-    margin-left: 8px;
+    fill: ${COLORS.darkgray};
     z-index: 2;
+    width: 0.95em;
+    height: 0.95em;
+    margin-right: 8px;
+    cursor: pointer;
   }
   & .MuiInputBase-input {
-    color: black;
-    padding-left: 24px;
+    padding-left: 12px;
+    color: ${COLORS.darkgray};
     width: 100%;
   }
 `

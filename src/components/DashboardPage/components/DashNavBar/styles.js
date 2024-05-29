@@ -3,7 +3,7 @@ import { DRAWER_WIDTH } from '../../constants/params'
 
 export const Container = styled(AppBar)`
 ${({ theme }) => `
-  ${theme.breakpoints.up('sm')} {
+  ${theme.breakpoints.up('md')} {
     margin-left: ${DRAWER_WIDTH}px;
   }
 `}
@@ -12,7 +12,7 @@ ${({ theme }) => `
 export const MenuIconButton = styled(IconButton)`
   margin-right: 8px;
   ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
+    ${theme.breakpoints.up('md')} {
       display: none;
     }
   `}

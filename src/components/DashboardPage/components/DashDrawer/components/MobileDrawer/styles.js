@@ -6,7 +6,7 @@ export const MobileDrawerContainer = styled(Drawer)`
   display: block;
   width: ${DRAWER_WIDTH}px;
   ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
+    ${theme.breakpoints.up('md')} {
       display: none;
     }
   `}

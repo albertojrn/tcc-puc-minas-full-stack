@@ -2,7 +2,7 @@ import React from 'react'
 import { useLocation } from 'react-router-dom'
 import { AppBar, IconButton, Toolbar } from '@mui/material'
 import { Menu } from '@mui/icons-material'
-import { ContentContainer, LogoContainer, MiddleContentContainer } from './styles'
+import { ContentContainer, LogoContainer, MiddleContentContainer, MobileSearchFormContainer } from './styles'
 import SearchForm from './components/SearchForm'
 import DesktopIcons from './components/DesktopIcons'
 import MobileIcons from './components/MobileIcons'
@@ -13,7 +13,7 @@ import { useStoreContext } from '../../contexts/StoreContext'
 import AppBarMenu from './components/AppBarMenu'
 
 function NavBar() {
-  const { setStorePersistent } = useStoreContext()
+  const { openMobileSearchField, setStorePersistent } = useStoreContext()
   const location = useLocation()
   if (NAVBAR_HIDE_ON_ROUTES.includes(location.pathname)) return null
   const showContent = !NAVBAR_HIDE_PART_ON_ROUTES.includes(location.pathname)
@@ -57,6 +57,9 @@ function NavBar() {
               )}
           </ContentContainer>
         </Toolbar>
+        <MobileSearchFormContainer open={openMobileSearchField}>
+          <SearchForm />
+        </MobileSearchFormContainer>
       </AppBar>
     </AppBarContainer>
   )

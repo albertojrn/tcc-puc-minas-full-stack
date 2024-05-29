@@ -7,10 +7,14 @@ export const buildQueryString = (query) => {
       const prop = queryProps[i]
       if (Array.isArray(query[prop])) {
         for (const [a, item] of query[prop].entries()) {
-          queryString += `${i !== 0 || a !== 0 ? '&' : ''}${prop}=${item}`
+          if (item !== undefined && item !== null) {
+            queryString += `${i !== 0 || a !== 0 ? '&' : ''}${prop}=${item}`
+          }
         }
       }
-      else queryString += `${i !== 0 ? '&' : ''}${prop}=${query[prop]}`
+      else if (query[prop] !== undefined && query[prop] !== null) {
+        queryString += `${i !== 0 ? '&' : ''}${prop}=${query[prop]}`
+      }
     }
   }
   if (queryString === '?') queryString = ''

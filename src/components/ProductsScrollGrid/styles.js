@@ -17,7 +17,7 @@ export const ControlsContainer = styled('div', { shouldForwardProp: prop => !['i
   top: 0;
   ${({ isRight }) => (isRight ? 'right: 0;' : 'left: 0;')}
   ${({ theme }) => `
-    ${theme.breakpoints.down('sm')} {
+    ${theme.breakpoints.down('md')} {
       display: none;
     }
   `}
@@ -29,7 +29,7 @@ export const MainContainer = styled('div')`
   position: relative;
   width: 100%;
   ${({ theme }) => `
-    ${theme.breakpoints.down('sm')} {
+    ${theme.breakpoints.down('md')} {
       overflow-x: auto;
       padding: 0;
     }
@@ -45,7 +45,7 @@ export const ScrollContainer = styled(Grid)`
     min-width: 200px;
     max-width: 250px;
   ${({ theme }) => `
-    ${theme.breakpoints.down('sm')} {
+    ${theme.breakpoints.down('md')} {
     min-width: 150px;
     max-width: 200px;
     }

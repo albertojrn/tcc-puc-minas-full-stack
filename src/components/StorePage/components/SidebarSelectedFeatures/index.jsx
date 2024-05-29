@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Chip, Stack, Typography } from '@mui/material'
 import { Close } from '@mui/icons-material'
-import { ChipsContainer } from './styles'
+import { ChipsContainer, SelectedFilters } from './styles'
 import { CustomLink } from '../../../../styles'
 import { buildQueryString } from '../../../../utils/buildQueryString'
 import { readFeatureValues } from '../../../../services/api/featureValues'
@@ -40,7 +40,7 @@ function SidebarSelectedFeatures({ menuItems = [], selectedFeatures = [] }) {
   return (
     chipItems?.length
       ? (
-        <Stack direction='column' spacing={1}>
+        <SelectedFilters direction='column' spacing={1}>
           <Typography variant='body2'>
             Filtros selecionados
           </Typography>
@@ -58,7 +58,7 @@ function SidebarSelectedFeatures({ menuItems = [], selectedFeatures = [] }) {
               />
             ))}
           </ChipsContainer>
-        </Stack>
+        </SelectedFilters>
       )
       : null
   )

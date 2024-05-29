@@ -4,7 +4,7 @@ export const IconsContainer = styled(Box)`
   display: flex;
   & .hideInMobile {
     ${({ theme }) => `
-      ${theme.breakpoints.down('sm')} {
+      ${theme.breakpoints.down('md')} {
         display: none;
       }
     `}
@@ -13,7 +13,7 @@ export const IconsContainer = styled(Box)`
 export const LoginContainer = styled(Stack)`
   cursor: pointer;
   ${({ theme }) => `
-    ${theme.breakpoints.down('sm')} {
+    ${theme.breakpoints.down('md')} {
       display: none;
     }
   `}

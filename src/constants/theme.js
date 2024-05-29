@@ -9,6 +9,7 @@ export const COLORS = {
   inputBorderColor: 'rgba(0, 0, 0, 0.23)',
   urbanBeige: '#E3E2DD',
   urbanBlack: '#454545',
+  darkgray: '#757575',
 }
 
 const CUSTOM_THEME = {

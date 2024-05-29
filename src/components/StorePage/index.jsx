@@ -68,7 +68,7 @@ function StorePage() {
   useEffect(() => {
     if (productsPage === 1) fetchProducts()
     else setProductsPage(1)
-  }, [selectedFeatures.join()])
+  }, [selectedFeatures.join(), searchquery])
 
   return (
     <MainGridContainer container maxWidth={{ md: '1200px' }} spacing={3}>

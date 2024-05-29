@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
 import { Badge, IconButton, Menu, Stack } from '@mui/material'
-import { AccountCircle, ShoppingCart } from '@mui/icons-material'
+import { AccountCircle, Search, ShoppingCart } from '@mui/icons-material'
 import { IconsContainer, LoginContainer, LoginText } from './styles'
 import { useUserContext } from '../../../../contexts/UserContext'
 import LoggedInMenuItems from '../LoggedInMenuItems'
 import { CustomLink } from '../../../../styles'
+import { useStoreContext } from '../../../../contexts/StoreContext'
 
 function DesktopIcons() {
   const [anchor, setAnchor] = useState(null)
   const { cart, token } = useUserContext()
+  const { openMobileSearchField, setStorePersistent } = useStoreContext()
   const quantities = cart.map(item => item.quantity)
   const cartTotal = quantities.reduce((a, b) => a + b, 0)
 
@@ -26,6 +28,14 @@ function DesktopIcons() {
                 size='large'
               >
                 <AccountCircle />
+              </IconButton>
+              <IconButton
+                color='inherit'
+                edge='end'
+                size='large'
+                onClick={() => setStorePersistent({ openMobileSearchField: !openMobileSearchField })}
+              >
+                <Search />
               </IconButton>
               <CustomLink color='inherit' textDecoration='none' to='/cart'>
                 <IconButton

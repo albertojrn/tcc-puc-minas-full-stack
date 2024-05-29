@@ -4,7 +4,7 @@ import { NAVBAR_MIN_HEIGHT } from '../../../../constants/theme'
 
 export const DrawerContainer = styled(Box)`
   ${({ theme }) => `
-    ${theme.breakpoints.up('sm')} {
+    ${theme.breakpoints.up('md')} {
       flex-shrink: 0;
       width: ${DRAWER_WIDTH}px;
       & .MuiDrawer-paper {

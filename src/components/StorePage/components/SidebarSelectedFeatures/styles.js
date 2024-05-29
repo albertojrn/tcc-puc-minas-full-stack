@@ -8,3 +8,8 @@ export const ChipsContainer = styled(Stack)`
     width: 0.6em;
   }
 `
+
+export const SelectedFilters = styled(Stack)`
+  padding-left: 12px;
+  padding-right: 12px;
+`

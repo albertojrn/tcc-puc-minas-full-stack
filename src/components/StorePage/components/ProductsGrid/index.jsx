@@ -14,7 +14,6 @@ function ProductsGrid({
   setProductsPage,
 }) {
   const { openProductFilter, setStorePersistent } = useStoreContext()
-  console.log({products})
 
   return (
     <MainGridContainer container spacing={2}>
