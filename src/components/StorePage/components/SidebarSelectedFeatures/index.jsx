@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Chip, Stack, Typography } from '@mui/material'
+import { Chip, Typography } from '@mui/material'
 import { Close } from '@mui/icons-material'
 import { ChipsContainer, SelectedFilters } from './styles'
 import { CustomLink } from '../../../../styles'

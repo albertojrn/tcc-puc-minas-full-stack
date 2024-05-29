@@ -99,7 +99,7 @@ router.get('/:user_id', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, re
   }
 })
 
-router.post('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
+router.post('/', authTokenCheck, ensureIsTheLoggedInUserOrAdmin, (req, res, next) => {
   try {
     const user_id = req.body.user_id
     const shipping_fee = req.body.shipping_fee

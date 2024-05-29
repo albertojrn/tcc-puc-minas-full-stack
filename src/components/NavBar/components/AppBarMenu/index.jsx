@@ -7,6 +7,7 @@ function AppBarMenu() {
   return (
     <AppBarMenuContainer
       alignItems='center'
+      justifyContent='center'
       direction='row'
       display={{ xs: 'none', md: 'flex' }}
       spacing={5}

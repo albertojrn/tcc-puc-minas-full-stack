@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Carousel } from 'react-bootstrap'
+import Carousel from 'react-bootstrap/Carousel'
 import { ArrowBackIos, ArrowForwardIos, Close } from '@mui/icons-material'
 import { CarouselContainer } from '../../styles'
 import { DeleteImageIcon } from './styles'
