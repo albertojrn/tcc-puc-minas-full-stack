@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { IconButton } from '@mui/material'
 import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material'
+import { v4 } from 'uuid'
 import { Container, ControlsContainer, MainContainer, ScrollContainer } from './styles'
 import { GridItem } from '../../styles'
 import ProductCard from '../ProductCard'
 
-function ProductScrollGrid({ fetchProducts, sizes, query }) {
+function ProductScrollGrid({ fetchProducts, sizes }) {
   const [loading, setLoading] = useState(false)
   const [products, setProducts] = useState([])
   const [scrollIndex, setScrollIndex] = useState(0)
   const prevRemainingScroll = useRef(null)
+  const preClass = v4()
 
   function onControlClick(direction) {
-    const container = document.getElementById('ProductsScrollGridContainer-root')
+    const container = document.getElementById(`${preClass}ProductsScrollGridContainer-root`)
     setScrollIndex(prev => {
       if (direction === 'prev') {
         const futureIndex = prev - 1
@@ -32,12 +34,10 @@ function ProductScrollGrid({ fetchProducts, sizes, query }) {
   }
 
   async function loadProducts() {
-    if (query) {
-      setLoading(true)
-      const res = await fetchProducts()
-      setLoading(true)
-      if (res?.data?.length) setProducts(res.data)
-    }
+    setLoading(true)
+    const res = await fetchProducts()
+    setLoading(true)
+    if (res?.data?.length) setProducts(res.data)
   }
 
   useEffect(() => {
@@ -45,7 +45,7 @@ function ProductScrollGrid({ fetchProducts, sizes, query }) {
   }, [])
 
   useEffect(() => {
-    const container = document.getElementById('ProductsScrollGridContainer-root')
+    const container = document.getElementById(`${preClass}ProductsScrollGridContainer-root`)
     const innerContainer = container.getElementsByClassName('ProductsScrollContainer-root')[0]
     const childs = innerContainer.children
     if (childs[scrollIndex]) {
@@ -60,7 +60,7 @@ function ProductScrollGrid({ fetchProducts, sizes, query }) {
   return (
     <MainContainer>
 
-      <Container id='ProductsScrollGridContainer-root'>
+      <Container id={`${preClass}ProductsScrollGridContainer-root`}>
         <ScrollContainer className='ProductsScrollContainer-root' container spacing={2}>
           {products.map((product) => (
             <GridItem item {...sizes} key={product.id}>
@@ -68,6 +68,7 @@ function ProductScrollGrid({ fetchProducts, sizes, query }) {
                 productId={product.id}
                 title={product.title}
                 variations={product.variations}
+                images={product.images}
               />
             </GridItem>
           ))}

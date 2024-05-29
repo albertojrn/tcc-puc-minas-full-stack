@@ -7,7 +7,7 @@ export async function authUser(body) {
   const result = await axios.post(url, body)
     .then(res => res)
     .catch(error => error?.response)
-  return result
+  return result ?? {}
 }
 
 export async function authGoogleUser(token) {
@@ -19,7 +19,7 @@ export async function authGoogleUser(token) {
   })
     .then(res => res)
     .catch(error => error?.response)
-  return result
+  return result ?? {}
 }
 
 export async function validateUser(token) {
@@ -31,5 +31,5 @@ export async function validateUser(token) {
   })
     .then(res => res)
     .catch(error => error?.response)
-  return result
+  return result ?? {}
 }

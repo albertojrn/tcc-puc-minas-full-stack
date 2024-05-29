@@ -11,7 +11,7 @@ export async function createUserAddress(body, token) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function deleteUserAddress(id, user_id, token) {
@@ -23,7 +23,7 @@ export async function deleteUserAddress(id, user_id, token) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function readUserAddress(user_id, token) {
@@ -35,7 +35,7 @@ export async function readUserAddress(user_id, token) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function updateUserAddress(id, body, token) {
@@ -47,5 +47,5 @@ export async function updateUserAddress(id, body, token) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }

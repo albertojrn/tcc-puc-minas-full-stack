@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { buildQueryString } from '../../utils/buildQueryString'
 
 const v1BaseUrl = `${process.env.REACT_APP_API_HOST}/api/v1`
 
@@ -11,7 +12,7 @@ export async function createOrders(body, token) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function deleteOrders(id, token) {
@@ -23,19 +24,11 @@ export async function deleteOrders(id, token) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function readOrders(user_id, token, reqQuery = {}) {
-  let queryString = ''
-  const queryProps = Object.keys(reqQuery)
-  if (queryProps.length) {
-    queryString += '?'
-    for (let i = 0; i < queryProps.length; i++) {
-      const prop = queryProps[i]
-      queryString += `${i !== 0 ? '&' : ''}${prop}=${reqQuery[prop]}`
-    }
-  }
+  const queryString = buildQueryString(reqQuery)
   const url = `${v1BaseUrl}/orders${(user_id || user_id === 0) ? `/${user_id}` : ''}${queryString}`
   const result = await axios.get(url, {
     headers: {
@@ -44,7 +37,7 @@ export async function readOrders(user_id, token, reqQuery = {}) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function updateOrders(id, body, token) {
@@ -56,5 +49,5 @@ export async function updateOrders(id, body, token) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }

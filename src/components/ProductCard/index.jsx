@@ -7,25 +7,26 @@ import { CustomDivider } from '../../styles'
 function ProductCard({
   productId,
   title,
-  variations
+  variations,
+  images
 }) {
   const lowestPrice = Math.min(...variations.map(variation => variation.price))
   return (
     <LinkContainer to={`/product/${productId}`}>
       <CardContainer direction='column' spacing={1}>
         <div className='ProductCardImg-root'>
-          <img src={`${process.env.PUBLIC_URL}/images/1716037704529-nike-revo-7-fem-1.jpg`} alt='banner_img' />
+          <img src={`${process.env.PUBLIC_URL}/images/${images?.[0]}`} alt='banner_img' />
         </div>
         <CustomDivider />
-        <Typography className='ProductCardTitle-root' component='div'>
-          {title}
+        <Typography className='ProductCardTitle-root'>
+          {`${title}`}
         </Typography>
         <CustomDivider />
-        <Stack direction='row' alignItems='start' justifyContent='space-between'>
-          <Typography className='ProductCardPrice-label' component='div'>
+        <Stack direction='column' spacing={0}>
+          <Typography align='right' className='ProductCardPrice-label'>
             A partir de:
           </Typography>
-          <Typography align='right' className='ProductCardPrice-root' component='div'>
+          <Typography align='right' className='ProductCardPrice-root'>
             {formatPrice(lowestPrice)}
           </Typography>
         </Stack>

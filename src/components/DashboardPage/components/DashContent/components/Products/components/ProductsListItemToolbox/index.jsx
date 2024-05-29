@@ -9,12 +9,14 @@ import { useDashboardDataContext } from '../../../../../../../../contexts/Dashbo
 import ProductRegistry from '../ProductRegistry'
 import DialogRetry from '../../../../../../../DialogRetry'
 import { updateListPagesOnDelete } from '../../../../utils/updateListPagesOnDelete'
+import { useUserContext } from '../../../../../../../../contexts/UserContext'
 
 function ProductsListItemToolbox({ product, page }) {
   const [anchorMenu, setAnchorMenu] = useState(null)
   const { setDashboardParams } = useDashboardContext()
   const { products, setDashboardData } = useDashboardDataContext()
   const { setLoading } = useLoadingContext()
+  const { token } = useUserContext()
   const open = Boolean(anchorMenu)
 
   function handleOpenEditProduct() {
@@ -30,7 +32,7 @@ function ProductsListItemToolbox({ product, page }) {
 
   async function handleDeleteProduct() {
     setLoading({ show: true })
-    const res = await deleteProducts(product.id)
+    const res = await deleteProducts(product.id, token)
     if (res.status === 204) {
       const newProducts = updateListPagesOnDelete(products, page, product)
       setDashboardData({ products: newProducts })

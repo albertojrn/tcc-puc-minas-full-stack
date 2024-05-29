@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Divider, Stack, Typography } from '@mui/material'
+import { Button, Divider, List, Stack, Typography } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import { v4 } from 'uuid'
 import { FormContainer } from '../../../../../../../../../../styles'
@@ -7,21 +7,20 @@ import VariationItem from '../VariationItem'
 import { useDashboardContext } from '../../../../../../../../../../contexts/DashboardContext'
 import AddProductVariation from '../../../AddProductVariation'
 import groupVariations from './utils/groupVariations'
-import { VaritionsLis } from './styles'
 
 function ProductVariations({ setVariations, variations }) {
   const { setDashboardParams } = useDashboardContext()
   const groupedVariations = groupVariations(variations)
 
   return (
-    <FormContainer>
+    <FormContainer maxHeight='250px'>
       <Typography
         component='div'
         variant='h6'
       >
         Variações*
       </Typography>
-      <VaritionsLis>
+      <List>
         <Divider />
         {groupedVariations.map(groupedVariation => (
           <React.Fragment key={v4()}>
@@ -32,7 +31,7 @@ function ProductVariations({ setVariations, variations }) {
             <Divider />
           </React.Fragment>
         ))}
-      </VaritionsLis>
+      </List>
       <Stack direction='row' justifyContent='end'>
         <Button
           color='standard'

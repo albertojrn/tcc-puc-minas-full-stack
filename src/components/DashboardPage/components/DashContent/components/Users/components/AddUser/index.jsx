@@ -63,7 +63,7 @@ function AddUser({ user }) {
       setLoading({ show: false })
       if (res.status === 201) {
         const newUsers = { ...users }
-        newUsers[usersPage] = [...newUsers[usersPage], res.data]
+        newUsers[usersPage] = [...(newUsers[usersPage] ?? []), res.data]
         setDashboardData({ users: newUsers })
         setDashboardParams({ openModal: false })
       }

@@ -8,11 +8,13 @@ import AddFeatureValues from '../AddFeatureValues'
 import { deleteFeatureValues } from '../../../../../../../../services/api/featureValues'
 import DialogOk from '../../../../../../../DialogOk'
 import DialogYesNo from '../../../../../../../DialogYesNo'
+import { useUserContext } from '../../../../../../../../contexts/UserContext'
 
 function FeatureCardToolbox({ featureValue }) {
   const { setLoading } = useLoadingContext()
   const { featureValues, setDashboardData } = useDashboardDataContext()
   const { setDashboardParams } = useDashboardContext()
+  const { token } = useUserContext()
 
   function handleEditFeature() {
     setDashboardParams({
@@ -25,7 +27,7 @@ function FeatureCardToolbox({ featureValue }) {
 
   async function handleDeleteFeature() {
     setLoading({ show: true })
-    const res = await deleteFeatureValues(featureValue.id)
+    const res = await deleteFeatureValues(featureValue.id, token)
     if (res.status === 204) {
       const newFeatureValues = structuredClone(featureValues)
       newFeatureValues[featureValue.feature_id] = newFeatureValues[featureValue.feature_id].filter(f => f.id !== featureValue.id)

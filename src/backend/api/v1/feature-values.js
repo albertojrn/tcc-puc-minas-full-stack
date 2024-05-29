@@ -3,6 +3,8 @@ const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
 const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
+const ensureIsAdmin = require('../../middlewares/ensureIsAdmin')
+const authTokenCheck = require('../../middlewares/authTokenCheck')
 
 const router = express.Router()
 
@@ -31,7 +33,7 @@ router.get('/:id', (req, res, next) => {
   }
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const name = req.body.name
     const feature_id = req.body.feature_id
@@ -46,7 +48,7 @@ router.post('/', (req, res, next) => {
   }
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     const name = req.body.name
@@ -68,7 +70,7 @@ router.put('/:id', (req, res, next) => {
   }
 })
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     db.query('DELETE FROM feature_values WHERE id= ?', id, (err) => {

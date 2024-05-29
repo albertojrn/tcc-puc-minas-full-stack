@@ -1,5 +1,4 @@
 import React from 'react'
-import { useUserContext } from '../../contexts/UserContext'
 import { GridItem, MainGridContainer } from '../../styles'
 import BigCarousel from './components/BigCarousel'
 import ProductScrollGrid from '../ProductsScrollGrid'
@@ -7,7 +6,6 @@ import GridTitle from '../GridTitle'
 import { readProducts } from '../../services/api/products'
 
 function HomePage() {
-  const { id } = useUserContext()
   return (
     <MainGridContainer container spacing={2}>
       <GridItem item xs={12}>
@@ -15,7 +13,11 @@ function HomePage() {
       </GridItem>
       <GridTitle title='Adicionados Recentemente' />
       <GridItem item xs={12}>
-        <ProductScrollGrid fetchProducts={() => readProducts(null, { limit: 10, orderby: 'date', orderdirection: 'DESC' })} query={{ limit: 10, orderby: 'date', orderdirection: 'DESC' }} />
+        <ProductScrollGrid fetchProducts={() => readProducts(null, { limit: 10, orderby: 'date', orderdirection: 'DESC' })} />
+      </GridItem>
+      <GridTitle title='Os mais vendidos' />
+      <GridItem item xs={12}>
+        <ProductScrollGrid fetchProducts={() => readProducts(null, { limit: 10, orderby: 'orders', orderdirection: 'DESC' })} />
       </GridItem>
     </MainGridContainer>
   )

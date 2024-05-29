@@ -11,7 +11,7 @@ export async function createCartProduct(body, token) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function deleteCartProduct(user_id, product_id, primary_color_id, secondary_color_id, size_id, token) {
@@ -23,7 +23,7 @@ export async function deleteCartProduct(user_id, product_id, primary_color_id, s
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function readCartProduct(user_id, token) {
@@ -35,7 +35,7 @@ export async function readCartProduct(user_id, token) {
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function updateCartProduct(user_id, product_id, primary_color_id, secondary_color_id, size_id, body, token) {
@@ -47,5 +47,5 @@ export async function updateCartProduct(user_id, product_id, primary_color_id, s
   })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }

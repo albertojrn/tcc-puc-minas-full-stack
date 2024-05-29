@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Box, Button, Divider, Grid, Stack, TextField, Typography, styled } from '@mui/material'
-import { COLORS, NAVBAR_HEIGHT } from './constants/theme'
+import { COLORS, NAVBAR_MIN_HEIGHT, NAVBAR_MIN_HEIGHT_MOBILE } from './constants/theme'
 import { formatCssProp } from './utils/cssMethods'
 
 export const AppBarContainer = styled(Box)`
@@ -9,7 +9,18 @@ export const AppBarContainer = styled(Box)`
   flex-direction: row;
   align-items: center;
   width: 100%;
-  height: ${NAVBAR_HEIGHT}px;
+  & .MuiToolbar-root {   
+  ${({ theme }) => `
+    ${theme.breakpoints.up('xs')} {
+      min-height: ${NAVBAR_MIN_HEIGHT_MOBILE}px;
+    }
+  `} 
+  ${({ theme }) => `
+    ${theme.breakpoints.up('sm')} {
+      min-height: ${NAVBAR_MIN_HEIGHT}px;
+    }
+  `}
+  }
 `
 
 export const CenterModalContainer = styled(Box, { shouldForwardProp: prop => !['height', 'width'].includes(prop) })`
@@ -50,20 +61,25 @@ export const CustomDivider = styled(Divider, { shouldForwardProp: prop => !['col
   border-bottom-width: ${({ thickness }) => thickness ?? '2px'};
   ${({ margin }) => margin && `margin: ${margin}`};
 `
-export const CustomLink = styled(Link, { shouldForwardProp: prop => !['color', 'textDecoration'].includes(prop) })`
+export const CustomLink = styled(Link, { shouldForwardProp: prop => !['color', 'textDecoration', 'preventWrap'].includes(prop) })`
   &:active, &:hover, &:visited, &:link {
     color: ${({ color }) => color ?? 'black'};
     ${({ textDecoration }) => textDecoration && `text-decoration: ${textDecoration};`}
   }
+  ${({ preventWrap }) => preventWrap && `
+    overflow: hidden;
+    text-wrap: nowrap;
+  `}
 `
 
-export const FormContainer = styled(Box, { shouldForwardProp: prop => !['height', 'maxHeight'].includes(prop) })`
+export const FormContainer = styled(Box, { shouldForwardProp: prop => !['height', 'maxHeight', 'position'].includes(prop) })`
   border: 1px solid ${COLORS.inputBorderColor};
   border-radius: 4px;
   padding: 8px;
   overflow: auto;
   ${({ height }) => height && `height: ${height};`}
   ${({ maxHeight }) => maxHeight && `max-height: ${maxHeight};`}
+  ${({ position }) => position && `position: ${position};`}
 `
 
 export const FormTextField = styled(TextField, { shouldForwardProp: prop => !['helperTextColor', 'padding'].includes(prop) })`
@@ -85,7 +101,7 @@ export const GridItem = styled(Grid, { shouldForwardProp: prop => !['align', 'al
   ${({ justifyContent }) => justifyContent && `justify-content: ${justifyContent};`}
   ${({ isFlex }) => isFlex && 'display: flex;'}
   ${({ theme, hideInMobile }) => `
-    ${theme.breakpoints.down('sm')} {
+    ${theme.breakpoints.down('md')} {
       ${hideInMobile && 'display: none;'}
     }
   `}
@@ -156,7 +172,7 @@ export const StackedFormContainer = styled(Stack)`
   `}
 `
 export const ViewboxContainer = styled(Box)`
-  --menu-height: ${NAVBAR_HEIGHT}px;
+  --menu-height: ${NAVBAR_MIN_HEIGHT}px;
   align-items: center;
   display: flex;
   justify-content: center;

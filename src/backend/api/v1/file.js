@@ -1,7 +1,8 @@
 const express = require('express')
 const multer = require('multer')
 const errorHandler = require('../../middlewares/errorHandler')
-const responseHandler = require('../../middlewares/responseHandler')
+const ensureIsAdmin = require('../../middlewares/ensureIsAdmin')
+const authTokenCheck = require('../../middlewares/authTokenCheck')
 
 const router = express.Router()
 
@@ -17,7 +18,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-router.post('/', upload.array('files'), (req, res, next) => {
+router.post('/', authTokenCheck, ensureIsAdmin, upload.array('files'), (req, res, next) => {
   try {
     if (!req.files) {
       return res.status(400).json({ error: 'No file uploaded' })

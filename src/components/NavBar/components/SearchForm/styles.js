@@ -8,15 +8,7 @@ export const SearchContainer = styled(Box)`
   display: flex;
   flex-direction: row;
   flex-grow: 1;
-  margin-left: 16px;
-  margin-right: 16px;
   position: relative;
-  ${({ theme }) => `
-    ${theme.breakpoints.up('md')} {
-      margin-left: 124px;
-      margin-right: 124px;
-    }
-  `}
 `
 
 export const SearchInput = styled(InputBase)`

@@ -8,6 +8,7 @@ import { CONSTRAINTS } from './constants/validationParams'
 import { useLoadingContext } from '../../../../../../../../contexts/LoadingContext'
 import { createFeatureValues, updateFeatureValues } from '../../../../../../../../services/api/featureValues'
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
+import { useUserContext } from '../../../../../../../../contexts/UserContext'
 import SQL_ERROR_STATUS_DICT from '../../../../../../../../constants/sqlErrorStatusDict'
 
 function AddFeatureValues({ feature }) {
@@ -18,6 +19,7 @@ function AddFeatureValues({ feature }) {
   const { setDashboardParams } = useDashboardContext()
   const { featureValues, setDashboardData } = useDashboardDataContext()
   const { setLoading } = useLoadingContext()
+  const { token } = useUserContext()
 
   async function handleOnOkClick() {
     const validation = validateFields({ name }, CONSTRAINTS)
@@ -27,8 +29,8 @@ function AddFeatureValues({ feature }) {
       setErrorCreate('')
       const res = (
         isUpdate
-          ? await updateFeatureValues(feature.id, { name })
-          : await createFeatureValues({ name, feature_id: feature.id })
+          ? await updateFeatureValues(feature.id, { name }, token)
+          : await createFeatureValues({ name, feature_id: feature.id }, token)
       )
       setLoading({ show: false })
       if (res.status === 201) {

@@ -3,6 +3,8 @@ const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
 const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
+const ensureIsAdmin = require('../../middlewares/ensureIsAdmin')
+const authTokenCheck = require('../../middlewares/authTokenCheck')
 
 const router = express.Router()
 
@@ -13,8 +15,43 @@ router.get('/', (req, res, next) => {
     const orderby = req.query.orderby
     const orderdirection = req.query.orderdirection
     const onlyinfo = req.query.onlyinfo
+    const featurevalues = req.query.featurevalues
+    const count = req.query.count
+    const searchquery = req.query.searchquery
+
+    let whereQuery = 'WHERE '
+    const whereParts = []
+    if (featurevalues) {
+      let fv = featurevalues
+      if (!Array.isArray(fv)) fv = [fv]
+      whereParts.push(
+        `
+          products.id IN
+          (
+          SELECT product_id from products_features_values
+          WHERE
+          (
+          ${fv.map(val => (`product_id IN (SELECT product_id from products_features_values WHERE feature_values_id = ${val})`)).join(' AND ')}
+          )
+          OR
+          (
+          ${fv.map(val => (`product_id IN (SELECT product_id from products_variations pv WHERE pv.primary_color_id = ${val} OR pv.secondary_color_id = ${val} OR pv.size_id = ${val})`)).join(' AND ')}
+          )
+          GROUP BY product_id
+          )
+        `
+      )
+    }
+    if (searchquery && typeof searchquery === 'string') {
+      whereParts.push(`products.title LIKE '%${searchquery}%'`)
+    }
+    whereQuery += whereParts.join(' AND ')
+    if (whereQuery === 'WHERE ') whereQuery = ''
+    console.log({searchquery, whereParts, whereQuery})
 
     const query = `
+      ${count === 'true' ? `
+      SELECT COUNT(products.id) AS totalProducts FROM products ${whereQuery};` : ''}
       SELECT
       *,
       ${onlyinfo === 'true' ? '' : `
@@ -36,6 +73,13 @@ router.get('/', (req, res, next) => {
       WHERE products.id = pv.product_id
       )
       AS variations,`}
+      ${orderby === 'orders' ? `
+      (
+      SELECT SUM(quantity)
+      FROM orders_items oi
+      WHERE products.id = oi.product_id
+      )
+      AS orders,` : ''}
       (
       SELECT JSON_ARRAYAGG(pImg.name)
       FROM products_images pImg
@@ -43,21 +87,30 @@ router.get('/', (req, res, next) => {
       )
       AS images
       FROM products
+      ${whereQuery}
       GROUP BY products.id
       ${orderby ? `ORDER BY ${orderby}${orderdirection ? ` ${orderdirection}` : ''}` : ''}
       ${limit ? `LIMIT ${limit}` : ''}
       ${offset ? `OFFSET ${offset}` : ''};
     `
+
     db.query(query, (err, result) => {
       if (err) return sqlErrorHandler(err, req, res, next)
-      if (Array.isArray(result)) {
-        for (const item of result) {
+      let modifiedResult = result
+      if (count === 'true') {
+        modifiedResult = result[1]
+        if (modifiedResult[0]) {
+          modifiedResult[0].count = result[0][0].totalProducts
+        }
+      }
+      if (Array.isArray(modifiedResult)) {
+        for (const item of modifiedResult) {
           if (item.selectedFeatures) item.selectedFeatures = JSON.parse(item.selectedFeatures)
           if (item.variations) item.variations = JSON.parse(item.variations)
           if (item.images) item.images = JSON.parse(item.images)
         }
       }
-      responseHandler(req, res, result)
+      responseHandler(req, res, modifiedResult)
     })
   }
   catch (err) {
@@ -118,7 +171,7 @@ router.get('/:id', (req, res, next) => {
   }
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const title = req.body.title
     const description = req.body.description
@@ -160,7 +213,7 @@ router.post('/', (req, res, next) => {
   }
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     const {
@@ -210,7 +263,7 @@ router.put('/:id', (req, res, next) => {
   }
 })
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     db.query('DELETE FROM products WHERE id= ?', id, (err) => {

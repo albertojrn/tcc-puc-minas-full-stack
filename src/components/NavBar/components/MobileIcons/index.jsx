@@ -8,7 +8,7 @@ import LoggedOutMenuItems from '../LoggedOutMenuItems'
 
 function MobileIcons() {
   const [anchor, setAnchor] = useState(null)
-  const { isLoggedIn } = useUserContext()
+  const { token } = useUserContext()
 
   return (
     <>
@@ -24,7 +24,7 @@ function MobileIcons() {
       <Menu
         anchorEl={anchor}
         anchorOrigin={{
-          vertical: 'top',
+          vertical: 'bottom',
           horizontal: 'right',
         }}
         keepMounted
@@ -35,9 +35,9 @@ function MobileIcons() {
         open={Boolean(anchor)}
         onClose={() => setAnchor(null)}
       >
-        {isLoggedIn
-          ? <LoggedInMenuItems />
-          : <LoggedOutMenuItems />}
+        {token
+          ? <LoggedInMenuItems setAnchor={setAnchor} />
+          : <LoggedOutMenuItems setAnchor={setAnchor}/>}
       </Menu>
     </>
   )

@@ -3,6 +3,8 @@ const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
 const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
+const ensureIsAdmin = require('../../middlewares/ensureIsAdmin')
+const authTokenCheck = require('../../middlewares/authTokenCheck')
 
 const router = express.Router()
 
@@ -45,7 +47,7 @@ router.get('/:product_id/:name', (req, res, next) => {
   }
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const product_id = req.body.product_id
     const name = req.body.name
@@ -60,7 +62,7 @@ router.post('/', (req, res, next) => {
   }
 })
 
-router.put('/:product_id/:name', (req, res, next) => {
+router.put('/:product_id/:name', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const paramProductId = req.params.product_id
     const paramName = req.params.name
@@ -83,7 +85,7 @@ router.put('/:product_id/:name', (req, res, next) => {
   }
 })
 
-router.delete('/:product_id/:name', (req, res, next) => {
+router.delete('/:product_id/:name', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const product_id = req.params.product_id
     const name = req.params.name

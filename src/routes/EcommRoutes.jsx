@@ -13,6 +13,7 @@ import Redirect from '../components/Redirect'
 import CheckoutPage from '../components/CheckoutPage'
 import OrderConfirmationPage from '../components/OrderConfirmationPage'
 import ProfilePage from '../components/ProfilePage'
+import StorePage from '../components/StorePage'
 
 function EcommRoutes() {
   const { role, token } = useUserContext()
@@ -50,6 +51,7 @@ function EcommRoutes() {
       <Route exact path='/order-confirmation/:slug' element={<ContentMainConatiner><OrderConfirmationPage /></ContentMainConatiner>} />
       <Route exact path='/sign-up' element={<ContentMainConatiner><SignUpPage /></ContentMainConatiner>} />
       <Route exact path='/password-recovery' element={<ContentMainConatiner><ForgetPasswordPage /></ContentMainConatiner>} />
+      <Route exact path='/store' element={<ContentMainConatiner><StorePage /></ContentMainConatiner>} />
       <Route exact path='/product/:id' element={<ContentMainConatiner><ProductPage /></ContentMainConatiner>} />
       {role === 'admin'
         && (

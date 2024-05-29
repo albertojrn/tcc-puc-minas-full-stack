@@ -12,6 +12,7 @@ import { createProducts, readProducts, updateProducts } from '../../../../../../
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
 import SQL_ERROR_STATUS_DICT from '../../../../../../../../constants/sqlErrorStatusDict'
 import { useLoadingContext } from '../../../../../../../../contexts/LoadingContext'
+import { useUserContext } from '../../../../../../../../contexts/UserContext'
 import { deleteProductImages } from '../../../../../../../../services/api/productImages'
 import { deleteProductFeatures } from '../../../../../../../../services/api/productFeatures'
 import { deleteProductVariations } from '../../../../../../../../services/api/productVariations'
@@ -33,6 +34,7 @@ function ProductFormFields({ product, selectedImages }) {
   const { openDialog, productsPage, setDashboardParams } = useDashboardContext()
   const { products, setDashboardData } = useDashboardDataContext()
   const { setLoading } = useLoadingContext()
+  const { token } = useUserContext()
   if (variations.length && error.variations) setError(prev => ({ ...prev, variations: '' }))
 
   async function handleCreateProduct() {
@@ -102,19 +104,19 @@ function ProductFormFields({ product, selectedImages }) {
         input.selectedFeatures = featuresToAdd
       }
       const preSavingPromises = []
-      preSavingPromises.push(imagesToAdd.length ? uploadFiles(imagesToAdd) : undefined)
+      preSavingPromises.push(imagesToAdd.length ? uploadFiles(imagesToAdd, token) : undefined)
       if (isUpdate) {
         preSavingPromises
           .push(imagesToRemove.length
-            ? imagesToRemove.map(item => deleteProductImages(product.id, item))
+            ? imagesToRemove.map(item => deleteProductImages(product.id, item, token))
             : [])
         preSavingPromises
           .push(featuresToRemove.length
-            ? featuresToRemove.map(item => deleteProductFeatures(product.id, item))
+            ? featuresToRemove.map(item => deleteProductFeatures(product.id, item, token))
             : [])
         preSavingPromises
           .push(variationsToRemove.length
-            ? variationsToRemove.map(item => deleteProductVariations(product.id, item.primary_color_id, item.secondary_color_id, item.size_id))
+            ? variationsToRemove.map(item => deleteProductVariations(product.id, item.primary_color_id, item.secondary_color_id, item.size_id, token))
             : [])
       }
       const [uploadImagesRes, deleteImagesRes, deleteFeaturesRes, deleteVariationsRes] = await Promise.allSettled(preSavingPromises)
@@ -170,12 +172,12 @@ function ProductFormFields({ product, selectedImages }) {
       }
       const res = (
         isUpdate
-          ? await updateProducts(product.id, input)
-          : await createProducts(input)
+          ? await updateProducts(product.id, input, token)
+          : await createProducts(input, token)
       )
       if (res.status === 201 && res.data) {
         const newProducts = { ...products }
-        newProducts[productsPage] = [...newProducts[productsPage], res.data]
+        newProducts[productsPage] = [...(newProducts[productsPage] ?? []), res.data]
         setDashboardData({ products: newProducts })
         setDashboardParams({ openModal: false })
       }

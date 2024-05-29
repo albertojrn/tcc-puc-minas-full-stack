@@ -12,6 +12,8 @@ import { UserContextProvider } from './contexts/UserContext'
 import Loading from './components/Loading'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import DialogRoot from './components/DialogRoot'
+import Footer from './components/Footer'
+import DrawerMenu from './components/NavBar/components/DrawerMenu'
 
 function App() {
   const theme = createTheme(CUSTOM_THEME)
@@ -26,8 +28,10 @@ function App() {
                 <div id='app-main'>
                   <NavBar />
                   <EcommRoutes />
+                  <Footer />
                   <Loading />
                   <DialogRoot />
+                  <DrawerMenu />
                 </div>
               </LoadingContextProvider>
             </GoogleOAuthProvider>

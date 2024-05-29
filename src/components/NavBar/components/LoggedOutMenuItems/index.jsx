@@ -1,12 +1,13 @@
 import React from 'react'
 import { MenuItem } from '@mui/material'
 import { DICTIONARY } from '../../../../constants/dictionary'
+import { CustomLink } from '../../../../styles'
 
-function LoggedOutMenuItems() {
+function LoggedOutMenuItems({ setAnchor }) {
   return (
-    <>
-      <MenuItem onClick={() => null}>{DICTIONARY.SIGN_UP}</MenuItem>
-    </>
+    <CustomLink color='black' textDecoration='none' to='/login'>
+      <MenuItem onClick={() => setAnchor(null)}>{DICTIONARY.SIGN_UP}</MenuItem>
+    </CustomLink>
   )
 }
 

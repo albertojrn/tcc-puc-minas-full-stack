@@ -3,13 +3,56 @@ const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
 const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
+const ensureIsAdmin = require('../../middlewares/ensureIsAdmin')
+const authTokenCheck = require('../../middlewares/authTokenCheck')
 
 const router = express.Router()
 
 router.get('/', (req, res, next) => {
   try {
-    db.query('SELECT * FROM features', (err, result) => {
+    const getvalues = req.query.getvalues
+    const featurevalues = req.query.featurevalues
+
+    let whereQuery = ''
+    if (featurevalues) {
+      let fv = featurevalues
+      if (!Array.isArray(fv)) fv = [fv]
+      whereQuery += `
+        WHERE features.id IN (
+        SELECT feature_id FROM feature_values fv
+        WHERE fv.id IN (${featurevalues.join(', ')})
+        GROUP BY feature_id
+        )
+      `
+    }
+
+    const query = `
+    SELECT *
+    ${getvalues === 'true' ? `
+    ,(
+      SELECT JSON_ARRAYAGG(JSON_OBJECT(
+      'id', fv.id,
+      'name', fv.name,
+      'feature_id', fv.feature_id
+      ))
+      FROM feature_values fv
+      WHERE features.id = fv.feature_id
+      ${featurevalues ? ` AND fv.id IN (${Array.isArray(featurevalues) ? featurevalues.join(', ') : featurevalues})` : ''}
+    )
+    AS featureValues
+    ` : ''}
+    FROM features
+    ${whereQuery}
+    ;
+    `
+
+    db.query(query, (err, result) => {
       if (err) return sqlErrorHandler(err, req, res, next)
+      if (Array.isArray(result)) {
+        for (const item of result) {
+          if (item.featureValues) item.featureValues = JSON.parse(item.featureValues)
+        }
+      }
       responseHandler(req, res, result)
     })
   }
@@ -31,7 +74,7 @@ router.get('/:id', (req, res, next) => {
   }
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const name = req.body.name
     const is_multiple = req.body.is_multiple
@@ -46,7 +89,7 @@ router.post('/', (req, res, next) => {
   }
 })
 
-router.put('/:id', (req, res, next) => {
+router.put('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     const name = req.body.name
@@ -68,7 +111,7 @@ router.put('/:id', (req, res, next) => {
   }
 })
 
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const id = req.params.id
     db.query('DELETE FROM features WHERE id= ?', id, (err) => {

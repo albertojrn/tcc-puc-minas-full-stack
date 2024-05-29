@@ -8,6 +8,7 @@ import { useDashboardContext } from '../../../../../../../../contexts/DashboardC
 import DialogOk from '../../../../../../../DialogOk'
 import DialogYesNo from '../../../../../../../DialogYesNo'
 import AddFeature from '../AddFeature'
+import { useUserContext } from '../../../../../../../../contexts/UserContext'
 
 function EditRemoveFeatureButtons({ feature }) {
   const [anchorMenu, setAnchorMenu] = useState(null)
@@ -15,6 +16,7 @@ function EditRemoveFeatureButtons({ feature }) {
   const { features, setDashboardData } = useDashboardDataContext()
   const { setDashboardParams } = useDashboardContext()
   const openMenu = Boolean(anchorMenu)
+  const { token } = useUserContext()
 
   function handleEditFeature() {
     setAnchorMenu(null)
@@ -28,7 +30,7 @@ function EditRemoveFeatureButtons({ feature }) {
 
   async function handleDeleteFeature() {
     setLoading({ show: true })
-    const res = await deleteFeatures(feature.id)
+    const res = await deleteFeatures(feature.id, token)
     setLoading({ show: false })
     if (res.status === 204) {
       const newFeatures = features.filter(f => f.id !== feature.id)

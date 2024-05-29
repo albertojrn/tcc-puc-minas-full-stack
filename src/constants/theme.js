@@ -1,4 +1,5 @@
-export const NAVBAR_HEIGHT = 64
+export const NAVBAR_MIN_HEIGHT = 96
+export const NAVBAR_MIN_HEIGHT_MOBILE = 40
 
 export const COLORS = {
   red: '#D2011A',

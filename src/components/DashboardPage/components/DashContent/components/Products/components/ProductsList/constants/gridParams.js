@@ -30,4 +30,4 @@ export const COLUMNS = [
   },
 ]
 
-export const MAX_STRING_LENGTH = 150
+export const MAX_STRING_LENGTH = 75

@@ -5,6 +5,7 @@ import { validateFields } from '../../../../../../../../utils/formMethods'
 import { CONSTRAINTS } from './constants/validationParams'
 import { useDashboardContext } from '../../../../../../../../contexts/DashboardContext'
 import { useDashboardDataContext } from '../../../../../../../../contexts/DashboardDataContext'
+import { useUserContext } from '../../../../../../../../contexts/UserContext'
 import { useLoadingContext } from '../../../../../../../../contexts/LoadingContext'
 import { createFeatures, updateFeatures } from '../../../../../../../../services/api/features'
 import { Color } from '../../../../../../../../styles'
@@ -19,6 +20,7 @@ function AddFeature({ feature }) {
   const { setDashboardParams } = useDashboardContext()
   const { features, setDashboardData } = useDashboardDataContext()
   const { setLoading } = useLoadingContext()
+  const { token } = useUserContext()
 
   async function handleOnOkClick() {
     const validation = validateFields({ name }, CONSTRAINTS)
@@ -28,8 +30,8 @@ function AddFeature({ feature }) {
       setErrorCreate('')
       const res = (
         isUpdate
-          ? await updateFeatures(feature.id, { name, is_multiple: isMultiple })
-          : await createFeatures({ name, is_multiple: isMultiple })
+          ? await updateFeatures(feature.id, { name, is_multiple: isMultiple }, token)
+          : await createFeatures({ name, is_multiple: isMultiple }, token)
       )
       setLoading({ show: false })
       if (res.status === 201) {

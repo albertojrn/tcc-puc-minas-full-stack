@@ -1,44 +1,49 @@
 import axios from 'axios'
+import { buildQueryString } from '../../utils/buildQueryString'
 
 const v1BaseUrl = `${process.env.REACT_APP_API_HOST}/api/v1`
 
-export async function createProducts(body) {
+export async function createProducts(body, token) {
   const url = `${v1BaseUrl}/products`
-  const result = await axios.post(url, body)
+  const result = await axios.post(url, body, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
-export async function deleteProducts(id) {
+export async function deleteProducts(id, token) {
   const url = `${v1BaseUrl}/products/${id}`
-  const result = await axios.delete(url)
+  const result = await axios.delete(url, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
 export async function readProducts(id, reqQuery = {}) {
-  let queryString = ''
-  const queryProps = Object.keys(reqQuery)
-  if (queryProps.length) {
-    queryString += '?'
-    for (let i = 0; i < queryProps.length; i++) {
-      const prop = queryProps[i]
-      queryString += `${i !== 0 ? '&' : ''}${prop}=${reqQuery[prop]}`
-    }
-  }
+  const queryString = buildQueryString(reqQuery)
   const url = `${v1BaseUrl}/products${(id || id === 0) ? `/${id}` : ''}${queryString}`
   const result = await axios.get(url)
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }
 
-export async function updateProducts(id, body) {
+export async function updateProducts(id, body, token) {
   const url = `${v1BaseUrl}/products/${id}`
-  const result = await axios.put(url, body)
+  const result = await axios.put(url, body, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
     .then(res => res)
     .catch(error => error.response)
-  return result
+  return result ?? {}
 }

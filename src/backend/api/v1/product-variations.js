@@ -3,6 +3,8 @@ const db = require('../../dbConfig')
 const errorHandler = require('../../middlewares/errorHandler')
 const responseHandler = require('../../middlewares/responseHandler')
 const sqlErrorHandler = require('../../middlewares/sqlErrorHandler')
+const ensureIsAdmin = require('../../middlewares/ensureIsAdmin')
+const authTokenCheck = require('../../middlewares/authTokenCheck')
 
 const router = express.Router()
 
@@ -48,7 +50,7 @@ router.get('/:product_id/:primary_color_id/:secondary_color_id/:size_id', (req, 
   }
 })
 
-router.post('/', (req, res, next) => {
+router.post('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const product_id = req.body.product_id
     const size_id = req.body.size_id
@@ -67,7 +69,7 @@ router.post('/', (req, res, next) => {
   }
 })
 
-router.put('/:product_id/:primary_color_id/:secondary_color_id/:size_id', (req, res, next) => {
+router.put('/:product_id/:primary_color_id/:secondary_color_id/:size_id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const paramProductId = req.params.product_id
     const paramPrimaryColorId = req.params.primary_color_id
@@ -101,7 +103,7 @@ router.put('/:product_id/:primary_color_id/:secondary_color_id/:size_id', (req, 
   }
 })
 
-router.delete('/:product_id/:primary_color_id/:secondary_color_id/:size_id', (req, res, next) => {
+router.delete('/:product_id/:primary_color_id/:secondary_color_id/:size_id', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   try {
     const product_id = req.params.product_id
     const primary_color_id = req.params.primary_color_id

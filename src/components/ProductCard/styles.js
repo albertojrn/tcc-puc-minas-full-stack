@@ -5,7 +5,7 @@ import { COLORS } from '../../constants/theme'
 export const CardContainer = styled(Stack)`
   border: 1px solid ${COLORS.lightBorder};
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px;
   width: 100%;
   & .ProductCardImg-root {
     height: 164px;
@@ -18,22 +18,33 @@ export const CardContainer = styled(Stack)`
     }
   }
   & .ProductCardTitle-root {
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: 0.95rem;
+    line-height: 1.5rem;
+    max-height: 3rem;
     word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
     &:hover {
       text-decoration: underline;
     }
   }
   & .ProductCardPrice-root {
-    margin-top: 18px;
+    margin-top: 6px;
     font-size: 1.3rem;
-    line-height: 1.2;
+    line-height: 1.6rem;
     font-stretch: expanded;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
   & .ProductCardPrice-label {
-    font-size: 1.0;
+    font-size: 0.9rem;
+    line-height: 1.1rem;
     color: ${COLORS.urbanBlack};
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    margin-top: 20px;
   }
 `
 
