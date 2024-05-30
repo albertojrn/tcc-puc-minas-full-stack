@@ -4,6 +4,11 @@ export const Container = styled('div')`
   width: 100%;
   overflow-y: hidden;
   overflow-x: hidden;
+  ${({ theme }) => `
+    ${theme.breakpoints.down('md')} {
+      overflow-x: auto;
+    }
+  `}
 `
 
 export const ControlsContainer = styled('div', { shouldForwardProp: prop => !['isRight'].includes(prop) })`

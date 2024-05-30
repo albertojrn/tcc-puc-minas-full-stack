@@ -59,7 +59,6 @@ function ProductScrollGrid({ fetchProducts, sizes }) {
 
   return (
     <MainContainer>
-
       <Container id={`${preClass}ProductsScrollGridContainer-root`}>
         <ScrollContainer className='ProductsScrollContainer-root' container spacing={2}>
           {products.map((product) => (
