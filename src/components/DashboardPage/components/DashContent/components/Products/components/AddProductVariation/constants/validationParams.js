@@ -5,7 +5,4 @@ export const CONSTRAINTS = {
       message: '^Pelo menos a cor primária deve ser escolhida.'
     },
   },
-  sizes: {
-    
-  }
 }
