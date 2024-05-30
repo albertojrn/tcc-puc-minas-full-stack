@@ -13,6 +13,19 @@ function CategoriesMenu() {
   return (
     <>
       <List>
+        <ListItem disablePadding>
+          <CustomLink
+            color={COLORS.urbanBlack}
+            to='/store'
+            textDecoration='none'
+            preventWrap
+            style={{ width: '100%' }}
+          >
+            <ListItemButton onClick={() => setStorePersistent({ openMenu: false })}>
+              <ListItemText primary='Todas as categorias' />
+            </ListItemButton>
+          </CustomLink>
+        </ListItem>
         {MENU_ITEMS.map(item => (
           <CollapsibleListItem
             key={item.category}
