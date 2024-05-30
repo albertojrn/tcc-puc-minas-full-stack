@@ -46,7 +46,7 @@
     "keyword-spacing": ["warn"],
     "space-before-blocks": ["warn"],
     "block-spacing": ["warn"],
-    //"linebreak-style": ["warn", "windows"],
+    //"linebreak-style": ["warn", "windows"]
     "no-multiple-empty-lines": ["warn", { "max": 2, "maxEOF": 0 }],
     "key-spacing": "warn",
     "space-infix-ops": "warn",
