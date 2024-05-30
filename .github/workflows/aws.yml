@@ -1,0 +1,42 @@
+name: Push-to-EC2
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    env:
+        REACT_APP_SQL_HOST: tcc-puc-minas-mysql.c94ookmemxvv.us-east-2.rds.amazonaws.com
+        REACT_APP_SQL_PORT: 3306
+        REACT_APP_SQL_USER: ${{secrets.SQL_USER}}
+        REACT_APP_SQL_PASS: ${{secrets.SQL_PASS}}
+        REACT_APP_SQL_DATABASE: tcc_puc_minas
+        REACT_APP_API_HOST: http://localhost:3002
+        REACT_APP_AUTH_SECRET: ${{secrets.AUTH_SECRET}}
+        REACT_APP_GOOGLE_AUTH_CLIENT_ID: ${{secrets.GOOGLE_AUTH_CLIENT_ID}}
+        
+    steps:
+    - name: Checkout the files
+      uses: actions/checkout@v4
+
+    - name: Install
+      run: |
+        npm ci
+
+    - name: Build
+      run: |
+        npm run build
+
+    - name: Copy files with SSH
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{secrets.EC2_SSH_KEY}}
+        ARGS: "-rltgoDzvO --delete"
+        SOURCE: "./"
+        REMOTE_HOST: "ec2-3-19-75-19.us-east-2.compute.amazonaws.com"
+        REMOTE_USER: "ec2-user"
+        TARGET: "/home/ec2-user/tcc-puc-minas"
+        EXCLUDE: "/dist/, /node_modules/, **.env, rebuild_app.sh, watcher.sh"
