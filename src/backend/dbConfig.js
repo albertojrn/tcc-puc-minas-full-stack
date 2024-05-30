@@ -8,14 +8,6 @@ const {
   REACT_APP_SQL_DATABASE,
 } = process.env
 
-console.log({
-  REACT_APP_SQL_PORT,
-  REACT_APP_SQL_HOST,
-  REACT_APP_SQL_USER,
-  REACT_APP_SQL_PASS,
-  REACT_APP_SQL_DATABASE,
-})
-
 const db = mysql.createConnection({
   port: REACT_APP_SQL_PORT,
   host: REACT_APP_SQL_HOST,

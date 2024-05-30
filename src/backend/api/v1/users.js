@@ -13,7 +13,6 @@ const router = express.Router()
 router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   const limit = req.query.limit
   const offset = req.query.offset
-  console.log('user-get')
   try {
     db.query(
       `
@@ -22,6 +21,7 @@ router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
       ${offset ? `OFFSET ${offset}` : ''};
       `,
       (err, result) => {
+        console.log({err})
         if (err) return sqlErrorHandler(err, req, res, next)
         for (const user of result) {
           if (Object.prototype.hasOwnProperty.call(user, 'password')) delete user.password
@@ -32,6 +32,7 @@ router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
     )
   }
   catch (err) {
+    console.log({err})
     errorHandler(err, req, res, next)
   }
 })
