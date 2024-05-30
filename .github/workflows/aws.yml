@@ -19,6 +19,9 @@ jobs:
       REACT_APP_GOOGLE_AUTH_CLIENT_ID: ${{secrets.GOOGLE_AUTH_CLIENT_ID}}
 
     steps:
+    - name: Checkout the files
+      uses: actions/checkout@v4
+
     - name: 'Create env file'
       run: |
         touch .env
@@ -30,10 +33,7 @@ jobs:
         echo REACT_APP_API_HOST=http://ec2-3-19-75-19.us-east-2.compute.amazonaws.com:3002 >> .env
         echo REACT_APP_AUTH_SECRET=${{secrets.AUTH_SECRET}} >> .env
         echo REACT_APP_GOOGLE_AUTH_CLIENT_ID=${{secrets.GOOGLE_AUTH_CLIENT_ID}} >> .env
-        cat .env
-
-    - name: Checkout the files
-      uses: actions/checkout@v4
+        cat .env    
 
     - name: Install
       run: |
