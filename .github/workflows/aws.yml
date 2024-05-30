@@ -27,8 +27,6 @@ jobs:
         npm ci
 
     - name: Build
-      run: |
-        npm run build
       env:
         REACT_APP_SQL_HOST: "tcc-puc-minas-mysql.c94ookmemxvv.us-east-2.rds.amazonaws.com"
         REACT_APP_SQL_PORT: "3306"
@@ -38,6 +36,8 @@ jobs:
         REACT_APP_API_HOST: "http://ec2-3-19-75-19.us-east-2.compute.amazonaws.com:3002"
         REACT_APP_AUTH_SECRET: ${{secrets.AUTH_SECRET}}
         REACT_APP_GOOGLE_AUTH_CLIENT_ID: ${{secrets.GOOGLE_AUTH_CLIENT_ID}}
+      run: |
+        npm run build
 
     - name: Copy files with SSH
       uses: easingthemes/ssh-deploy@main
