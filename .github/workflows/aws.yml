@@ -14,7 +14,7 @@ jobs:
         REACT_APP_SQL_USER: ${{secrets.SQL_USER}}
         REACT_APP_SQL_PASS: ${{secrets.SQL_PASS}}
         REACT_APP_SQL_DATABASE: tcc_puc_minas
-        REACT_APP_API_HOST: http://127.0.0.1:3002
+        REACT_APP_API_HOST: http://ec2-3-19-75-19.us-east-2.compute.amazonaws.com:3002
         REACT_APP_AUTH_SECRET: ${{secrets.AUTH_SECRET}}
         REACT_APP_GOOGLE_AUTH_CLIENT_ID: ${{secrets.GOOGLE_AUTH_CLIENT_ID}}
         
