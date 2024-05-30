@@ -13,6 +13,7 @@ const router = express.Router()
 router.get('/', authTokenCheck, ensureIsAdmin, (req, res, next) => {
   const limit = req.query.limit
   const offset = req.query.offset
+  console.log('user-get')
   try {
     db.query(
       `
