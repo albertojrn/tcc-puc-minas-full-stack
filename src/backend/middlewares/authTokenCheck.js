@@ -10,11 +10,13 @@ const authTokenCheck = (req, res, next) => {
     }
     const secret = process.env.REACT_APP_AUTH_SECRET
     const user = jwt.verify(token, secret) // Throws an error if token is invalid
+    console.log({secret, token, user})
     req.verifiedUser = user?.id
     req.verifiedRole = user?.role
     next()
   }
   catch (err) {
+    console.log(err)
     errorHandler({ status: 498, message: 'Token é inválido.' }, req, res, next)
   }
 }
