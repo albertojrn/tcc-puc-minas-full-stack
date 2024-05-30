@@ -22,18 +22,18 @@ jobs:
     - name: Checkout the files
       uses: actions/checkout@v4
 
-    - name: 'Create env file'
-      run: |
-        touch .env
-        echo REACT_APP_SQL_HOST=tcc-puc-minas-mysql.c94ookmemxvv.us-east-2.rds.amazonaws.com >> .env
-        echo REACT_APP_SQL_PORT=3306 >> .env
-        echo REACT_APP_SQL_USER=${{secrets.SQL_USER}} >> .env
-        echo REACT_APP_SQL_PASS=${{secrets.SQL_PASS}} >> .env
-        echo REACT_APP_SQL_DATABASE=tcc_puc_minas >> .env
-        echo REACT_APP_API_HOST=http://ec2-3-19-75-19.us-east-2.compute.amazonaws.com:3002 >> .env
-        echo REACT_APP_AUTH_SECRET=${{secrets.AUTH_SECRET}} >> .env
-        echo REACT_APP_GOOGLE_AUTH_CLIENT_ID=${{secrets.GOOGLE_AUTH_CLIENT_ID}} >> .env
-        cat .env    
+    # - name: 'Create env file'
+    #   run: |
+    #     touch .env
+    #     echo REACT_APP_SQL_HOST=tcc-puc-minas-mysql.c94ookmemxvv.us-east-2.rds.amazonaws.com >> .env
+    #     echo REACT_APP_SQL_PORT=3306 >> .env
+    #     echo REACT_APP_SQL_USER=${{secrets.SQL_USER}} >> .env
+    #     echo REACT_APP_SQL_PASS=${{secrets.SQL_PASS}} >> .env
+    #     echo REACT_APP_SQL_DATABASE=tcc_puc_minas >> .env
+    #     echo REACT_APP_API_HOST=http://ec2-3-19-75-19.us-east-2.compute.amazonaws.com:3002 >> .env
+    #     echo REACT_APP_AUTH_SECRET=${{secrets.AUTH_SECRET}} >> .env
+    #     echo REACT_APP_GOOGLE_AUTH_CLIENT_ID=${{secrets.GOOGLE_AUTH_CLIENT_ID}} >> .env
+    #     cat .env    
 
     - name: Install
       run: |
@@ -52,3 +52,4 @@ jobs:
         REMOTE_HOST: "ec2-3-19-75-19.us-east-2.compute.amazonaws.com"
         REMOTE_USER: "ec2-user"
         TARGET: "/home/ec2-user/tcc-puc-minas"
+        EXCLUDE: "/dist/, /node_modules/, rebuild_app.sh, watcher.sh"
