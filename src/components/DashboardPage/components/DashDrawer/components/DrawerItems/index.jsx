@@ -18,11 +18,6 @@ function DrawerItems({ setContentId }) {
     <ItemsContainer>
       <ItemsList>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => setContentId(0)}>
-            <ListItemText primary='Dashboard' />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
           <ListItemButton onClick={() => setContentId(1)}>
             <ListItemText primary='Usuários' />
           </ListItemButton>

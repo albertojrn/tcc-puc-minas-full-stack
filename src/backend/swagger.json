@@ -57,11 +57,29 @@
             }
           }
         }
-      },
+      }
+    },
+    "/features?getvalues={getvalues}&featurevalues={featurevalues}": {
       "get": {
         "summary": "Busca de todas as características",
         "description": "Rota responsável por buscar todas as características de produto.",
         "tags": ["Features"],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "getvalues",
+            "description": "Informa com true ou false se deve ser retornada uma array de objetos de todos os 'valores de características' que são filhos da característica retornada",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "featurevalues",
+            "description": "Se informado um ou mais valores, são retornadas as características 'pai' dos 'valores de características' passados pela query.",
+            "required": false,
+            "type": "integer"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -214,8 +232,1984 @@
           }
         }
       }
+    },
+
+    "/feature-values": {
+      "post": {
+        "summary": "Cadastro de novos 'valores de características'",
+        "description": "Rota responsável por cadastrar novos 'valores de características'.",
+        "tags": ["Features"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Feature-Values"
+              },
+              "examples": {
+                "feature-values": {
+                  "value": {
+                    "name": "couro",
+                    "feature_id": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "ER_DUP_ENTRY: Duplicate entry"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Feature-Values"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ResourceUrl"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca de todos os 'valores de características'",
+        "description": "Rota responsável por buscar todos os 'valores de características' dos produto.",
+        "tags": ["Features"],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Feature-Values"
+                  }
+                },
+                "examples": {
+                  "feature-values": {
+                    "value": [
+                      {
+                        "id": 1,
+                        "name": "couro",
+                        "feature_id": "1"
+                      },
+                      {
+                        "id": 2,
+                        "name": "azul",
+                        "feature_id": "2"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feature-values/{id}": {
+      "get": {
+        "summary": "Busca um único 'valor de característica' por id",
+        "description": "Rota responsável por buscar um único 'valor de característica' de uma característica.",
+        "tags": ["Features"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do 'valor da característica'",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Feature-Values"
+                  }
+                },
+                "examples": {
+                  "feature-values": {
+                    "value": [
+                      {
+                        "id": 2,
+                        "name": "azul",
+                        "feature_id": "2"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Altera um 'valor de característica'",
+        "description": "Rota responsável por alterar um 'valor de característica' de uma característica.",
+        "tags": ["Features"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Feature-Values"
+              },
+              "examples": {
+                "feature-values": {
+                  "value": {
+                    "feature_id": "3"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do 'valor da característica'",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "ER_DUP_ENTRY: Duplicate entry"
+          },
+          "200": {
+            "description": "OK. Retorna o id do 'valor de característica' alterado e apenas os valores que foram alterados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Feature-Values"
+                },
+                "examples": {
+                  "feature-values": {
+                    "value": {
+                      "id": 1,
+                      "name": "sintético"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um 'valor de característica'",
+        "description": "Rota responsável por excluir um 'valore de característica' de uma característica.",
+        "tags": ["Features"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do 'valor de característica'",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+
+    "/address": {
+      "post": {
+        "summary": "Cadastro de novos endereços de usuários",
+        "description": "Rota responsável por cadastrar novos endereços dos usuários.",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Address"
+              },
+              "examples": {
+                "address": {
+                  "value": {
+                    "user_id": 10,
+                    "address_1": "Rua dos girassóis",
+                    "address_2": "AP 501",
+                    "zip_code": "21901-050",
+                    "city": "São Paulo",
+                    "state": "São Paulo",
+                    "address_1_num": "37"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "ER_DUP_ENTRY: Duplicate entry"
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Address"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ResourceUrl"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Busca de todos os endereços de todos os usuários.",
+        "description": "Rota responsável todos os endereços de todos os usuários.",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Address"
+                  }
+                },
+                "examples": {
+                  "feature": {
+                    "value": [
+                      {
+                        "id": 1,
+                        "user_id": 10,
+                        "address_1": "Rua dos girassóis",
+                        "address_2": "AP 501",
+                        "zip_code": "21901-050",
+                        "city": "São Paulo",
+                        "state": "São Paulo",
+                        "address_1_num": "37"
+                      },
+                      {
+                        "id": 2,
+                        "user_id": 13,
+                        "address_1": "Rua das Pedras",
+                        "address_2": "AP 305",
+                        "zip_code": "21756-060",
+                        "city": "São Luiz",
+                        "state": "Maranhão",
+                        "address_1_num": "500"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/address/{user_id}": {
+      "get": {
+        "summary": "Busca os endereços através do id do usuário.",
+        "description": "Rota responsável por os endereços de um usuário através do seu id.",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "Id do usuário",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Address"
+                  }
+                },
+                "examples": {
+                  "feature": {
+                    "value": [
+                      {
+                        "id": 2,
+                        "user_id": 13,
+                        "address_1": "Rua das Pedras",
+                        "address_2": "AP 305",
+                        "zip_code": "21756-060",
+                        "city": "São Luiz",
+                        "state": "Maranhão",
+                        "address_1_num": "500"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/address/{id}": {
+      "put": {
+        "summary": "Altera um endereço do usuário",
+        "description": "Rota responsável por alterar um endereço do usuário através do id do endereço.",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Address"
+              },
+              "examples": {
+                "feature": {
+                  "value": {
+                    "address_1": "Rua das Laranjeiras",
+                    "address_1_num": "472"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do endereço.",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "409": {
+            "description": "ER_DUP_ENTRY: Duplicate entry"
+          },
+          "200": {
+            "description": "OK. Retorna o id e apenas os valores do endereço que foram alterados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Address"
+                },
+                "examples": {
+                  "feature": {
+                    "value": {
+                      "id": 1,
+                      "address_1": "Rua das Laranjeiras",
+                      "address_1_num": "472"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Exclui um endereço",
+        "description": "Rota responsável por excluir um endereço do usuário.",
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id do endereço",
+            "required": true
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized"
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+
+    "/auth/login": {
+      "post": {
+        "summary": "Login de usuário 'standard'",
+        "description": "Rota responsável por autentica e logar o usuário 'standard'.",
+        "tags": ["Auth"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "address": {
+                  "value": {
+                    "email": "teste@teste.com",
+                    "password": "teste1234"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+  "/auth/login-google": {
+    "post": {
+      "summary": "Login de usuário 'google'",
+      "description": "Rota responsável por autentica e logar o usuário 'google'. Um usuário é criado com o email utilizado caso não exista no banco de dados. Verifica-se a autenticação com o token do google e caso aprovada, fornece-se um token para o usuário.",
+      "tags": ["Auth"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/User"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
     }
   },
+
+  "/cart": {
+    "post": {
+      "summary": "Cria um novo item do Carrinho",
+      "description": "Rota responsável por inserir um novo item no carrinho do usuário.",
+      "tags": ["Users"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Cart"
+            }
+          }
+        }
+      },
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "201": {
+          "description": "Created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Cart"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ResourceUrl"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "summary": "Busca todos os itens de carrinho de todos os usuários.",
+      "description": "Rota responsável por buscar todos os itens de carrinho de todos os usuários.",
+      "tags": ["Users"],
+      "security": [{ "bearerAuth": [] }],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Cart"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/cart/{user_id}": {
+    "get": {
+      "summary": "Busca todos os itens de carrinho de um usuário.",
+      "description": "Rota responsável por buscar todos os itens de carrinho de um usuário.",
+      "tags": ["Users"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "description": "Id do usuário",
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Cart"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Exclui todos os itens do carrinho do usuário",
+      "description": "Rota responsável por excluir todos os itens do carrinho do usuário.",
+      "tags": ["Users"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "description": "Id do usuário.",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "204": {
+          "description": "No Content"
+        }
+      }
+    }
+  },
+  "/cart/{user_id}/{product_id}/{primary_color_id}/{secondary_color_id}/{size_id}": {
+    "put": {
+      "summary": "Altera um item de carrinho do usuário",
+      "description": "Rota responsável por alterar um item de carrinho do usuário.",
+      "tags": ["Users"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Cart"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "description": "Id do usuário.",
+          "required": true
+        },
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto.",
+          "required": true
+        },
+        {
+          "name": "primary_color_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente à cor primária do produto.",
+          "required": true
+        },
+        {
+          "name": "secondary_color_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente à cor secundária do produto.",
+          "required": false
+        },
+        {
+          "name": "size_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente ao tamanho do produto.",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "200": {
+          "description": "OK. Retorna os valores do item de carrinho que foram alterados.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cart"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Exclui um único item do carrinho do usuário",
+      "description": "Rota responsável por excluir um único item do carrinho do usuário.",
+      "tags": ["Users"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "description": "Id do usuário.",
+          "required": true
+        },
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto.",
+          "required": true
+        },
+        {
+          "name": "primary_color_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente à cor primária do produto.",
+          "required": true
+        },
+        {
+          "name": "secondary_color_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente à cor secundária do produto.",
+          "required": false
+        },
+        {
+          "name": "size_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente ao tamanho do produto.",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "204": {
+          "description": "No Content"
+        }
+      }
+    }
+  },
+
+  "/orders": {
+    "post": {
+      "summary": "Cadastro de novas compras.",
+      "description": "Rota responsável por cadastrar uma nova compra realizada por um usuário.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Orders"
+            }
+          }
+        }
+      },
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "201": {
+          "description": "Created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Orders"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ResourceUrl"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/orders?limit={limit}&offset={offset}&orderby={orderby}&orderdirection={orderdirection}&onlyinfo={onlyinfo}": {
+    "get": {
+      "summary": "Busca de todas as compras",
+      "description": "Rota responsável por buscar todas as compras realizadas pelos usuários.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "query",
+          "name": "limit",
+          "description": "Número máximo de registros que se deseja retornar",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "in": "query",
+          "name": "offset",
+          "description": "Quantos registros devem ser pulados para começar a busca.",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "in": "query",
+          "name": "orderby",
+          "description": "Por qual propriedade deseja-se ordenar os resultados",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "in": "query",
+          "name": "orderdirection",
+          "description": "Qual a direção da ordenação. (ASC | ascendente, DESC | descendente)",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "in": "query",
+          "name": "onlyinfo",
+          "description": "Se true, não serão retornados os produtos referentes à compra. Apenas a informação básica da compra.",
+          "required": false,
+          "type": "boolean"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Orders"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Orders-Products"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/orders/{user_id}?onlyinfo={onlyinfo}": {
+    "get": {
+      "summary": "Busca todas as compras de um usuário.",
+      "description": "Rota responsável por buscar todas as compras de um usuário.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "user_id",
+          "in": "path",
+          "description": "Id do usuário",
+          "required": true
+        },
+        {
+          "in": "query",
+          "name": "onlyinfo",
+          "description": "Se true, não serão retornados os produtos referentes à compra. Apenas a informação básica da compra.",
+          "required": false,
+          "type": "boolean"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Orders"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Orders-Products"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/orders/{id}": {
+    "put": {
+      "summary": "Altera uma compra",
+      "description": "Rota responsável por alterar uma compra por id.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Orders"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Id da caompra",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "200": {
+          "description": "OK. Retorna o id da compra e apenas os valores alterados.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Orders"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Exclui uma compra",
+      "description": "Rota responsável por excluir uma compra feita pelo usuário.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Id da compra",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "204": {
+          "description": "No Content"
+        }
+      }
+    }
+  },
+
+  "/product-features": {
+    "post": {
+      "summary": "Cria e relaciona uma nova característica ao produto.",
+      "description": "Rota responsável por criar e relacionar uma nova característica ao produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Product-Features"
+            }
+          }
+        }
+      },
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "201": {
+          "description": "Created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Product-Features"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ResourceUrl"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "summary": "Busca todas as caracte´risticas de todos os produtos.",
+      "description": "Rota responsável por buscar todas as caracte´risticas de todos os produtos.",
+      "tags": ["Store"],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Product-Features"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/product-features/{product_id}": {
+    "get": {
+      "summary": "Busca todas as características de um único produto.",
+      "description": "Rota responsável por buscar todas as características de um único produto.",
+      "tags": ["Store"],
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Product-Features"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/product-features/{product_id}/{feature_values_id}": {
+    "get": {
+      "summary": "Busca uma única característica de um produto.",
+      "description": "Rota responsável por buscar uma única característica de um produto.",
+      "tags": ["Store"],
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        },
+        {
+          "name": "feature_values_id",
+          "in": "path",
+          "description": "Id do 'valor da característica'",
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Product-Features"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Altera um 'valor de característica' de um produto",
+      "description": "Rota responsável por alterar um 'valor de característica' de um produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Product-Features"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        },
+        {
+          "name": "feature_values_id",
+          "in": "path",
+          "description": "Id do 'valor da característica'",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "200": {
+          "description": "OK. Retorna os valores que foram alterados.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product-Features"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Exclui um único 'valor de característica' de um produto",
+      "description": "Rota responsável por excluir um único 'valor de característica' de um produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        },
+        {
+          "name": "feature_values_id",
+          "in": "path",
+          "description": "Id do 'valor da característica'",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "204": {
+          "description": "No Content"
+        }
+      }
+    }
+  },
+
+  "/product-images": {
+    "post": {
+      "summary": "Cria e relaciona uma nova imagem ao produto.",
+      "description": "Rota responsável por criar e relacionar uma nova imagem ao produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Product-Images"
+            }
+          }
+        }
+      },
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "201": {
+          "description": "Created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Product-Images"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ResourceUrl"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "summary": "Busca todas imagens de todos os produtos.",
+      "description": "Rota responsável por buscar todas imagens de todos os produtos.",
+      "tags": ["Store"],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Product-Images"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/product-images/{product_id}": {
+    "get": {
+      "summary": "Busca todas as imagens de um único produto.",
+      "description": "Rota responsável por buscar todas as imagens de um único produto.",
+      "tags": ["Store"],
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Product-Images"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/product-images/{product_id}/{name}": {
+    "get": {
+      "summary": "Busca uma única imagem de um produto.",
+      "description": "Rota responsável por buscar uma única imagem de um produto.",
+      "tags": ["Store"],
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        },
+        {
+          "name": "name",
+          "in": "path",
+          "description": "Nome da imagem",
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Product-Images"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Altera um nome de uma imagem de um produto",
+      "description": "Rota responsável por alterar um nome de uma imagem de um produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Product-Images"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        },
+        {
+          "name": "name",
+          "in": "path",
+          "description": "O nome da imagem do produto.",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "200": {
+          "description": "OK. Retorna os valores que foram alterados.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product-Images"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Exclui um único 'valor de característica' de um produto",
+      "description": "Rota responsável por excluir um único 'valor de característica' de um produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        },
+        {
+          "name": "name",
+          "in": "path",
+          "description": "O nome da imagem do produto.",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "204": {
+          "description": "No Content"
+        }
+      }
+    }
+  },
+
+  "/product-variations": {
+    "post": {
+      "summary": "Cria uma nova variação do produto",
+      "description": "Rota responsável por criar uma nova variação do produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Product-Variations"
+            }
+          }
+        }
+      },
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "201": {
+          "description": "Created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Product-Variations"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ResourceUrl"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "get": {
+      "summary": "Busca todas as variações de todos os produtos.",
+      "description": "Rota responsável por buscar todas as variações de todos os produtos.",
+      "tags": ["Store"],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Product-Variations"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/product-variations/{product_id}": {
+    "get": {
+      "summary": "Busca todas as variações de um produto.",
+      "description": "Rota responsável por buscar todas as variações de um produto.",
+      "tags": ["Store"],
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Product-Variations"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/product-variations/{product_id}/{primary_color_id}/{secondary_color_id}/{size_id}": {
+    "put": {
+      "summary": "Altera uma variação de um produto",
+      "description": "Rota responsável por alterar uma variação de um produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Product-Variations"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto.",
+          "required": true
+        },
+        {
+          "name": "primary_color_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente à cor primária do produto.",
+          "required": true
+        },
+        {
+          "name": "secondary_color_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente à cor secundária do produto.",
+          "required": false
+        },
+        {
+          "name": "size_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente ao tamanho do produto.",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "200": {
+          "description": "OK. Retorna os valores que foram alterados.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product-Variations"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Exclui uma única variação de um único",
+      "description": "Rota responsável por excluir uma única variação de um único.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "description": "Id do produto.",
+          "required": true
+        },
+        {
+          "name": "primary_color_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente à cor primária do produto.",
+          "required": true
+        },
+        {
+          "name": "secondary_color_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente à cor secundária do produto.",
+          "required": false
+        },
+        {
+          "name": "size_id",
+          "in": "path",
+          "description": "Id do 'valor de característica' correspondente ao tamanho do produto.",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "204": {
+          "description": "No Content"
+        }
+      }
+    }
+  },
+
+  "/report?limit={limit}&offset={offset}&orderby={orderby}&orderdirection={orderdirection}&from={from}&to={to}": {
+    "get": {
+      "summary": "Busca de todas as compras para o relatório",
+      "description": "Rota responsável por buscar todas as compras realizadas pelos usuários para o relatório, podendo utilizar datas de períodos.",
+      "tags": ["Dashboard"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "in": "query",
+          "name": "limit",
+          "description": "Número máximo de registros que se deseja retornar",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "in": "query",
+          "name": "offset",
+          "description": "Quantos registros devem ser pulados para começar a busca.",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "in": "query",
+          "name": "orderby",
+          "description": "Por qual propriedade deseja-se ordenar os resultados",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "in": "query",
+          "name": "orderdirection",
+          "description": "Qual a direção da ordenação. (ASC | ascendente, DESC | descendente)",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "in": "query",
+          "name": "from",
+          "description": "Data inicial do período.",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "in": "query",
+          "name": "to",
+          "description": "Data final do período.",
+          "required": false,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Orders"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Orders-Products"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "/products?limit={limit}&offset={offset}&orderby={orderby}&orderdirection={orderdirection}&onlyinfo={onlyinfo}&featurevalues={featurevalues}&count={count}&searchquery={searchquery}": {
+    "get": {
+      "summary": "Busca de produtos.",
+      "description": "Rota responsável por buscar produtos.",
+      "tags": ["Store"],
+      "parameters": [
+        {
+          "in": "query",
+          "name": "limit",
+          "description": "Número máximo de registros que se deseja retornar",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "in": "query",
+          "name": "offset",
+          "description": "Quantos registros devem ser pulados para começar a busca.",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "in": "query",
+          "name": "orderby",
+          "description": "Por qual propriedade deseja-se ordenar os resultados",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "in": "query",
+          "name": "orderdirection",
+          "description": "Qual a direção da ordenação. (ASC | ascendente, DESC | descendente)",
+          "required": false,
+          "type": "string"
+        },
+        {
+          "in": "query",
+          "name": "onlyinfo",
+          "description": "Se true só retorna as informações básicas do produto e exclui variações e características.",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "in": "query",
+          "name": "featurevalues",
+          "description": "Filtra por uma ou mais características.",
+          "required": false,
+          "type": "number"
+        },
+        {
+          "in": "query",
+          "name": "count",
+          "description": "Se true retorna na array de results como o primeiro objeto uma propriedade com o valor total de produtos que atendem as condições de busca.",
+          "required": false,
+          "type": "boolean"
+        },
+        {
+          "in": "query",
+          "name": "searchquery",
+          "description": "Procura por títulos de produtos que contenham a string passada por essa query.",
+          "required": false,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Products"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "selectedFeatures": {
+                            "$ref": "#/components/schemas/Feature-Values"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "variations": {
+                            "$ref": "#/components/schemas/Product-Variations"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "images": {
+                            "$ref": "#/components/schemas/Product-Images"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/products/{id}?onlyinfo={onlyinfo}": {
+    "get": {
+      "summary": "Busca um produto por id",
+      "description": "Rota responsável por buscar um  produto.",
+      "tags": ["Store"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        },
+        {
+          "in": "query",
+          "name": "onlyinfo",
+          "description": "Se true só retorna as informações básicas do produto e exclui variações e características.",
+          "required": false,
+          "type": "boolean"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "OK",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Products"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "selectedFeatures": {
+                            "$ref": "#/components/schemas/Feature-Values"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "variations": {
+                            "$ref": "#/components/schemas/Product-Variations"
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "images": {
+                            "$ref": "#/components/schemas/Product-Images"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/products/{id}": {
+    "post": {
+      "summary": "Cria um novo produto",
+      "description": "Rota responsável por criar um novo produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Products"
+            }
+          }
+        }
+      },
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "201": {
+          "description": "Created",
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Products"
+                  },
+                  {
+                    "$ref": "#/components/schemas/ResourceUrl"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Altera um produto",
+      "description": "Rota responsável por alterar um produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "requestBody": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Products"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "409": {
+          "description": "ER_DUP_ENTRY: Duplicate entry"
+        },
+        "200": {
+          "description": "OK. Retorna os valores que foram alterados.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Products"
+              }
+            }
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Exclui um produto",
+      "description": "Rota responsável por excluir um produto.",
+      "tags": ["Store"],
+      "security": [{ "bearerAuth": [] }],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "Id do produto",
+          "required": true
+        }
+      ],
+      "responses": {
+        "401": {
+          "description": "Unauthorized"
+        },
+        "204": {
+          "description": "No Content"
+        }
+      }
+    }
+  }
+},
   "components": {
     "schemas": {
       "Feature": {
@@ -228,6 +2222,257 @@
             "type": "boolean"
           },
           "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Feature-Values": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "feature_id": {
+            "type": "number"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "user_id": {
+            "type": "number"
+          },
+          "address_1": {
+            "type": "string"
+          },
+          "address_2": {
+            "type": "string"
+          },
+          "zip_code": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "address_1_num": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          },
+          "birth_date": {
+            "type": "string"
+          },
+          "cpf": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "third_id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "Cart": {
+        "type": "object",
+        "properties": {
+          "primary_color_id": {
+            "type": "number"
+          },
+          "product_id": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "secondary_color_id": {
+            "type": "number"
+          },
+          "size_id": {
+            "type": "number"
+          },
+          "user_id": {
+            "type": "number"
+          }
+        }
+      },
+      "Orders": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "user_id": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "shipping_fee": {
+            "type": "number"
+          },
+          "shipping_address_id": {
+            "type": "string"
+          },
+          "payment_method": {
+            "type": "string"
+          },
+          "discount": {
+            "type": "number"
+          },
+          "total_products": {
+            "type": "number"
+          },
+          "coupon": {
+            "type": "string"
+          },
+          "installments": {
+            "type": "number"
+          },
+          "shipping_method": {
+            "type": "string"
+          },
+          "shipping_days": {
+            "type": "number"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "Orders-Products": {
+        "type": "object",
+        "properties": {
+          "order_id": {
+            "type": "number"
+          },
+          "primary_color_id": {
+            "type": "number"
+          },
+          "secondary_color_id": {
+            "type": "number"
+          },
+          "size_id": {
+            "type": "number"
+          },
+          "product_id": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      },
+      "Product-Features": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "feature_values_id": {
+            "type": "number"
+          }
+        }
+      },
+      "Product-Images": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "number"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Product-Variations": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "number"
+          },
+          "size_id": {
+            "type": "number"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          },
+          "primary_color_id": {
+            "type": "number"
+          },
+          "secondary_color_id": {
+            "type": "number"
+          }
+        }
+      },
+      "Products": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "depth": {
+            "type": "number"
+          },
+          "sku": {
+            "type": "string"
+          },
+          "width": {
+            "type": "number"
+          },
+          "height": {
+            "type": "number"
+          },
+          "date": {
             "type": "string"
           }
         }

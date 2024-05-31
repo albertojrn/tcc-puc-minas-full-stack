@@ -24,6 +24,7 @@ const authRoute = require('./api/v1/auth')
 const cart = require('./api/v1/cart')
 const address = require('./api/v1/address')
 const orders = require('./api/v1/orders')
+const report = require('./api/v1/report')
 
 app.use('/api/v1/features', featuresRoute)
 app.use('/api/v1/feature-values', featureValuesRoute)
@@ -37,6 +38,7 @@ app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/cart', cart)
 app.use('/api/v1/address', address)
 app.use('/api/v1/orders', orders)
+app.use('/api/v1/report', report)
 
 app.listen(PORT, () => {
   console.log(`Server is running on ${PORT}`)

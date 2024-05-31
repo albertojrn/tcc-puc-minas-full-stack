@@ -12,7 +12,7 @@ function ContentHeader({ page, title }) {
             {title}
           &nbsp;
           </Typography>
-          <AddButton page={page} />
+          {page && <AddButton page={page} />}
         </Stack>
       </GridItem>
       <GridItem item xs={12}>
