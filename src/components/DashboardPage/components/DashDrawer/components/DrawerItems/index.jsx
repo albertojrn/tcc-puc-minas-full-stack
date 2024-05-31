@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { ExpandLess, ExpandMore } from '@mui/icons-material'
 import {
   Collapse,
@@ -9,10 +8,16 @@ import {
 } from '@mui/material'
 import { ItemsContainer, ItemsList, ListItemCustom } from './styles'
 import { COLORS } from '../../../../../../constants/theme'
+import { useUserContext } from '../../../../../../contexts/UserContext'
 
 function DrawerItems({ setContentId }) {
   const [collapseRegisterMenu, setCollapseRegisterMenu] = useState(true)
   const [collapseReportMenu, setCollapseReportMenu] = useState(true)
+  const { logoutUser } = useUserContext()
+
+  function handleLogout() {
+    logoutUser()
+  }
 
   return (
     <ItemsContainer>
@@ -59,13 +64,11 @@ function DrawerItems({ setContentId }) {
         </Collapse>
       </ItemsList>
       <ItemsList>
-        <Link to='/logout' >
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemText primary='Sair' />
-            </ListItemButton>
-          </ListItem>
-        </Link>
+        <ListItem disablePadding>
+          <ListItemButton onClick={handleLogout}>
+            <ListItemText primary='Sair' />
+          </ListItemButton>
+        </ListItem>
       </ItemsList>
     </ItemsContainer>
   )

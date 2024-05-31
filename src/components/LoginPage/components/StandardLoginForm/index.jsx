@@ -27,6 +27,12 @@ function StandardLoginForm({ handleLoginSuccess, rememberMe, setRememberMe }) {
     }
   }
 
+  function enterPresed(e) {
+    if (e.key === 'Enter') {
+      handleLogin()
+    }
+  }
+
   return (
     <>
       <FormField
@@ -34,6 +40,7 @@ function StandardLoginForm({ handleLoginSuccess, rememberMe, setRememberMe }) {
         error={error}
         field='email'
         label='Email'
+        onKeyDown={enterPresed}
         required
         setError={setError}
         setField={setEmail}
@@ -54,6 +61,7 @@ function StandardLoginForm({ handleLoginSuccess, rememberMe, setRememberMe }) {
         error={error}
         field='password'
         label='Senha'
+        onKeyDown={enterPresed}
         required
         setError={setError}
         setField={setPassword}

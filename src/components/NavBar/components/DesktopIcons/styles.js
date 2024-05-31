@@ -9,6 +9,13 @@ export const IconsContainer = styled(Box)`
       }
     `}
   }
+  & .hideInDesktop {
+    ${({ theme }) => `
+      ${theme.breakpoints.up('md')} {
+        display: none;
+      }
+    `}
+  }
 `
 export const LoginContainer = styled(Stack)`
   cursor: pointer;

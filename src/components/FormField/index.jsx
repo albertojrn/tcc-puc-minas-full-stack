@@ -18,6 +18,7 @@ function FormField({
   multiline = false,
   onlyNumbers,
   onBlurNum,
+  onKeyDown,
   padding,
   pattern,
   placeholder,
@@ -48,6 +49,10 @@ function FormField({
       handleOnUserTyping(field, setField, onBlurNum, setError)
     }
   }
+  function handleOnKeyDown(e) {
+    if (preventTyping) return e.preventDefault()
+    onKeyDown(e)
+  }
 
   return (
     <FormTextField
@@ -65,7 +70,7 @@ function FormField({
       multiline={multiline}
       onBlur={onBlurNum ? handleOnBlurNum : undefined}
       onChange={handleOnChange}
-      onKeyDown={preventTyping ? ((e) => e.preventDefault()) : undefined}
+      onKeyDown={handleOnKeyDown}
       padding={padding}
       placeholder={placeholder}
       required={required}

@@ -60,7 +60,7 @@ function EcommRoutes() {
           role === 'admin'
             ? <DashboardPage />
             : <Redirect to='/' />
-      }
+        }
       />
     </Routes>
   )

@@ -1,7 +1,7 @@
 import React from 'react'
-import { Toolbar, Typography } from '@mui/material'
+import { Stack, Toolbar, Typography } from '@mui/material'
 import { Menu } from '@mui/icons-material'
-import { AppBarContainer } from '../../../../styles'
+import { AppBarContainer, CustomLink } from '../../../../styles'
 import { Container, MenuIconButton } from './styles'
 
 function DashNavBar({ handleDrawerToggle }) {
@@ -17,9 +17,14 @@ function DashNavBar({ handleDrawerToggle }) {
           >
             <Menu />
           </MenuIconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            DASHBOARD
-          </Typography>
+          <Stack direction='row' sx={{ flexGrow: 1 }} alignItems='center' justifyContent='space-between'>
+            <Typography variant="h6" component="div" >
+              DASHBOARD
+            </Typography>
+            <CustomLink textDecoration='none' to='/'>
+              Ir para a loja
+            </CustomLink>
+          </Stack>
         </Toolbar>
       </Container>
     </AppBarContainer>

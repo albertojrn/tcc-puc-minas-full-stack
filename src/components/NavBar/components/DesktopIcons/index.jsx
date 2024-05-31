@@ -30,6 +30,7 @@ function DesktopIcons() {
                 <AccountCircle />
               </IconButton>
               <IconButton
+                className='hideInDesktop'
                 color='inherit'
                 edge='end'
                 size='large'

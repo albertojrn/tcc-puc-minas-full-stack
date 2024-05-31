@@ -45,6 +45,7 @@
     "start": "react-scripts start",
     "start-build": "serve -s build",
     "build": "CI=false && react-scripts build",
+    "buildnoci": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "start:build": "concurrently \"npm run start-build\" \"npm run api\""

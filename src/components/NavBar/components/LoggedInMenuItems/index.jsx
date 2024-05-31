@@ -5,7 +5,7 @@ import { CustomLink } from '../../../../styles'
 import { useUserContext } from '../../../../contexts/UserContext'
 
 function LoggedInMenuItems({ setAnchor }) {
-  const { logoutUser } = useUserContext()
+  const { role, logoutUser } = useUserContext()
 
   function handleLogout() {
     setAnchor(null)
@@ -17,6 +17,12 @@ function LoggedInMenuItems({ setAnchor }) {
       <CustomLink color='black' textDecoration='none' to='/my-profile'>
         <MenuItem onClick={() => setAnchor(null)}>{DICTIONARY.MY_ACCOUNT}</MenuItem>
       </CustomLink>
+      {role === 'admin'
+        && (
+        <CustomLink color='black' textDecoration='none' to='/dashboard'>
+          <MenuItem onClick={() => setAnchor(null)}>Dashboard</MenuItem>
+        </CustomLink>
+        )}
       <MenuItem onClick={handleLogout}>{DICTIONARY.LEAVE}</MenuItem>
     </>
   )

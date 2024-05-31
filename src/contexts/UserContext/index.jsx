@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { USER_INIT_VALUES } from './constants/params'
 import { readCartProduct } from '../../services/api/cart'
 import { readUserAddress } from '../../services/api/address'
 import { validateUser } from '../../services/api/auth'
-import { useNavigate } from 'react-router-dom'
 
 const context = createContext({
   ...USER_INIT_VALUES,
