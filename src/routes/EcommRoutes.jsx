@@ -53,10 +53,15 @@ function EcommRoutes() {
       <Route exact path='/password-recovery' element={<ContentMainConatiner><ForgetPasswordPage /></ContentMainConatiner>} />
       <Route exact path='/store' element={<ContentMainConatiner><StorePage /></ContentMainConatiner>} />
       <Route exact path='/product/:id' element={<ContentMainConatiner><ProductPage /></ContentMainConatiner>} />
-      {role === 'admin'
-        && (
-          <Route exact path='/dashboard' element={<DashboardPage />} />
-        )}
+      <Route
+        exact
+        path='/dashboard'
+        element={
+          role === 'admin'
+            ? <DashboardPage />
+            : <Redirect to='/' />
+      }
+      />
     </Routes>
   )
 }
