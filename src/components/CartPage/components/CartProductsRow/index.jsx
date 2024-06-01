@@ -3,8 +3,9 @@ import { Stack, Typography } from '@mui/material'
 import { GridItem, ListImgThumb } from '../../../../styles'
 import FormField from '../../../FormField'
 import { formatPrice } from '../../../../utils/formatMethods'
-import { updateCartProduct } from '../../../../services/api/cart'
+import { deleteCartProduct, updateCartProduct } from '../../../../services/api/cart'
 import { useUserContext } from '../../../../contexts/UserContext'
+import { DeleteButton } from './styles'
 
 function CartProductsRow({ cartItem, cartProductsInfo, featuresValues, isCheckoutPage }) {
   const [quantity, setQuantity] = useState(cartItem.quantity)
@@ -64,6 +65,28 @@ function CartProductsRow({ cartItem, cartProductsInfo, featuresValues, isCheckou
     }
   }
 
+  async function handleDeleteItem() {
+    const user_id = cartItem.user_id
+    const product_id = cartItem.product_id
+    const primary_color_id = cartItem.primary_color_id
+    const secondary_color_id = cartItem.secondary_color_id
+    const size_id = cartItem.size_id
+    const res = await deleteCartProduct(user_id, product_id, primary_color_id, secondary_color_id, size_id, token)
+    if (res.status === 204) {
+      let newCart = structuredClone(cart)
+      newCart = newCart.filter(item => (
+        !(
+          item.user_id === cartItem.user_id
+          && item.product_id === cartItem.product_id
+          && item.primary_color_id === cartItem.primary_color_id
+          && item.secondary_color_id === cartItem.secondary_color_id
+          && item.size_id === cartItem.size_id
+        )
+      ))
+      setUser({ cart: newCart })
+    }
+  }
+
   useEffect(() => {
     if (quantity !== undefined
         && quantity !== null
@@ -101,21 +124,26 @@ function CartProductsRow({ cartItem, cartProductsInfo, featuresValues, isCheckou
             </Typography>
           )
           : (
-            <FormField
-              field='quantity'
-              fullWidth
-              inputProps={{
-                min: 1,
-                step: 1,
-              }}
-              label='Qtd'
-              onBlurNum={1}
-              padding='12px 8px'
-              required
-              setField={setQuantity}
-              type='number'
-              value={quantity}
-            />
+            <Stack direction='column' alignItems='center'>
+              <FormField
+                field='quantity'
+                fullWidth
+                inputProps={{
+                  min: 1,
+                  step: 1,
+                }}
+                label='Qtd'
+                onBlurNum={1}
+                padding='12px 8px'
+                required
+                setField={setQuantity}
+                type='number'
+                value={quantity}
+              />
+              <DeleteButton color='standard' onClick={handleDeleteItem}>
+                Remover
+              </DeleteButton>
+            </Stack>
           )}
       </GridItem>
       <GridItem item xs={isCheckoutPage ? 3 : 2}>

@@ -51,7 +51,7 @@ function FormField({
   }
   function handleOnKeyDown(e) {
     if (preventTyping) return e.preventDefault()
-    onKeyDown(e)
+    if (typeof onKeyDown === 'function') onKeyDown(e)
   }
 
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import DashNavBar from './components/DashNavBar'
 import { DashboardContainer } from './styles'
 import DashDrawer from './components/DashDrawer'
@@ -27,6 +27,10 @@ function DashboardPage() {
       setOpen(prev => !prev)
     }
   }
+
+  useEffect(() => {
+    if (open) setOpen(false)
+  }, [contentId])
 
   return (
     <DashboardContextProvider>

@@ -61,7 +61,7 @@ function EditRemoveFeatureButtons({ feature }) {
       dialogChild: (
         <DialogYesNo
           onYes={confirmDeleteFeature}
-          text={`Tem certeza de que deseja apagar a característica '${feature.name}'?`}
+          text={`Tem certeza de que deseja excluir a característica '${feature.name}'?`}
           title='PRECISAMOS DA SUA CONFIRMAÇÃO'
           setDialogParams={setDashboardParams}
         />
@@ -84,7 +84,7 @@ function EditRemoveFeatureButtons({ feature }) {
           Editar
         </MenuItem>
         <MenuItem onClick={openDeleteDialog}>
-          Apagar
+          Excluir
         </MenuItem>
       </Menu>
     </>

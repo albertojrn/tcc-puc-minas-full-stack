@@ -3,17 +3,17 @@ export const COLUMNS = [
     align: 'center',
     header: 'ID',
     id: 'id',
-    sizes: { xs: 1 }
+    sizes: { xs: 2, md: 0.5 }
   },
   {
     header: 'Nome',
     id: 'name',
-    sizes: { xs: 5.25, sm: 3.5 }
+    sizes: { xs: 4.75, md: 3.5 }
   },
   {
     header: 'Email',
     id: 'email',
-    sizes: { xs: 5.25, sm: 3.5 }
+    sizes: { xs: 4.75, md: 3.5 }
   },
   {
     align: 'center',
@@ -27,7 +27,7 @@ export const COLUMNS = [
     header: 'Tipo',
     hideInMobile: true,
     id: 'type',
-    sizes: { xs: 1.5 }
+    sizes: { xs: 2, md: 2 }
   },
 ]
 

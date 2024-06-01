@@ -6,8 +6,6 @@ export const exportToPdf = (htmlId, setLoading) => {
   const htmlSource = document.getElementById(htmlId)
   const filename = 'Relatorio-de-vendas-Urban-Sneakers'
 
-  console.log(htmlId, htmlSource)
-
   if (!htmlSource) {
     return
   }

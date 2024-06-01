@@ -30,8 +30,9 @@ function UsersList() {
   }, [])
 
   return (
-    <MainGridContainer container spacing={2} alignItems='center'>
+    <MainGridContainer container spacing={{ xs: 0.5, md: 2 }} alignItems='center'>
       <GridListHeader columns={COLUMNS} />
+      <GridItem item xs={0.5} />
       {errFetch
         ? (
           <GridItem item xs={12}>

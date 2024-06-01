@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Button, Typography } from '@mui/material'
 import { GridItem, MainGridContainer } from '../../styles'
 import SignUpFormFields from './components/SignUpFormFields'
 import { CONSTRAINTS } from './constants/validationParams'
 import { validateFields } from '../../utils/formMethods'
+import { createUsers } from '../../services/api/users'
+import { useStoreContext } from '../../contexts/StoreContext'
+import DialogRetry from '../DialogRetry'
+import DialogOk from '../DialogOk'
+import { useLoadingContext } from '../../contexts/LoadingContext'
 
 function SignUpPage() {
   const [birthDate, setBirthDate] = useState('')
@@ -15,8 +21,11 @@ function SignUpPage() {
   const [phone, setPhone] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [userName, setUserName] = useState('')
+  const { setStorePersistent } = useStoreContext()
+  const { setLoading } = useLoadingContext()
+  const navigate = useNavigate()
 
-  function handleSignUp() {
+  async function handleSignUp() {
     const validation = validateFields(
       {
         birthDate,
@@ -31,8 +40,54 @@ function SignUpPage() {
     )
     setError(validation.error)
     if (validation.passed) {
-      
+      const fields = {
+        birth_date: birthDate,
+        cpf,
+        email,
+        gender,
+        password,
+        phone,
+        name: userName,
+      }
+      setLoading({ show: true })
+      const res = await createUsers(fields)
+      setLoading({ show: false })
+      if (res.status === 201) {
+        setStorePersistent({
+          dialogChild: (
+            <DialogOk
+              title='Confirmação'
+              text='Sua conta foi cadastrada com sucesso. Por favor, entre com a sua conta.'
+              setDialogParams={setStorePersistent}
+              onOk={handleOnOk}
+            />
+          ),
+          openDialog: true
+        })
+      }
+      else {
+        setStorePersistent({
+          dialogChild: (
+            <DialogRetry
+              title='Erro'
+              text='Não foi possível realizar o cadastro.'
+              onRetry={handleTryAgain}
+              setDialogParams={setStorePersistent}
+            />
+          ),
+          openDialog: true
+        })
+      }
     }
+  }
+
+  function handleTryAgain() {
+    handleSignUp()
+    setStorePersistent({ openDialog: false })
+  }
+
+  function handleOnOk() {
+    navigate('/login')
   }
 
   return (
